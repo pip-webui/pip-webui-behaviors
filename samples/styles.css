@@ -1,0 +1,86 @@
+.pip-recommended-header {
+    height: 45px;
+    min-height: 45px;
+    z-index: 10;
+}
+
+.pip-recommended-header .md-toolbar-tools {
+    height: 45px;
+    min-height: 45px;
+}
+
+.pip-recommended-header pip-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pip-recommended-header .md-button > span {
+    text-transform: none;
+}
+
+.pip-body {
+    padding: 24px !important;
+}
+
+/* Styles for Selected */
+
+.app-selected .pip-list-x {
+    background-color: grey;
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.app-selected .pip-list-x:focus {
+    background-color: yellow;
+    outline: blue solid 1px;
+}
+
+.app-selected .pip-list-x .pip-list-x-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.app-selected .pip-list-x-item:hover,
+.app-selected .pip-list-x-item.selected {
+    background-color: red;
+}
+
+/* Styles for Infinite Scroll */
+
+.app-infinite-scroll {
+    border: 2px solid red;
+    overflow-y: auto;
+    height: 500px;
+}
+
+.app-infinite-scroll .item-container {
+    width: 680px;
+    margin: 0 auto;
+}
+
+.app-infinite-scroll .item {
+    margin: 10px;
+    display: inline-block;
+    width: 200px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    vertical-align: middle;
+    border: 2px solid black;
+}
+
+.p24-flex {
+    padding: 24px;
+}
+
+.p0 {
+    padding: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .p24-flex {
+        padding: 16px;
+    }
+
+}
