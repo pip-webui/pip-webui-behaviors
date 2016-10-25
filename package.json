@@ -1,8 +1,8 @@
 {
-    "name": "pip-webui-lists",
+    "name": "pip-webui-behaviors",
     "version": "1.5.0",
     "author": "Digital Living Software Corp. <www.digitallivingsoftware.com>",
-    "description": "List controls for Pip.WebUI",
+    "description": "Attachable behaviors for Pip.WebUI",
     "contributors": [
         {
             "name": "Sergey Seroukhov",
@@ -20,8 +20,7 @@
     "keywords": [
         "pip",
         "webui",
-        "list",
-        "controls"
+        "behaviors"
     ],
     "noAnalyze": true,
     "license": "MIT",

@@ -1,7 +1,7 @@
 {
-    "name": "pip-webui-lists",
+    "name": "pip-webui-behaviors",
     "version": "1.5.0",
-    "description": "lists for Pip.WebUI",
+    "description": "Attachable behaviors for Pip.WebUI",
     "main": "",
     "authors": [
         {
@@ -25,10 +25,9 @@
     "keywords": [
         "pip",
         "webui",
-        "services",
-        "filters"
+        "behaviors"
     ],
-    "homepage": "https://github.com/pip-webui/pip-webui-lists",
+    "homepage": "https://github.com/pip-webui/pip-webui-behaviors",
     "ignore": [
         ".gitignore",
         "node_modules",

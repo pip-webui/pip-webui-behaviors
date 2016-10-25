@@ -1,7 +1,7 @@
 module.exports = {
     module: {
-        name: 'pipLists',
-        styles: 'lists'
+        name: 'pipBehaviors',
+        styles: 'behaviors'
     },
     build: {
         js: true,
@@ -35,9 +35,9 @@ module.exports = {
         ]
     },
     samples: {
-        port: 8140
+        port: 8190
     },
     api: {
-        port: 8141
+        port: 8191
     }
 };
