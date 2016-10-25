@@ -3,15 +3,15 @@
 </h2>
 
 <p>
-    {{ ::try | translate }}
+    {{ ::try }}
 </p>
 <pip-unsaved-changes pip-unsaved-changes-available="isAvailable()" pip-unsaved-changes-message="{{ message }}"></pip-unsaved-changes>
 <md-input-container class="popover-text-container">
-    <label >{{ ::text | translate }}</label>
+    <label >{{ ::text }}</label>
     <input  ng-model="message" required/>
 </md-input-container>
-<md-switch ng-model="available">{{ ::available | translate }}</md-switch>
+<md-switch ng-model="available">{{ ::available }}</md-switch>
 <div>
-<md-button ng-click="onLeavePage()" ng-disabled="!message">{{ ::leave | translate }}</md-button>
-<a href="http://github.com/pip-webui/pip-webui-controls/issues/77">{{ ::link | translate }}</a>
+<md-button ng-click="onLeavePage()" ng-disabled="!message">{{ ::leave }}</md-button>
+<a href="http://github.com/pip-webui/pip-webui-controls/issues/77">{{ ::link }}</a>
 </div>

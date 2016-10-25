@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var thisModule = angular.module('appControls.UnsavedChanges', []);
+    var thisModule = angular.module('appBehaviors.UnsavedChanges', []);
 
     thisModule.controller('UnsavedChangesController',
         function($scope, $injector) {

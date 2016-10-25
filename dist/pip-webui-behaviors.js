@@ -1,3 +1,8 @@
+/**
+ * @file Registration of all WebUI list controls
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+/* global angular */
 (function () {
     'use strict';
     angular.module('pipBehaviors', [
@@ -9,6 +14,7 @@
     ]);
 })();
 
+/// <reference path="../../typings/tsd.d.ts" />
 (function () {
     'use strict';
     var thisModule = angular.module("pipDraggable", []);
@@ -29,13 +35,14 @@
             restrict: 'A',
             link: function (scope, element, attrs) {
                 scope.value = attrs.ngDrag;
-                var LONG_PRESS = 50;
+                var LONG_PRESS = 50; // 50ms for longpress
                 var offset, _centerAnchor = false, _mx, _my, _tx, _ty, _mrx, _mry;
-                var _hasTouch = ('ontouchstart' in window) || window.DocumentTouch;
+                var _hasTouch = ('ontouchstart' in window) || window.DocumentTouch; // && document instanceof DocumentTouch; // DocumentTouch is not defined!
                 var _pressEvents = 'touchstart mousedown';
                 var _moveEvents = 'touchmove mousemove';
                 var _releaseEvents = 'touchend mouseup';
                 var _dragHandle;
+                // to identify the element in order to prevent getting superflous events when a single element has both drag and drop directives on it.
                 var _myid = scope.$id;
                 var _data = null;
                 var _dragOffset = null;
@@ -48,11 +55,16 @@
                 var allowTransform = angular.isDefined(attrs.allowTransform) ? scope.$eval(attrs.allowTransform) : false;
                 var getDragData = $parse(attrs.pipDragData);
                 var verticalScroll = toBoolean(attrs.pipVerticalScroll) || true, horizontalScroll = toBoolean(attrs.pipHorizontalScroll) || true, activationDistance = parseFloat(attrs.pipActivationDistance) || 75, scrollDistance = parseFloat(attrs.pipScrollDistance) || 50, scrollParent = false, scrollContainer = angular.element(window), scrollContainerGetter = $parse(attrs.pipScrollContainer);
+                // deregistration function for mouse move events in $rootScope triggered by jqLite trigger handler
                 var _deregisterRootMoveListener = angular.noop;
                 initialize();
                 return;
+                //-----------------------------------
                 function initialize() {
-                    element.attr('pip-draggable', 'false');
+                    element.attr('pip-draggable', 'false'); // prevent native drag
+                    // check to see if drag handle(s) was specified
+                    // if querySelectorAll is available, we use this instead of find
+                    // as JQLite find is limited to tagnames
                     var dragHandles;
                     if (element[0].querySelectorAll) {
                         dragHandles = angular.element(element[0].querySelectorAll('[pip-drag-handle]'));
@@ -64,6 +76,7 @@
                         _dragHandle = dragHandles;
                     }
                     toggleListeners(true);
+                    // Initialize scroll container
                     if (scrollParent) {
                         scrollContainer = angular.element(element.parent());
                     }
@@ -85,19 +98,23 @@
                 function toggleListeners(enable) {
                     if (!enable)
                         return;
+                    // add listeners.
                     scope.$on('$destroy', onDestroy);
                     scope.$watch(attrs.pipDrag, onEnableChange);
                     scope.$watch(attrs.pipCenterAnchor, onCenterAnchor);
+                    // wire up touch events
                     if (_dragHandle) {
+                        // handle(s) specified, use those to initiate drag
                         _dragHandle.on(_pressEvents, onpress);
                     }
                     else {
+                        // no handle(s) specified, use the element as the handle
                         element.on(_pressEvents, onpress);
                     }
                     if (!_hasTouch && element[0].nodeName.toLowerCase() == "img") {
                         element.on('mousedown', function () {
                             return false;
-                        });
+                        }); // prevent native drag for images
                     }
                 }
                 function onDestroy(enable) {
@@ -113,6 +130,10 @@
                 function isClickableElement(evt) {
                     return (angular.isDefined(angular.element(evt.target).attr("pip-cancel-drag")));
                 }
+                /*
+                 * When the element is clicked start the drag behaviour
+                 * On touch devices as a small delay so as not to prevent native window scrolling
+                 */
                 function onpress(evt) {
                     if (!_dragEnabled)
                         return;
@@ -120,6 +141,7 @@
                         return;
                     }
                     if (evt.type == "mousedown" && evt.button != 0) {
+                        // Do not start dragging on right-click
                         return;
                     }
                     saveElementStyles();
@@ -173,6 +195,10 @@
                     }
                     $document.on(_moveEvents, onmove);
                     $document.on(_releaseEvents, onrelease);
+                    // This event is used to receive manually triggered mouse move events
+                    // jqLite unfortunately only supports triggerHandler(...)
+                    // See http://api.jquery.com/triggerHandler/
+                    // _deregisterRootMoveListener = $rootScope.$on('draggable:_triggerHandlerMove', onmove);
                     _deregisterRootMoveListener = $rootScope.$on('draggable:_triggerHandlerMove', function (event, origEvent) {
                         onmove(origEvent);
                     });
@@ -326,18 +352,21 @@
                 var _lastDropTouch = null;
                 var _myid = scope.$id;
                 var _dropEnabled = false;
-                var onDropCallback = $parse(attrs.pipDropSuccess);
+                var onDropCallback = $parse(attrs.pipDropSuccess); // || function(){};
                 var onDragStartCallback = $parse(attrs.pipDragStart);
                 var onDragStopCallback = $parse(attrs.pipDragStop);
                 var onDragMoveCallback = $parse(attrs.pipDragMove);
                 initialize();
                 return;
+                //----------------------
                 function initialize() {
                     toggleListeners(true);
                 }
                 function toggleListeners(enable) {
+                    // remove listeners
                     if (!enable)
                         return;
+                    // add listeners.
                     scope.$watch(attrs.pipDrop, onEnableChange);
                     scope.$on('$destroy', onDestroy);
                     scope.$on('draggable:start', onDragStart);
@@ -371,11 +400,14 @@
                     }
                 }
                 function onDragEnd(evt, obj) {
+                    // don't listen to drop events if this is the element being dragged
+                    // only update the styles and return
                     if (!_dropEnabled || _myid === obj.uid) {
                         updateDragStyles(false, obj.element);
                         return;
                     }
                     if (isTouching(obj.x, obj.y, obj.element)) {
+                        // call the pipDraggable pipDragSuccess element callback
                         if (obj.callback) {
                             obj.callback(obj);
                         }
@@ -429,19 +461,116 @@
             }
         };
     }]);
+    //thisModule.directive('pipDragClone', function ($parse, $timeout, pipDraggable) {
+    //    return {
+    //        restrict: 'A',
+    //        link: function (scope, element, attrs) {
+    //            var img, _allowClone = true;
+    //            var _dragOffset = null;
+    //            scope.clonedData = {};
+    //            initialize();
+    //            return;
+    //            function initialize() {
+    //
+    //                img = element.find('img');
+    //                element.attr('pip-draggable', 'false');
+    //                img.attr('draggable', 'false');
+    //                reset();
+    //                toggleListeners(true);
+    //            }
+    //
+    //
+    //            function toggleListeners(enable) {
+    //                // remove listeners
+    //
+    //                if (!enable)return;
+    //                // add listeners.
+    //                scope.$on('draggable:start', onDragStart);
+    //                scope.$on('draggable:move', onDragMove);
+    //                scope.$on('draggable:end', onDragEnd);
+    //                preventContextMenu();
+    //
+    //            }
+    //            function preventContextMenu() {
+    //                //  element.off('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+    //                img.off('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+    //                //  element.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+    //                img.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+    //            }
+    //            function onDragStart(evt, obj, elm) {
+    //                _allowClone = true;
+    //                if (angular.isDefined(obj.data.allowClone)) {
+    //                    _allowClone = obj.data.allowClone;
+    //                }
+    //                if (_allowClone) {
+    //                    scope.$apply(function () {
+    //                        scope.clonedData = obj.data;
+    //                    });
+    //                    element.css('width', obj.element[0].offsetWidth);
+    //                    element.css('height', obj.element[0].offsetHeight);
+    //
+    //                    moveElement(obj.tx, obj.ty);
+    //                }
+    //
+    //            }
+    //            function onDragMove(evt, obj) {
+    //                if (_allowClone) {
+    //
+    //                    _tx = obj.tx + obj.dragOffset.left;
+    //                    _ty = obj.ty + obj.dragOffset.top;
+    //
+    //                    moveElement(_tx, _ty);
+    //                }
+    //            }
+    //            function onDragEnd(evt, obj) {
+    //                //moveElement(obj.tx,obj.ty);
+    //                if (_allowClone) {
+    //                    reset();
+    //                }
+    //            }
+    //
+    //            function reset() {
+    //                element.css({left: 0, top: 0, position: 'fixed', 'z-index': -1, visibility: 'hidden'});
+    //            }
+    //            function moveElement(x, y) {
+    //                element.css({
+    //                    transform: 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0, 1)',
+    //                    'z-index': 99999,
+    //                    'visibility': 'visible',
+    //                    '-webkit-transform': 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0, 1)',
+    //                    '-ms-transform': 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
+    //                    //,margin: '0'  don't monkey with the margin,
+    //                });
+    //            }
+    //
+    //            function absorbEvent_(event) {
+    //                var e = event;//.originalEvent;
+    //                e.preventDefault && e.preventDefault();
+    //                e.stopPropagation && e.stopPropagation();
+    //                e.cancelBubble = true;
+    //                e.returnValue = false;
+    //                return false;
+    //            }
+    //
+    //        }
+    //    };
+    //});
     thisModule.directive('pipPreventDrag', ['$parse', '$timeout', function ($parse, $timeout) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 initialize();
                 return;
+                //---------------------
                 function initialize() {
                     element.attr('pip-draggable', 'false');
                     toggleListeners(true);
                 }
                 function toggleListeners(enable) {
+                    // remove listeners
                     if (!enable)
                         return;
+                    // add listeners.
                     element.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
                 }
                 function absorbEvent_(event) {
@@ -465,6 +594,11 @@
     });
 })();
 
+/**
+ * @file Keyboard navigation over few focusable controls
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+/* global angular */
 (function () {
     'use strict';
     var thisModule = angular.module("pipFocused", []);
@@ -482,6 +616,7 @@
                     var selector = withHidden ? '.pip-focusable' : '.pip-focusable:visible';
                     controls = $element.find(selector);
                     controlsLength = controls.length;
+                    // add needed event listeners
                     controls.on('focus', function () {
                         $element.addClass('pip-focused-container');
                         $(this).addClass('md-focused');
@@ -491,12 +626,14 @@
                 }
                 function keydownListener(e) {
                     var keyCode = e.which || e.keyCode;
+                    // Check control keyCode
                     if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW ||
                         keyCode == $mdConstant.KEY_CODE.UP_ARROW ||
                         keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
                         keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
                         e.preventDefault();
                         var increment = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1, moveToControl = controls.index(controls.filter(".md-focused")) + increment;
+                        // Move focus to next control
                         if (moveToControl >= 0 && moveToControl < controlsLength) {
                             controls[moveToControl].focus();
                         }
@@ -507,6 +644,220 @@
     }]);
 })();
 
+/**
+ * @file Keyboard navigation with scrolling over non-focusable controls
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+/* global angular */
+(function () {
+    'use strict';
+    var thisModule = angular.module("pipSelected", []);
+    thisModule.directive('pipSelected', ['$parse', '$mdConstant', '$timeout', function ($parse, $mdConstant, $timeout) {
+        return {
+            restrict: 'A',
+            scope: false,
+            link: function ($scope, $element, $attrs) {
+                var indexGetter = $attrs.pipSelected ? $parse($attrs.pipSelected) : null, indexSetter = indexGetter ? indexGetter.assign : null, idGetter = $attrs.pipSelectedId ? $parse($attrs.pipSelectedId) : null, idSetter = idGetter ? idGetter.assign : null, changeGetter = $attrs.pipSelect ? $parse($attrs.pipSelect) : null, enterSpaceGetter = $attrs.pipEnterSpacePress ? $parse($attrs.pipEnterSpacePress) : null, noScroll = toBoolean($attrs.pipNoScroll), modifier = toBoolean($attrs.pipSkipHidden) ? ':visible' : '', className = toBoolean($attrs.pipTreeList) ? '.pip-selectable-tree' : '.pip-selectable', selectedIndex = indexGetter($scope), currentElementTabinex = $element.attr('tabindex'), pipSelectedWatch = $attrs.pipSelectedWatch;
+                // Set tabindex if it's not set yet
+                $element.attr('tabindex', currentElementTabinex || 0);
+                // Watch selected item index
+                if (!toBoolean($attrs.pipTreeList)) {
+                    $scope.$watch(indexGetter, function (newSelectedIndex) {
+                        selectItem({ itemIndex: newSelectedIndex });
+                    });
+                }
+                else {
+                    $scope.$watch(idGetter, function (newSelectedId) {
+                        setTimeout(function () {
+                            selectItem({ itemId: newSelectedId, raiseEvent: true });
+                        }, 0);
+                    });
+                }
+                // Watch resync selection
+                if (pipSelectedWatch) {
+                    $scope.$watch(pipSelectedWatch, function () {
+                        // Delay update to allow ng-repeat to update DOM
+                        setTimeout(function () {
+                            selectedIndex = indexGetter($scope);
+                            selectItem({ itemIndex: selectedIndex });
+                        }, 100);
+                    });
+                }
+                // Select item defined by index
+                selectItem({ itemIndex: selectedIndex, items: $element.find(className) });
+                // Converts value into boolean
+                function toBoolean(value) {
+                    if (value == null)
+                        return false;
+                    if (!value)
+                        return false;
+                    value = value.toString().toLowerCase();
+                    return value == '1' || value == 'true';
+                }
+                ;
+                // Functions and listeners
+                function selectItem(itemParams) {
+                    var itemIndex = itemParams.itemIndex, itemId = itemParams.itemId, items = itemParams.items || $element.find(className + modifier), itemsLength = items.length, item = (function () {
+                        if (itemParams.item)
+                            return itemParams.item;
+                        if (itemIndex === undefined && itemIndex === -1) {
+                            itemIndex = items.index(items.filter('[pip-id=' + itemId + ']'));
+                        }
+                        if (itemIndex >= 0 && itemIndex < itemsLength) {
+                            return items[itemIndex];
+                        }
+                    }()), raiseEvent = itemParams.raiseEvent;
+                    if (item) {
+                        $element.find(className).removeClass('selected md-focused');
+                        item = angular.element(item)
+                            .addClass('selected md-focused')
+                            .focus(); // todo сдвигает список тут, на первом проходе
+                        if (!noScroll)
+                            scrollToItem(item);
+                        if (raiseEvent)
+                            defineSelectedIndex(items);
+                    }
+                }
+                ;
+                function defineSelectedIndex(items) {
+                    var oldSelectedIndex = selectedIndex;
+                    selectedIndex = -1;
+                    for (var index = 0; index < items.length; index++) {
+                        if ($(items[index]).hasClass('selected')) {
+                            selectedIndex = index;
+                            break;
+                        }
+                    }
+                    // Execute callback to notify about item select
+                    if (oldSelectedIndex != selectedIndex && selectedIndex !== -1) {
+                        $scope.$apply(updateIndex);
+                    }
+                    function updateIndex() {
+                        var selectedItem = angular.element(items[selectedIndex]), selectedId = selectedItem.attr('pip-id');
+                        if (indexSetter)
+                            indexSetter($scope, selectedIndex);
+                        if (idSetter)
+                            idSetter($scope, selectedId);
+                        if (changeGetter) {
+                            changeGetter($scope, {
+                                $event: {
+                                    target: $element,
+                                    item: selectedItem,
+                                    index: selectedIndex,
+                                    id: selectedId,
+                                    newIndex: selectedIndex,
+                                    oldIndex: oldSelectedIndex
+                                }
+                            });
+                        }
+                    }
+                    ;
+                }
+                ;
+                function scrollToItem($item) {
+                    if (noScroll)
+                        return;
+                    var containerTop = $element.offset().top, containerHeight = $element.height(), containerBottom = containerTop + containerHeight, itemTop = $item.offset().top, itemHeight = $item.outerHeight(true), itemBottom = itemTop + itemHeight, containerScrollTop = $element.scrollTop();
+                    if (containerTop > itemTop) {
+                        $element.scrollTop(containerScrollTop + itemTop - containerTop);
+                    }
+                    else if (containerBottom < itemBottom) {
+                        $element.scrollTop(containerScrollTop + itemBottom - containerBottom);
+                    }
+                }
+                ;
+                $element.on('click touchstart', className, function (event) {
+                    selectItem({ item: event.currentTarget, raiseEvent: true });
+                });
+                $element.on('keydown', function (e) {
+                    var keyCode = e.which || e.keyCode;
+                    // Check control keyCode
+                    if (keyCode == $mdConstant.KEY_CODE.ENTER || keyCode == $mdConstant.KEY_CODE.SPACE) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (enterSpaceGetter) {
+                            enterSpaceGetter($scope, {
+                                $event: {
+                                    target: $element,
+                                    index: selectedIndex,
+                                    item: $element.find('.selected')
+                                }
+                            });
+                        }
+                    }
+                    else if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW || keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
+                        keyCode == $mdConstant.KEY_CODE.UP_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Get next selectable control index
+                        var items = $element.find(className + modifier), inc = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1, newSelectedIndex = selectedIndex + inc;
+                        // Set next control as selected
+                        selectItem({ itemIndex: newSelectedIndex, items: items, raiseEvent: true });
+                    }
+                });
+                $element.on('focusin', function (event) {
+                    // Choose selected element
+                    var items, selectedItem = $element.find(className + '.selected');
+                    selectedItem.addClass('md-focused');
+                    // If there are not selected elements then pick the first one
+                    if (selectedItem.length === 0) {
+                        selectedIndex = indexGetter($scope);
+                        items = $element.find(className + modifier);
+                        selectItem({ itemIndex: selectedIndex || 0, items: items, raiseEvent: true });
+                    }
+                });
+                $element.on('focusout', function (event) {
+                    $element.find(className + '.md-focused' + modifier).removeClass('md-focused');
+                });
+            }
+        };
+    }]);
+})();
+
+/// <reference path="../../typings/tsd.d.ts" />
+(function () {
+    'use strict';
+    var thisModule = angular.module("pipUnsavedChanges", []);
+    thisModule.directive("pipUnsavedChanges", ['$window', '$rootScope', function ($window, $rootScope) {
+        return {
+            restrict: 'AE',
+            scope: {
+                unsavedChangesAvailable: '&pipUnsavedChangesAvailable',
+                unsavedChangesMessage: '@pipUnsavedChangesMessage',
+                afterLeave: '&pipUnsavedChangesAfterLeave'
+            },
+            link: function ($scope) {
+                $window.onbeforeunload = function () {
+                    if ($scope.unsavedChangesAvailable()) {
+                        $rootScope.$routing = false;
+                        return $scope.unsavedChangesMessage;
+                    }
+                };
+                var unbindFunc = $scope.$on('$stateChangeStart', function (event) {
+                    if ($scope.unsavedChangesAvailable() && !$window.confirm($scope.unsavedChangesMessage)) {
+                        $rootScope.$routing = false;
+                        event.preventDefault();
+                    }
+                    else {
+                        _.isFunction($scope.afterLeave) && $scope.afterLeave();
+                    }
+                });
+                $scope.$on('$destroy', function () {
+                    $window.onbeforeunload = null;
+                    unbindFunc();
+                });
+            }
+        };
+    }]);
+})();
+
+/**
+ * @file Infinite scrolling behavior
+ * @description
+ * Modified from https://github.com/sroze/ngInfiniteScroll
+ * @copyright Digital Living Software Corp. 2014-2016
+ */
+/* global angular */
 (function () {
     'use strict';
     var thisModule = angular.module("pipInfiniteScroll", []);
@@ -668,194 +1019,6 @@
                         return onContainerScroll();
                     }
                 }), 0, 1);
-            }
-        };
-    }]);
-})();
-
-(function () {
-    'use strict';
-    var thisModule = angular.module("pipSelected", []);
-    thisModule.directive('pipSelected', ['$parse', '$mdConstant', '$timeout', function ($parse, $mdConstant, $timeout) {
-        return {
-            restrict: 'A',
-            scope: false,
-            link: function ($scope, $element, $attrs) {
-                var indexGetter = $attrs.pipSelected ? $parse($attrs.pipSelected) : null, indexSetter = indexGetter ? indexGetter.assign : null, idGetter = $attrs.pipSelectedId ? $parse($attrs.pipSelectedId) : null, idSetter = idGetter ? idGetter.assign : null, changeGetter = $attrs.pipSelect ? $parse($attrs.pipSelect) : null, enterSpaceGetter = $attrs.pipEnterSpacePress ? $parse($attrs.pipEnterSpacePress) : null, noScroll = toBoolean($attrs.pipNoScroll), modifier = toBoolean($attrs.pipSkipHidden) ? ':visible' : '', className = toBoolean($attrs.pipTreeList) ? '.pip-selectable-tree' : '.pip-selectable', selectedIndex = indexGetter($scope), currentElementTabinex = $element.attr('tabindex'), pipSelectedWatch = $attrs.pipSelectedWatch;
-                $element.attr('tabindex', currentElementTabinex || 0);
-                if (!toBoolean($attrs.pipTreeList)) {
-                    $scope.$watch(indexGetter, function (newSelectedIndex) {
-                        selectItem({ itemIndex: newSelectedIndex });
-                    });
-                }
-                else {
-                    $scope.$watch(idGetter, function (newSelectedId) {
-                        setTimeout(function () {
-                            selectItem({ itemId: newSelectedId, raiseEvent: true });
-                        }, 0);
-                    });
-                }
-                if (pipSelectedWatch) {
-                    $scope.$watch(pipSelectedWatch, function () {
-                        setTimeout(function () {
-                            selectedIndex = indexGetter($scope);
-                            selectItem({ itemIndex: selectedIndex });
-                        }, 100);
-                    });
-                }
-                selectItem({ itemIndex: selectedIndex, items: $element.find(className) });
-                function toBoolean(value) {
-                    if (value == null)
-                        return false;
-                    if (!value)
-                        return false;
-                    value = value.toString().toLowerCase();
-                    return value == '1' || value == 'true';
-                }
-                ;
-                function selectItem(itemParams) {
-                    var itemIndex = itemParams.itemIndex, itemId = itemParams.itemId, items = itemParams.items || $element.find(className + modifier), itemsLength = items.length, item = (function () {
-                        if (itemParams.item)
-                            return itemParams.item;
-                        if (itemIndex === undefined && itemIndex === -1) {
-                            itemIndex = items.index(items.filter('[pip-id=' + itemId + ']'));
-                        }
-                        if (itemIndex >= 0 && itemIndex < itemsLength) {
-                            return items[itemIndex];
-                        }
-                    }()), raiseEvent = itemParams.raiseEvent;
-                    if (item) {
-                        $element.find(className).removeClass('selected md-focused');
-                        item = angular.element(item)
-                            .addClass('selected md-focused')
-                            .focus();
-                        if (!noScroll)
-                            scrollToItem(item);
-                        if (raiseEvent)
-                            defineSelectedIndex(items);
-                    }
-                }
-                ;
-                function defineSelectedIndex(items) {
-                    var oldSelectedIndex = selectedIndex;
-                    selectedIndex = -1;
-                    for (var index = 0; index < items.length; index++) {
-                        if ($(items[index]).hasClass('selected')) {
-                            selectedIndex = index;
-                            break;
-                        }
-                    }
-                    if (oldSelectedIndex != selectedIndex && selectedIndex !== -1) {
-                        $scope.$apply(updateIndex);
-                    }
-                    function updateIndex() {
-                        var selectedItem = angular.element(items[selectedIndex]), selectedId = selectedItem.attr('pip-id');
-                        if (indexSetter)
-                            indexSetter($scope, selectedIndex);
-                        if (idSetter)
-                            idSetter($scope, selectedId);
-                        if (changeGetter) {
-                            changeGetter($scope, {
-                                $event: {
-                                    target: $element,
-                                    item: selectedItem,
-                                    index: selectedIndex,
-                                    id: selectedId,
-                                    newIndex: selectedIndex,
-                                    oldIndex: oldSelectedIndex
-                                }
-                            });
-                        }
-                    }
-                    ;
-                }
-                ;
-                function scrollToItem($item) {
-                    if (noScroll)
-                        return;
-                    var containerTop = $element.offset().top, containerHeight = $element.height(), containerBottom = containerTop + containerHeight, itemTop = $item.offset().top, itemHeight = $item.outerHeight(true), itemBottom = itemTop + itemHeight, containerScrollTop = $element.scrollTop();
-                    if (containerTop > itemTop) {
-                        $element.scrollTop(containerScrollTop + itemTop - containerTop);
-                    }
-                    else if (containerBottom < itemBottom) {
-                        $element.scrollTop(containerScrollTop + itemBottom - containerBottom);
-                    }
-                }
-                ;
-                $element.on('click touchstart', className, function (event) {
-                    selectItem({ item: event.currentTarget, raiseEvent: true });
-                });
-                $element.on('keydown', function (e) {
-                    var keyCode = e.which || e.keyCode;
-                    if (keyCode == $mdConstant.KEY_CODE.ENTER || keyCode == $mdConstant.KEY_CODE.SPACE) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (enterSpaceGetter) {
-                            enterSpaceGetter($scope, {
-                                $event: {
-                                    target: $element,
-                                    index: selectedIndex,
-                                    item: $element.find('.selected')
-                                }
-                            });
-                        }
-                    }
-                    else if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW || keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.UP_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        var items = $element.find(className + modifier), inc = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1, newSelectedIndex = selectedIndex + inc;
-                        selectItem({ itemIndex: newSelectedIndex, items: items, raiseEvent: true });
-                    }
-                });
-                $element.on('focusin', function (event) {
-                    var items, selectedItem = $element.find(className + '.selected');
-                    selectedItem.addClass('md-focused');
-                    if (selectedItem.length === 0) {
-                        selectedIndex = indexGetter($scope);
-                        items = $element.find(className + modifier);
-                        selectItem({ itemIndex: selectedIndex || 0, items: items, raiseEvent: true });
-                    }
-                });
-                $element.on('focusout', function (event) {
-                    $element.find(className + '.md-focused' + modifier).removeClass('md-focused');
-                });
-            }
-        };
-    }]);
-})();
-
-(function () {
-    'use strict';
-    var thisModule = angular.module("pipUnsavedChanges", []);
-    thisModule.directive("pipUnsavedChanges", ['$window', '$rootScope', function ($window, $rootScope) {
-        return {
-            restrict: 'AE',
-            scope: {
-                unsavedChangesAvailable: '&pipUnsavedChangesAvailable',
-                unsavedChangesMessage: '@pipUnsavedChangesMessage',
-                afterLeave: '&pipUnsavedChangesAfterLeave'
-            },
-            link: function ($scope) {
-                $window.onbeforeunload = function () {
-                    if ($scope.unsavedChangesAvailable()) {
-                        $rootScope.$routing = false;
-                        return $scope.unsavedChangesMessage;
-                    }
-                };
-                var unbindFunc = $scope.$on('$stateChangeStart', function (event) {
-                    if ($scope.unsavedChangesAvailable() && !$window.confirm($scope.unsavedChangesMessage)) {
-                        $rootScope.$routing = false;
-                        event.preventDefault();
-                    }
-                    else {
-                        _.isFunction($scope.afterLeave) && $scope.afterLeave();
-                    }
-                });
-                $scope.$on('$destroy', function () {
-                    $window.onbeforeunload = null;
-                    unbindFunc();
-                });
             }
         };
     }]);

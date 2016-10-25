@@ -11,37 +11,29 @@
     <link rel="stylesheet" href="../../dist/pip-webui-behaviors.css"/>
     <link rel="stylesheet" href="styles.css"/>
 
-    <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="https://www.google.com/jsapi"></script>
     <script src="../../lib/pip-webui-lib.js"></script>
     <script src="../../dist/pip-webui-behaviors.js"></script>
 
     <script src="index.js"></script>
 
-    <script src="ref_list/ref_list.js"></script>
     <script src="selected/selected.js"></script>
     <script src="focused/focused.js"></script>
     <script src="infinite_scroll/infinite_scroll.js"></script>
-    <script src="chips/chips.js"></script>
-    <script src="check_list/check_list.js"></script>
+    <script src="draggable_sample/draggable.js"></script>
+    <script src="draggable_sample/draggable_input.js"></script>
+    <script src="unsaved_changes_sample/unsaved_changes.js"></script>
 
-    <script src="dividers/dividers.js"></script>
-    <script src="ref_list/ref_item.js"></script>
-
-    <script src="simple_list/simple_list.js"></script>
-
-    <script src="table/table.js"></script>
-    <script src="tag_list/tag_list.js"></script>
 </head>
 
-<body ng-app="appLists" ng-controller="AppController" md-theme="{{ $theme || 'blue' }}" class="{{ $theme }} pip-main layout-column">
+<!--<body ng-app="appBehaviors" ng-controller="pipSampleController" md-theme="{{ $theme || 'blue' }}" class="{{ $theme }} pip-main layout-column">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <md-button class="md-icon-button" aria-label="menu"
                        ng-click="onToggleMenu()" hide-gt-sm>
                 <md-icon md-svg-icon="icons:menu"></md-icon>
             </md-button>
-            <div class="flex-var text-overflow">Lists</div>
+            <div class="flex-var text-overflow">Behaviors</div>
         </div>
     </md-toolbar>
         
@@ -61,5 +53,69 @@
             <div ui-view></div>            
         </md-content>
     </div>
+</body>-->
+
+
+<body ng-app="appBehaviors" ng-if="!$reset" ng-controller="pipSampleController"
+     class="pip-main layout-column {{$theme}}" md-theme="{{$theme || 'blue'}}">
+<md-toolbar >
+    <div class="layout-row layout-align-start-center">
+        <md-button class="md-icon-button" aria-label="MENU" ng-if="!$mdMedia('gt-sm')" ng-click="onToggleMenu()">
+            <md-icon md-svg-icon="icons:menu" ></md-icon>
+            </md-button>
+        <div class="md-toolbar-tools">
+            <div class="flex-var text-overflow">Behaviors</div>
+        </div>
+
+        <md-menu md-position-mode="target-right target" ng-if="isTheme">
+            <div class="layout-row layout-align-start-center" style="  cursor: pointer;outline: none; margin-right: 16px;"
+                      ng-click="$mdOpenMenu()"
+                      aria-label="theme selection">
+                    <span style="white-space:nowrap;">
+                        {{ $theme | translate}}
+                    </span>
+                    <md-icon md-svg-icon="icons:triangle-down"></md-icon>
+            </div>
+                <md-menu-content width="3">
+                    <md-menu-item ng-repeat="theme in themes">
+                        <md-button ng-click="onThemeClick(theme)">{{theme | translate}}</md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+        <md-menu md-position-mode="target-right target" ng-if="isTranslated">
+            <div class="layout-row layout-align-start-center" style="  cursor: pointer;outline: none; margin-right: 16px;"
+                      ng-click="$mdOpenMenu()"
+                      aria-label="language selection">
+                    <span >
+                        {{ $language | translate}}
+                    </span>
+                    <md-icon md-svg-icon="icons:triangle-down"></md-icon>
+            </div>
+                <md-menu-content width="3">
+                    <md-menu-item ng-repeat="lang in languages">
+                        <md-button ng-click="onLanguageClick(lang)">{{lang | translate}}</md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+    </div>
+</md-toolbar>
+
+<div class="layout-row flex">
+    <md-sidenav md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')"
+                class="md-whiteframe-z2 md-sidenav-left layout-column color-content-bg">
+        <md-list>
+            <md-list-item ng-repeat="contentItem in content"
+                          ng-click="onSwitchPage(contentItem.state)"
+                          ng-class="{ 'selected-state': isActiveState(contentItem.state) }">
+                <p ui-sref="{{contentItem.state}}">{{contentItem.title}}</p>
+            </md-list-item>
+        </md-list>
+    </md-sidenav>
+
+    <md-content id="content" class="sample-container flex">
+        <div ui-view></div>
+    </md-content>
+</div>
 </body>
 </html>

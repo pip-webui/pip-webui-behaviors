@@ -1,3 +1,64 @@
+
+.sample-container {
+    padding: 24px;
+}
+
+.sample-container .content-divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 8px -24px;
+}
+
+.sample-container .text-subhead2 {
+	margin: 16px 0px;
+}
+
+.w-stretch{
+    width: 100%;
+}
+
+.scroll{
+    overflow: auto;
+}
+
+.sample-container h2.text-title {
+	margin-top: 0px;
+	margin-bottom: 24px;
+}
+.sample-container .scroll-card {
+	margin: 0px;
+	padding: 0x;
+}
+
+.sample-container p.text-body1 {
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+
+.sample-container .code-block {
+	padding: 16px;
+}
+
+.sample-container .text-input {
+	margin-bottom: 24px!important;
+}
+.sample-container .popover-text-container {
+	width: 50%!important;
+	padding-left: 0px;
+	margin-bottom: 24px!important;
+}
+
+.sample-container .code-block .text-subhead2 {
+	margin: 0px;	
+}
+
+.sample-container pre {
+    border-radius: 4px;
+}
+
+.sample-container .flat {
+    box-shadow: none !important;
+}
+
 .pip-recommended-header {
     height: 45px;
     min-height: 45px;
@@ -84,3 +145,49 @@
     }
 
 }
+
+
+/* Styles for Draggable */
+
+.drag-scroll-test {
+	overflow: scroll;
+	height: 400px;
+}
+
+.drag-scroll [pip-drag] {
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.drag-scroll [pip-drag] {
+	cursor: move;
+}
+
+.drag-scroll [pip-drag].drag-over {
+	border: solid 1px red;
+}
+
+.drag-scroll [pip-drag].dragging {
+	opacity: 0.5;
+}
+
+.drag-scroll [pip-drop] {
+	position: relative;
+}
+
+.drag-scroll [pip-drop].drag-enter {
+	border: solid 5px red;
+}
+
+.drag-scroll [pip-drop] p {
+
+}
+
+.drag-scroll [pip-drop] div {
+	/*position: relative;*/
+	z-index: 2;
+}
+

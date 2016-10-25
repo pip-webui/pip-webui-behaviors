@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var thisModule = angular.module('appLists.Selected', ['pipSelected']);
+    var thisModule = angular.module('appBehaviors.Selected', ['pipSelected']);
 
     thisModule.controller('SelectedController',
         function($scope) {

@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var thisModule = angular.module('appLists.Focused', []);
+    var thisModule = angular.module('appBehaviors.Focused', []);
 
     thisModule.controller('FocusedController',
         function($scope) {

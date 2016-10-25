@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var thisModule = angular.module('pipControls.DraggableInput', []);
+    var thisModule = angular.module('appBehaviors.DraggableInput', []);
 
     thisModule.controller('DraggableInputController',
         function($scope) {
