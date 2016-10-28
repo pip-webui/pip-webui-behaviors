@@ -14,3 +14,12 @@
 		<md-button class="pip-focusable">Button 10</md-button>
 	</div>
 </div>
+
+
+    <md-tabs md-selected="selectedIndex" md-border-bottom="" md-autoselect="" style="width: 500px;">
+      <md-tab pip-focusable ng-repeat="tab in tabs" label="{{tab.title}}">
+        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+          <div ng-bind="tab.content"></div>
+        </div>
+      </md-tab>
+    </md-tabs>
