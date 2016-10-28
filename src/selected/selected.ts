@@ -27,7 +27,8 @@
                     className = toBoolean($attrs.pipTreeList) ? '.pip-selectable-tree' : '.pip-selectable',
                     selectedIndex = indexGetter($scope),
                     currentElementTabinex = $element.attr('tabindex'),
-                    pipSelectedWatch = $attrs.pipSelectedWatch;
+                    pipSelectedWatch = $attrs.pipSelectedWatch,
+                    isScrolled = false;
 
                 // Set tabindex if it's not set yet
                 $element.attr('tabindex', currentElementTabinex || 0);
@@ -70,6 +71,8 @@
                 // Functions and listeners
 
                 function selectItem(itemParams) {
+                    console.log('selectItem');
+                    if (isScrolled) return;
                     var itemIndex = itemParams.itemIndex,
                         itemId = itemParams.itemId,
                         items = itemParams.items || $element.find(className + modifier),
@@ -143,6 +146,11 @@
                         itemHeight = $item.outerHeight(true),
                         itemBottom = itemTop + itemHeight,
                         containerScrollTop = $element.scrollTop();
+
+                        isScrolled = true;
+                        setTimeout(function () {
+                            isScrolled = false;
+                        }, 100);
 
                     if (containerTop > itemTop) {
                         $element.scrollTop(containerScrollTop + itemTop - containerTop);
