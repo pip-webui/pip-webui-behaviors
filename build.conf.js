@@ -2,7 +2,8 @@ module.exports = {
     module: {
         name: 'pipBehaviors',
         styles: 'behaviors',
-        export: 'pip'
+        export: 'pip',
+        standalone: 'pip.behaviors'
     },
     build: {
         js: false,
