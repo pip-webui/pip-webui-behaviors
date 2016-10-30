@@ -1,3 +1,4 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function () {
     'use strict';
     angular.module('pipBehaviors', [
@@ -8,49 +9,7 @@
         'pipDraggable'
     ]);
 })();
-
-(function () {
-    'use strict';
-    var thisModule = angular.module("pipFocused", []);
-    thisModule.directive('pipFocused', ['$timeout', '$mdConstant', function ($timeout, $mdConstant) {
-        return {
-            require: "?ngModel",
-            link: function ($scope, $element, $attrs) {
-                var controls, controlsLength, withHidden = $attrs.pipWithHidden;
-                $timeout(init);
-                $element.on('keydown', keydownListener);
-                $scope.$watch($attrs.ngModel, function () {
-                    $timeout(init);
-                }, true);
-                function init() {
-                    var selector = withHidden ? '.pip-focusable' : '.pip-focusable:visible';
-                    controls = $element.find(selector);
-                    controlsLength = controls.length;
-                    controls.on('focus', function () {
-                        $element.addClass('pip-focused-container');
-                        $(this).addClass('md-focused');
-                    }).on('focusout', function () {
-                        $element.removeClass('pip-focused-container');
-                    });
-                }
-                function keydownListener(e) {
-                    var keyCode = e.which || e.keyCode;
-                    if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.UP_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
-                        e.preventDefault();
-                        var increment = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1, moveToControl = controls.index(controls.filter(".md-focused")) + increment;
-                        if (moveToControl >= 0 && moveToControl < controlsLength) {
-                            controls[moveToControl].focus();
-                        }
-                    }
-                }
-            }
-        };
-    }]);
-})();
-
+},{}],2:[function(require,module,exports){
 (function () {
     'use strict';
     var thisModule = angular.module("pipDraggable", []);
@@ -506,7 +465,49 @@
         };
     });
 })();
-
+},{}],3:[function(require,module,exports){
+(function () {
+    'use strict';
+    var thisModule = angular.module("pipFocused", []);
+    thisModule.directive('pipFocused', ['$timeout', '$mdConstant', function ($timeout, $mdConstant) {
+        return {
+            require: "?ngModel",
+            link: function ($scope, $element, $attrs) {
+                var controls, controlsLength, withHidden = $attrs.pipWithHidden;
+                $timeout(init);
+                $element.on('keydown', keydownListener);
+                $scope.$watch($attrs.ngModel, function () {
+                    $timeout(init);
+                }, true);
+                function init() {
+                    var selector = withHidden ? '.pip-focusable' : '.pip-focusable:visible';
+                    controls = $element.find(selector);
+                    controlsLength = controls.length;
+                    controls.on('focus', function () {
+                        $element.addClass('pip-focused-container');
+                        $(this).addClass('md-focused');
+                    }).on('focusout', function () {
+                        $element.removeClass('pip-focused-container');
+                    });
+                }
+                function keydownListener(e) {
+                    var keyCode = e.which || e.keyCode;
+                    if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW ||
+                        keyCode == $mdConstant.KEY_CODE.UP_ARROW ||
+                        keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
+                        keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
+                        e.preventDefault();
+                        var increment = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1, moveToControl = controls.index(controls.filter(".md-focused")) + increment;
+                        if (moveToControl >= 0 && moveToControl < controlsLength) {
+                            controls[moveToControl].focus();
+                        }
+                    }
+                }
+            }
+        };
+    }]);
+})();
+},{}],4:[function(require,module,exports){
 (function () {
     'use strict';
     var thisModule = angular.module("pipInfiniteScroll", []);
@@ -672,7 +673,7 @@
         };
     }]);
 })();
-
+},{}],5:[function(require,module,exports){
 (function () {
     'use strict';
     var thisModule = angular.module("pipSelected", []);
@@ -831,7 +832,7 @@
         };
     }]);
 })();
-
+},{}],6:[function(require,module,exports){
 (function () {
     'use strict';
     var thisModule = angular.module("pipUnsavedChanges", []);
@@ -867,7 +868,7 @@
         };
     }]);
 })();
-
+},{}]},{},[1,2,3,4,5,6])
 
 
 //# sourceMappingURL=pip-webui-behaviors.js.map
