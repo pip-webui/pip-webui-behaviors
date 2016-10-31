@@ -7,17 +7,14 @@ describe('pipSelected', function () {
            $rootScope,
            $directive,
            scope,
-           pipUtils,
            elem, selectableElems, control0, control1, control2;
 
-       beforeEach(module('pipUtils'));
        beforeEach(module('ngMaterial'));
        beforeEach(module('pipSelected'));
 
-       beforeEach(inject(function(_$compile_, _$rootScope_, _pipUtils_) {
+       beforeEach(inject(function(_$compile_, _$rootScope_) {
            $compile = _$compile_;
            $rootScope = _$rootScope_;
-           pipUtils = _pipUtils_;
        }));
 
        beforeEach(function () {
