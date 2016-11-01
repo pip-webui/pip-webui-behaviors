@@ -197,3 +197,32 @@
     padding-top: 0px; /*for selected scroll to element*/
     padding-bottom: 0px; /*for selected scroll to element*/ 
 }
+
+/* freeze */
+
+.wrapper {
+  width: 500px;
+  height: 400px;
+  border: 1px solid black;
+  overflow: auto;
+}
+.item {
+  background-color: #ccc;
+  line-height: 48px;
+  vertical-align: middle;
+  height: 48px;
+  margin-bottom: 1px;
+}
+
+.wrapper .bg-red {
+    background: red;
+}
+.wrapper .bg-blue {
+    background: blue;
+}
+.wrapper .bg-yellow {
+    background: yellow;
+}
+.wrapper .bg-green {
+    background: green;
+}

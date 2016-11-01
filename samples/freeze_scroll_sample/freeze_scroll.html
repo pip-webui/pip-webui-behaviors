@@ -1,0 +1,14 @@
+<h2>Block with red border is scroll container for infinite-scroll control</h2>
+<p>Scroll to some position into grid data and add some new elements</p>
+
+<div class="wrapper" keep-scroll>
+    <div class="item" scroll-item ng-repeat="item in items" ng-class="'bg-' + item.color" 
+            id="items-{{item.id}}" grid-id="items-{{item.id}}">
+      {{ item.sort }} -  {{ item.id }} -  {{ item.name }}
+    </div>
+  </div>
+<div>
+    <md-button ng-click="updateItems()">
+        Update Items
+    </md-button>
+</div>

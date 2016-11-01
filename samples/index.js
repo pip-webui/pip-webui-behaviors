@@ -9,7 +9,8 @@
         { title: 'Infinite Scroll', state: 'infinite_scroll', url: '/infinite_scroll', controller: 'InfiniteScrollController', templateUrl: 'infinite_scroll/infinite_scroll.html' },
         { title: 'Draggable', state: 'draggable', url: '/draggable', controller: 'DraggableController', templateUrl: 'draggable_sample/draggable.html' },
         { title: 'Draggable Input', state: 'draggable_input', url: '/draggable_input', controller: 'DraggableInputController', templateUrl: 'draggable_sample/draggable_input.html' },
-        { title: 'Unsaved Changes', state: 'unsaved_changes', url: '/unsaved_changes', controller: 'UnsavedChangesController', templateUrl: 'unsaved_changes_sample/unsaved_changes.html' }
+        { title: 'Unsaved Changes', state: 'unsaved_changes', url: '/unsaved_changes', controller: 'UnsavedChangesController', templateUrl: 'unsaved_changes_sample/unsaved_changes.html' },
+        { title: 'Freeze Scroll', state: 'freeze_scroll', url: '/freeze_scroll', controller: 'FreezeScrollController', templateUrl: 'freeze_scroll_sample/freeze_scroll.html' }
     ];
 
     var thisModule = angular.module('appBehaviors',
@@ -25,7 +26,8 @@
             'appBehaviors.UnsavedChanges',
             'appBehaviors.DraggableInput',
             'appBehaviors.Draggable',
-            'appBehaviors.UnsavedChanges'
+            'appBehaviors.UnsavedChanges',
+            'appBehaviors.FreezeScroll'
         ]
     );
 
