@@ -71,7 +71,6 @@
                 // Functions and listeners
 
                 function selectItem(itemParams) {
-                    console.log('selectItem');
                     if (isScrolled) return;
                     var itemIndex = itemParams.itemIndex,
                         itemId = itemParams.itemId,

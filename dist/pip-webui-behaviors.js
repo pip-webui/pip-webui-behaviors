@@ -715,7 +715,6 @@
                 }
                 ;
                 function selectItem(itemParams) {
-                    console.log('selectItem');
                     if (isScrolled)
                         return;
                     var itemIndex = itemParams.itemIndex, itemId = itemParams.itemId, items = itemParams.items || $element.find(className + modifier), itemsLength = items.length, item = (function () {

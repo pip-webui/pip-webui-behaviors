@@ -7,28 +7,23 @@
 
 
     thisModule.controller('FreezeScrollController',
-        function($scope) {
+        function($scope,  $anchorScroll) {
             $scope.items = [];
             $scope.items = generateItems(40, 0);
 
             $scope.updateItems = updateItems;
 
-var tableOffset = $(".wrapper").offset().top;
+            var tableOffset = $(".wrapper").offset().top;
 
-console.log('tableOffset', tableOffset);
-// var $header = $("#table-1 > thead").clone();
-// var $fixedHeader = $("#header-fixed").append($header);
+            console.log('tableOffset', tableOffset);
 
-$('.wrapper').bind("scroll", function() {
-    var offset = $(this).scrollTop();
-console.log('scroll', offset);
-    // if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
-    //     $fixedHeader.show();
-    // }
-    // else if (offset < tableOffset) {
-    //     $fixedHeader.hide();
-    // }
-});
+
+            $('.wrapper').bind("scroll", function() {
+                var offset = $(this).scrollTop();
+            console.log('scroll', offset);
+            });
+
+            // $location.hash('#items-20')
 
             return ;
 
@@ -61,7 +56,14 @@ console.log('scroll', offset);
                 $scope.items = _.sortBy(_.union($scope.items, items), function(item) { return item.sort });
             }
 
+            // function scrollToAnchor() {
+            //     $anchorScroll();
+            // }
+
         }
     );
 
 })();
+
+
+

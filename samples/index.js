@@ -27,7 +27,9 @@
             'appBehaviors.DraggableInput',
             'appBehaviors.Draggable',
             'appBehaviors.UnsavedChanges',
-            'appBehaviors.FreezeScroll'
+            'appBehaviors.FreezeScroll',
+
+            'pipFreeze'
         ]
     );
 
