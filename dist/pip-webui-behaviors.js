@@ -751,12 +751,20 @@
                     if (oldSelectedIndex != selectedIndex && selectedIndex !== -1) {
                         $scope.$apply(updateIndex);
                     }
+                    else {
+                        $scope.$apply(onSelect);
+                    }
                     function updateIndex() {
                         var selectedItem = angular.element(items[selectedIndex]), selectedId = selectedItem.attr('pip-id');
                         if (indexSetter)
                             indexSetter($scope, selectedIndex);
                         if (idSetter)
                             idSetter($scope, selectedId);
+                        onSelect();
+                    }
+                    ;
+                    function onSelect() {
+                        var selectedItem = angular.element(items[selectedIndex]), selectedId = selectedItem.attr('pip-id');
                         if (changeGetter) {
                             changeGetter($scope, {
                                 $event: {
@@ -770,7 +778,6 @@
                             });
                         }
                     }
-                    ;
                 }
                 ;
                 function scrollToItem($item) {

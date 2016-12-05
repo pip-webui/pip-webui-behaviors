@@ -111,6 +111,8 @@
                     // Execute callback to notify about item select
                     if (oldSelectedIndex != selectedIndex && selectedIndex !== -1) {
                         $scope.$apply(updateIndex);
+                    } else {
+                        $scope.$apply(onSelect);
                     }
 
                     function updateIndex() {
@@ -119,6 +121,13 @@
 
                         if (indexSetter) indexSetter($scope, selectedIndex);
                         if (idSetter) idSetter($scope, selectedId);
+                        onSelect();
+                    };
+
+                    function onSelect() {
+                        var selectedItem = angular.element(items[selectedIndex]),
+                            selectedId = selectedItem.attr('pip-id');
+
                         if (changeGetter) {
                             changeGetter($scope, {
                                 $event: {
@@ -130,8 +139,8 @@
                                     oldIndex: oldSelectedIndex
                                 }
                             });
-                        }
-                    };
+                        }                        
+                    }
                 };
 
                 function scrollToItem($item) {
