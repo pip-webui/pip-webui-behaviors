@@ -848,7 +848,8 @@
             scope: {
                 unsavedChangesAvailable: '&pipUnsavedChangesAvailable',
                 unsavedChangesMessage: '@pipUnsavedChangesMessage',
-                afterLeave: '&pipUnsavedChangesAfterLeave'
+                afterLeave: '&pipUnsavedChangesAfterLeave',
+                cancelLeave: '&pipUnsavedChangesCancelLeave'
             },
             link: function ($scope) {
                 $window.onbeforeunload = function () {
@@ -860,6 +861,7 @@
                 var unbindFunc = $scope.$on('$stateChangeStart', function (event) {
                     if ($scope.unsavedChangesAvailable() && !$window.confirm($scope.unsavedChangesMessage)) {
                         $rootScope.$routing = false;
+                        _.isFunction($scope.cancelLeave) && $scope.cancelLeave();
                         event.preventDefault();
                     }
                     else {
