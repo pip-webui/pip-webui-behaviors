@@ -715,8 +715,10 @@
                 }
                 ;
                 function selectItem(itemParams) {
+                    console.log('selectItem');
                     if (isScrolled)
                         return;
+                    console.log('selectItem1');
                     var itemIndex = itemParams.itemIndex, itemId = itemParams.itemId, items = itemParams.items || $element.find(className + modifier), itemsLength = items.length, item = (function () {
                         if (itemParams.item)
                             return itemParams.item;
@@ -727,7 +729,9 @@
                             return items[itemIndex];
                         }
                     }()), raiseEvent = itemParams.raiseEvent;
+                    console.log('selectItem2');
                     if (item) {
+                        console.log('selectItem3');
                         $element.find(className).removeClass('selected md-focused');
                         item = angular.element(item)
                             .addClass('selected md-focused')
@@ -781,6 +785,7 @@
                 }
                 ;
                 function scrollToItem($item) {
+                    console.log('scrollToItem');
                     if (noScroll)
                         return;
                     var containerTop = $element.offset().top, containerHeight = $element.height(), containerBottom = containerTop + containerHeight, itemTop = $item.offset().top, itemHeight = $item.outerHeight(true), itemBottom = itemTop + itemHeight, containerScrollTop = $element.scrollTop();
@@ -788,10 +793,16 @@
                     setTimeout(function () {
                         isScrolled = false;
                     }, 100);
+                    console.log('scrollToItem containerHeight', containerHeight);
+                    console.log('scrollToItem itemHeight', itemHeight);
+                    console.log('scrollToItem1', containerTop, itemTop);
+                    console.log('scrollToItem2', containerBottom, itemBottom);
                     if (containerTop > itemTop) {
+                        console.log('scrollToItem3', containerScrollTop + itemTop - containerTop);
                         $element.scrollTop(containerScrollTop + itemTop - containerTop);
                     }
                     else if (containerBottom < itemBottom) {
+                        console.log('scrollToItem4', containerScrollTop + itemBottom - containerBottom);
                         $element.scrollTop(containerScrollTop + itemBottom - containerBottom);
                     }
                 }
