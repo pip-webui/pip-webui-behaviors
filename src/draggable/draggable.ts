@@ -204,16 +204,16 @@
                         }
 
 
-                        element.centerX = element[0].offsetWidth / 2;
-                        element.centerY = element[0].offsetHeight / 2;
+                        (<any>element).centerX = element[0].offsetWidth / 2;
+                        (<any>element).centerY = element[0].offsetHeight / 2;
 
                         _mx = pipDraggable.inputEvent(evt).pageX;
                         _my = pipDraggable.inputEvent(evt).pageY;
                         _mrx = _mx - offset.left;
                         _mry = _my - offset.top;
                         if (_centerAnchor) {
-                            _tx = _mx - element.centerX - $window.pageXOffset;
-                            _ty = _my - element.centerY - $window.pageYOffset;
+                            _tx = _mx - (<any>element).centerX - $window.pageXOffset;
+                            _ty = _my - (<any>element).centerY - $window.pageYOffset;
                         } else {
                             _tx = _mx - _mrx - $window.pageXOffset;
                             _ty = _my - _mry - $window.pageYOffset;
@@ -262,8 +262,8 @@
                         }
 
                         if (_centerAnchor) {
-                            _tx = _mx - element.centerX - _dragOffset.left;
-                            _ty = _my - element.centerY - _dragOffset.top;
+                            _tx = _mx - (<any>element).centerX - _dragOffset.left;
+                            _ty = _my - (<any>element).centerY - _dragOffset.top;
                         } else {
                             _tx = _mx - _mrx - _dragOffset.left;
                             _ty = _my - _mry - _dragOffset.top;

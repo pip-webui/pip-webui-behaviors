@@ -82,7 +82,7 @@
                         }
 
                         if (useDocumentBottom) {
-                            elementBottom = height(($element[0].ownerDocument || $element[0].document).documentElement);
+                            elementBottom = height(($element[0].ownerDocument || (<any>$element[0]).document).documentElement);
                         }
 
                         remaining = elementBottom - containerBottom;
