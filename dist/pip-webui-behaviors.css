@@ -44,7 +44,7 @@ md-list-item.pip-list-no-click.pip-selectable.selected .md-no-style {
   background-color: rgba(158, 158, 158, 0.2);
   border-left: 5px solid rgba(33, 150, 243, 0.5) !important;
 }
-.pip-focusable.md-focused {
+.pip-focusable.md-focused.md-focused-opacity {
   background-color: rgba(158, 158, 158, 0.2);
 }
 input:focus,

@@ -19,7 +19,8 @@
                     opacityDelta = 0.4,
                     opacityLimit = 0.5,
                     _color,
-                    focusedColor = $attrs.pipFocusedColor ? $attrs.pipFocusedColor : null;
+                    focusedColor = $attrs.pipFocusedColor ? $attrs.pipFocusedColor : null,
+                    isOpacity = $attrs.pipFocusedOpacity ? toBoolean($attrs.pipFocusedOpacity) : false;
 
                 $timeout(init);
                 $element.on('keydown', keydownListener);
@@ -27,6 +28,14 @@
                 $scope.$watch($attrs.ngModel, function () {
                     $timeout(init);
                 }, true);
+
+                // Converts value into boolean
+                function toBoolean(value) {
+                    if (value == null) return false;
+                    if (!value) return false;
+                    value = value.toString().toLowerCase();
+                    return value == '1' || value == 'true';
+                };
 
                 function rgba(color) {
                     if (focusedColor) {
@@ -68,16 +77,30 @@
                         if ($(this).hasClass('md-focused')) {
                             return;
                         }
-                        _color = $(this).css('backgroundColor');
-                        $element.addClass('pip-focused-container');
-                        $(this).addClass('md-focused');
-                        $(this).css('backgroundColor', rgba(_color));
 
+                        $element.addClass('pip-focused-container');
+                        if (isOpacity) {
+                            let ell = angular.element($(this)[0]);
+
+                            _color = $(this).css('backgroundColor');
+                            // _color = $window.getComputedStyle($(this)[0], null).backgroundColor;
+                            $(this).css('backgroundColor', rgba(_color));
+                            $(this).addClass('md-focused');
+                        } else {
+                            $(this).addClass('md-focused md-focused-opacity');
+                        }
+                        
                         setTabindex(angular.element($(this)[0]), '0');
                     }).on('focusout', function () {
                         $element.removeClass('pip-focused-container');
-                        $(this).removeClass('md-focused');
-                        $(this).css('backgroundColor', _color);
+
+                        if (isOpacity) {
+                            // $(this).css('backgroundColor', _color);
+                            $(this).css('backgroundColor', "");
+                            $(this).removeClass('md-focused md-focused-opacity');
+                        } else {
+                            $(this).removeClass('md-focused');
+                        }
 
                         setTabindex(angular.element($(this)[0]), '1');
                     });
