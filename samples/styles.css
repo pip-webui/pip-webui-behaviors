@@ -226,3 +226,24 @@
 .wrapper .bg-green {
     background: green;
 }
+
+.div-box {
+    width: 200px;
+    line-height: 48px;
+    vertical-align: middle;
+    height: 48px;
+}
+
+.box-color {
+    background-color: yellow;
+}
+
+.block1 {
+    background-color: magenta;
+    width: 200px;
+}
+
+.block2 {
+    background-color: maroon;
+    width: 200px;
+}

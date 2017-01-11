@@ -21,7 +21,11 @@
             ];
 
             $scope.tabs = tabs;
-            $scope.selectedIndex = 2;            
+            $scope.selectedIndex = 2;  
+
+            $scope.onClick = function (value) {
+                console.log('value', value);
+            }          
         }
     );
 
