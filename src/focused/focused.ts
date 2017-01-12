@@ -20,6 +20,7 @@
                     opacityLimit = 0.5,
                     _color,
                     focusedColor = $attrs.pipFocusedColor ? $attrs.pipFocusedColor : null,
+                    focusedTabindex = $attrs.pipFocusedTabindex ? parseInt($attrs.pipFocusedTabindex) || 0 : 0,
                     isOpacity = $attrs.pipFocusedOpacity ? toBoolean($attrs.pipFocusedOpacity) : false;
 
                 $timeout(init);
@@ -75,7 +76,7 @@
 
                     if (index == -1 && controls.length > 0) {
                         // let el = controls[0];
-                        setTabindex(angular.element(controls[0]), 0);
+                        setTabindex(angular.element(controls[0]), focusedTabindex);
                     }
                 }
 
