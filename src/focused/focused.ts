@@ -65,13 +65,26 @@
                 }
 
                 function setTabindex(element, value) {
-                    element.attr('tabindex', '0');
+                    element.attr('tabindex', value);
+                }
+
+                function checkTabindex(controls) {
+                    let index = _.findIndex(controls, (c) => {
+                        return c['tabindex'] > -1;
+                    });
+
+                    if (index == -1 && controls.length > 0) {
+                        // let el = controls[0];
+                        setTabindex(angular.element(controls[0]), 0);
+                    }
                 }
 
                 function init() {
                     var selector = withHidden ? '.pip-focusable' : '.pip-focusable:visible';
                     controls = $element.find(selector);
                     controlsLength = controls.length;
+                    checkTabindex(controls);
+
                     // add needed event listeners
                     controls.on('focus', function () {
                         if ($(this).hasClass('md-focused')) {
@@ -90,8 +103,11 @@
                             $(this).addClass('md-focused md-focused-opacity');
                         }
                         
-                        setTabindex(angular.element($(this)[0]), '0');
+                        // setTabindex(angular.element($(this)[0]), 0);
                     }).on('focusout', function () {
+                        if (!$(this).hasClass('md-focused')) {
+                            return;
+                        }                        
                         $element.removeClass('pip-focused-container');
 
                         if (isOpacity) {
@@ -101,8 +117,8 @@
                         } else {
                             $(this).removeClass('md-focused');
                         }
-
-                        setTabindex(angular.element($(this)[0]), '1');
+                        // if I go from block all element have tabindex = -1
+                        // setTabindex(angular.element($(this)[0]), -1);
                     });
                 }
 
