@@ -20,15 +20,18 @@
                     opacityLimit = 0.5,
                     _color,
                     focusedColor = $attrs.pipFocusedColor ? $attrs.pipFocusedColor : null,
+                    reInit = $attrs.pipFocusedRebind ? $attrs.pipFocusedRebind : null,
                     focusedTabindex = $attrs.pipFocusedTabindex ? parseInt($attrs.pipFocusedTabindex) || 0 : 0,
                     isOpacity = $attrs.pipFocusedOpacity ? toBoolean($attrs.pipFocusedOpacity) : false;
 
                 $timeout(init);
                 $element.on('keydown', keydownListener);
 
-                $scope.$watch($attrs.ngModel, function () {
-                    $timeout(init);
-                }, true);
+                if ($attrs.ngModel) {
+                    $scope.$watch($attrs.ngModel, function () {
+                        $timeout(init);
+                    }, true);
+                }
 
                 // Converts value into boolean
                 function toBoolean(value) {
@@ -85,13 +88,14 @@
                     controls = $element.find(selector);
                     controlsLength = controls.length;
                     checkTabindex(controls);
-
                     // add needed event listeners
                     controls.on('focus', function () {
                         if ($(this).hasClass('md-focused')) {
                             return;
                         }
-
+                        if (reInit) {
+                            init();
+                        }
                         $element.addClass('pip-focused-container');
                         if (isOpacity) {
                             let ell = angular.element($(this)[0]);
