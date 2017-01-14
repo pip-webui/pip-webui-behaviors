@@ -14,10 +14,6 @@
         return {
             restrict: 'A',
             require: "?ngModel",
-            scope: {
-                focusedData: '=?pipFocusedData',
-                ngModel: '=?ngModel'
-            },
             link: function ($scope: any, $element, $attrs: any) {
                 var controls, controlsLength,
                     withHidden = $attrs.pipWithHidden,
@@ -37,11 +33,7 @@
                         $timeout(init);
                     }, true);
                 }
-               if ($scope.focusedData) {
-                    $scope.$watch($scope.focusedData, function () {
-                        $timeout(init);
-                    }, true);
-                }
+
                 // Converts value into boolean
                 function toBoolean(value) {
                     if (value == null) return false;
