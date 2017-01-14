@@ -12,7 +12,7 @@
 
     thisModule.directive('pipFocused', function ($timeout, $mdConstant, $window) {
         return {
-            restrict: 'A',
+            // restrict: 'EA',
             require: "?ngModel",
             link: function ($scope: any, $element, $attrs: any) {
                 var controls, controlsLength,
@@ -28,12 +28,18 @@
                 $timeout(init);
                 $element.on('keydown', keydownListener);
 
-                if ($scope.ngModel) {
+                if ($attrs.ngModel) {
                     $scope.$watch($attrs.ngModel, function () {
                         $timeout(init);
                     }, true);
                 }
 
+                if ($attrs.pipFocusedData) {
+                    $attrs.$observe('pipFocusedData', function () {
+                        $timeout(init);
+                    }, true);
+                }      
+                          
                 // Converts value into boolean
                 function toBoolean(value) {
                     if (value == null) return false;
