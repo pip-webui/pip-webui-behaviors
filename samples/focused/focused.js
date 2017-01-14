@@ -6,7 +6,7 @@
     var thisModule = angular.module('appBehaviors.Focused', []);
 
     thisModule.controller('FocusedController',
-        function($scope) {
+        function($scope, $interval) {
             var tabs = [
                 { title: 'One', content: "Tabs will become paginated if there isn't enough room for them."},
                 { title: 'Two', content: "You can swipe left and right on a mobile device to change tabs."},
@@ -25,7 +25,41 @@
 
             $scope.onClick = function (value) {
                 console.log('value', value);
-            }          
+            }  
+
+
+            $scope.collection = [
+                { 
+                    id: 1,
+                    text: '1'
+                },
+                { 
+                    id: 2,
+                    text: '2'
+                },
+                { 
+                    id: 3,
+                    text: '4'
+                },                                
+            ];  
+
+            $interval(function() {
+                $scope.collection = [
+                    { 
+                        id: 4,
+                        text: '4'
+                    },
+                    { 
+                        id: 5,
+                        text: '5'
+                    },
+                    { 
+                        id: 6,
+                        text: '7'
+                    },                                
+                ];   
+                console.log('interval', $scope.collection);             
+            }, 10000);  
         }
     );
 
