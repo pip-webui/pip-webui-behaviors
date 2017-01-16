@@ -208,7 +208,7 @@
                 }
 
                 function onTouchStart(ev) {
-                    ev.preventDefault();
+                    //ev.preventDefault();
 
                     let event = ev.originalEvent;
                     if (event['targetTouches'].length > 1) {
@@ -225,7 +225,7 @@
                     touchStartY = touch.pageY;
 
                     if ((event.timeStamp - lastClickTime) < tapdelay) {
-                        event.preventDefault();
+                      //  event.preventDefault();
                     }
 
                     return true;
