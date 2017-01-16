@@ -30,8 +30,24 @@
                     pipSelectedWatch = $attrs.pipSelectedWatch,
                     isScrolled = false;
 
+                // variables for touch    
+                var touchStartX, touchStartY, trackingClick, trackingClickStart, targetElement, lastClickTime, cancelNextClick;
+                // constant for touch
+                var touchBoundary = 10,
+                    tapdelay = 200,
+                    tapTimeout = 700;
+
                 // Set tabindex if it's not set yet
                 $element.attr('tabindex', currentElementTabinex || 0);
+                
+                $element.on('click', className, onClickEvent);
+                $element.on('touchstart', className, onTouchStart);
+                $element.on('touchmove', className, onTouchMove);
+                $element.on('touchend', className, onTouchEnd);
+                $element.on('touchcancel', className, onTouchCancel);
+                $element.on('keydown', onKeyDown);
+                $element.on('focusin', onFocusIn);
+                $element.on('focusout', onFocusOut);
 
                 // Watch selected item index
                 if (!toBoolean($attrs.pipTreeList)) {
@@ -69,7 +85,6 @@
                 };
 
                 // Functions and listeners
-
                 function selectItem(itemParams) {
                     if (isScrolled) return;
                     var itemIndex = itemParams.itemIndex,
@@ -169,11 +184,8 @@
 
                 };
 
-                var touchStartX, touchStartY, trackingClick, trackingClickStart, targetElement, lastClickTime, cancelNextClick;
-
                 function getTargetElementFromEventTarget(eventTarget) {
-
-                    // On some older browsers (notably Safari on iOS 4.1 - see issue #56) the event target may be a text node.
+                    // On some older browsers the event target may be a text node.
                     if (eventTarget.nodeType === Node.TEXT_NODE) {
                         return eventTarget.parentNode;
                     }
@@ -182,7 +194,7 @@
                 };
 
                 function touchHasMoved(event) {
-                    var touch = event.changedTouches[0], boundary = 10; //Touchmove boundary, beyond which a click will be cancelled.
+                    var touch = event.changedTouches[0], boundary = touchBoundary; //Touchmove boundary, beyond which a click will be cancelled.
 
                     if (Math.abs(touch.pageX - touchStartX) > boundary || Math.abs(touch.pageY - touchStartY) > boundary) {
                         return true;
@@ -191,15 +203,14 @@
                     return false;
                 };
 
-                $element.on('click', className, function (event) {
+                function onClickEvent(event) {
                     selectItem({ item: event.currentTarget, raiseEvent: true });
-                });
+                }
 
-                $element.on('touchstart', className, function (ev) {
+                function onTouchStart(ev) {
                     ev.preventDefault();
-                    console.log('touchstart event', event);
 
-                    event = ev.originalEvent;
+                    let event = ev.originalEvent;
                     if (event['targetTouches'].length > 1) {
                         return true;
                     }
@@ -213,18 +224,18 @@
                     touchStartX = touch.pageX;
                     touchStartY = touch.pageY;
 
-                    if ((event.timeStamp - lastClickTime) < 200) { // 200 - tapdelay
+                    if ((event.timeStamp - lastClickTime) < tapdelay) {
                         event.preventDefault();
                     }
 
                     return true;
-                });
+                }
 
-                $element.on('touchmove', className, function (ev) {
+                function onTouchMove(ev) {
                     if (!trackingClick) {
                         return true;
                     }
-                    event = ev.originalEvent;
+                    let event = ev.originalEvent;
                     // If the touch has moved, cancel the click tracking
                     if (targetElement !== getTargetElementFromEventTarget(event.target) || touchHasMoved(event)) {
                         trackingClick = false;
@@ -232,26 +243,26 @@
                     }
 
                     return true;
-                });
+                }
 
-                $element.on('touchend', className, function (ev) {
+                function onTouchEnd(ev) {
                     var forElement, newTrackingClickStart, targetTagName, scrollParent, touch, newtargetElement = targetElement;
 
                     if (!trackingClick) {
                         return true;
                     }
                     event = ev.originalEvent;
-                    // Prevent phantom clicks on fast double-tap (issue #36)
-                    if ((event.timeStamp - lastClickTime) < 200) { // 200 - tapdelay
+                    // Prevent phantom clicks on fast double-tap 
+                    if ((event.timeStamp - lastClickTime) < tapdelay) {
                         cancelNextClick = true;
                         return true;
                     }
 
-                    if ((event.timeStamp - trackingClickStart) > 700) { // tapTimeout - 700
+                    if ((event.timeStamp - trackingClickStart) > tapTimeout) {
                         return true;
                     }
 
-                    // Reset to prevent wrong click cancel on input (issue #156).
+                    // Reset to prevent wrong click cancel on input 
                     cancelNextClick = false;
 
                     lastClickTime = event.timeStamp;
@@ -263,15 +274,14 @@
                     selectItem({ item: ev.currentTarget, raiseEvent: true });
 
                     return false;
-                });
+                }
 
-                $element.on('touchcancel', className, function (ev) {
+                function onTouchCancel(ev) {
                     trackingClick = false;
                     targetElement = null;
-                });
+                }
 
-
-                $element.on('keydown', function (e) {
+                function onKeyDown(e) {
                     var keyCode = e.which || e.keyCode;
 
                     // Check control keyCode
@@ -304,9 +314,9 @@
                             // Set next control as selected
                             selectItem({ itemIndex: newSelectedIndex, items: items, raiseEvent: true });
                         }
-                });
+                }
 
-                $element.on('focusin', function (event) {
+                function onFocusIn(event) {
                     // Choose selected element
                     var items,
                         selectedItem = $element.find(className + '.selected');
@@ -319,11 +329,11 @@
                         items = $element.find(className + modifier);
                         selectItem({ itemIndex: selectedIndex || 0, items: items, raiseEvent: true });
                     }
-                });
+                }
 
-                $element.on('focusout', function (event) {
+                function onFocusOut(event) {
                     $element.find(className + '.md-focused' + modifier).removeClass('md-focused');
-                });
+                }
             }
         };
     });
