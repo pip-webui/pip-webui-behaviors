@@ -120,7 +120,6 @@ export class KeyboardShortcut {
         this.callback = callback;
 
         this.eventCallback = (event: JQueryEventObject) => {
-            console.log('eventCallback', this.shorcut);
             let e: JQueryEventObject = event || <JQueryEventObject>window.event;
             let code: number;
 
@@ -199,7 +198,6 @@ export class KeyboardShortcut {
                 this.modifiers.alt.pressed == this.modifiers.alt.wanted &&
                 this.modifiers.meta.pressed == this.modifiers.meta.wanted) {
 
-console.log('callback', this.shorcut, callback);
                 this.callback(e);
 
                 if (!this.option.Propagate) { //Stop the event

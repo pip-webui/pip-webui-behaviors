@@ -51,17 +51,20 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
 
     private checkAddShortcut(element: any, shorcutCombination: string, callback: (e: JQueryEventObject) => void): boolean {
         if (!element) {
-            // todo generate error
+            this._log.error('Register shortcut: element undentified!');
+
             return false;
         }
 
         if (!shorcutCombination) {
-            // todo generate error
+            this._log.error('Register shortcut: shorcut combination undentified!');
+
             return false;
         }
 
         if (!callback) {
-            // todo generate error
+            this._log.error('Register shortcut: shorcut callback undentified!');
+
             return false;
         }
 
@@ -73,7 +76,6 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
     }
 
     public add(shorcutName: string, callback: (e: JQueryEventObject) => void, option: ShortcutOption): void {
-        console.log('add', shorcutName, callback, option);
         let shorcutOption: ShortcutOption = option ? _.defaults(option, this._defaultOption) : this._defaultOption;
         let shorcutCombination: string = shorcutName.toLowerCase();
         let element = shorcutOption.Target;
@@ -108,7 +110,6 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
 		let shortcutCombination = shorcutName.toLowerCase();
 		let binding: KeyboardShortcut = this._shortcuts[shortcutCombination];
 
-        console.log('remove', shorcutName, this._shortcuts[shortcutCombination]);
 		delete(this._shortcuts[shortcutCombination])
 		if (!binding) return;
 
@@ -124,8 +125,6 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
             // element['on' + type] = false;
             element.off(type, callback);
         }
-
-        console.log('remove1', shorcutName, this._shortcuts[shortcutCombination]);
     }
 }
 

@@ -5,13 +5,11 @@
 
     var thisModule = angular.module('appBehaviors.Shortcuts', ['pipShortcuts']);
 
-    thisModule.config(function (pipShortcutsProvider) {
-        console.log('appBehaviors.Shortcuts thisModule.config');
-            pipShortcutsProvider.globalShortcuts = [
+    var globalShorcuts = [
                 { shortcut: 'ctrl+1', state: 'focused' },
                 { shortcut: 'ctrl+2', state: 'selected' }
-            ];
-            pipShortcutsProvider.localShortcuts = [
+            ],
+        localShortcuts = [
                 { shortcut: 'ctrl+3', url: '/draggable' },
                 { shortcut: 'ctrl+m', 
                     keypress: () => {
@@ -19,16 +17,19 @@
                     } 
                 }
             ];
+
+    thisModule.config(function (pipShortcutsProvider) {
+            pipShortcutsProvider.globalShortcuts = globalShorcuts;
+            pipShortcutsProvider.localShortcuts = localShortcuts;
         } 
     );
 
     thisModule.controller('ShortcutsController',
-        function($scope, pipShortcutsRegister, pipShortcuts) {
+        function($scope, $timeout, pipShortcutsRegister, pipShortcuts) {
             let textareaShortcut = 'shift+q';
             let documentShortcut = 'alt+g';
             let textareaOptions = { Target: 'textarea_shortcut' };
 
-console.log('pipShortcuts.config', pipShortcuts.config);
 
             pipShortcutsRegister.add(textareaShortcut, (e) => {
                 console.log('textareaShortcut11111111111111111111111111', e);
@@ -38,8 +39,10 @@ console.log('pipShortcuts.config', pipShortcuts.config);
                 console.log('documentShortcut22222222222222222222', e);
             });
 
+            // pipShortcuts.on(globalShorcuts, []);
+
             $scope.keyEvent = function ($event) {
-                    console.log('ctrl+v pressed into textarea', $event); 
+                console.log('ctrl+v pressed into textarea', $event); 
             }
         }
     );

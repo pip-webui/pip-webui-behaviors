@@ -27,19 +27,15 @@ class ShortcutController {
         $scope: ng.IScope,
         $log: ng.ILogService,
         $parse: any,
-        $timeout,
         pipShortcutsRegister: IShortcutsRegisterService
     ) {
         "ngInject";
         this._log = $log;
-//$parse($attrss.pipSelect)
 
         if ($attrs.pipShortcutAction) {
-            console.log('$attrs.pipShortcutAction');
             this.actionShortcuts = $parse($attrs.pipShortcutAction);
             let a1 = $attrs.pipShortcutAction;
             this.actionShortcuts($scope, {$event: {}});
-            console.log('$attrs.pipShortcutAction', a1);
         } else {
             this._log.error('Shorcunt action does not set.');
 
@@ -60,11 +56,6 @@ class ShortcutController {
         pipShortcutsRegister.add(this.nameShortcuts, (e?: any) => {
             this.actionShortcuts($scope, {$event: {'e': e}});          
         }, this.options);
-
-        $timeout(() => {
-            pipShortcutsRegister.remove(this.nameShortcuts);
-            console.log('shortcut removed');
-        }, 100000)
     }
 
     private keypressShortcut(action) {
@@ -82,7 +73,6 @@ class ShortcutController {
             controller: ShortcutController
         };
     }
-
 
     angular
         .module('pipShortcuts')
