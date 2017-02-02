@@ -10,7 +10,8 @@
         { title: 'Draggable', state: 'draggable', url: '/draggable', controller: 'DraggableController', templateUrl: 'draggable_sample/draggable.html' },
         { title: 'Draggable Input', state: 'draggable_input', url: '/draggable_input', controller: 'DraggableInputController', templateUrl: 'draggable_sample/draggable_input.html' },
         { title: 'Unsaved Changes', state: 'unsaved_changes', url: '/unsaved_changes', controller: 'UnsavedChangesController', templateUrl: 'unsaved_changes_sample/unsaved_changes.html' },
-        { title: 'Freeze Scroll', state: 'freeze_scroll', url: '/freeze_scroll', controller: 'FreezeScrollController', templateUrl: 'freeze_scroll_sample/freeze_scroll.html' }
+        { title: 'Freeze Scroll', state: 'freeze_scroll', url: '/freeze_scroll', controller: 'FreezeScrollController', templateUrl: 'freeze_scroll_sample/freeze_scroll.html' },
+        { title: 'Shortcuts', state: 'shortcuts', url: '/shortcuts', controller: 'ShortcutsController', templateUrl: 'shortcuts/shortcuts.html' }
     ];
 
     var thisModule = angular.module('appBehaviors',
@@ -28,7 +29,7 @@
             'appBehaviors.Draggable',
             'appBehaviors.UnsavedChanges',
             'appBehaviors.FreezeScroll',
-
+            'appBehaviors.Shortcuts',
             'pipFreeze'
         ]
     );

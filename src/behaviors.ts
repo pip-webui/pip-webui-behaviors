@@ -13,7 +13,8 @@
         'pipSelected',
         'pipInfiniteScroll',
         'pipUnsavedChanges',
-        'pipDraggable'
+        'pipDraggable',
+        'pipShortcuts'
     ]);
     
 })();
