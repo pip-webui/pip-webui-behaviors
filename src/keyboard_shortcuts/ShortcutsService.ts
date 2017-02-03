@@ -59,6 +59,7 @@ export interface IShortcutsService {
     localShortcuts: ShortcutItem[];
 
     on(globalShortcuts?: ShortcutItem[], localShortcuts?: ShortcutItem[]): void;
+    onLocal(localShortcuts?: ShortcutItem[]): void;
     off(): void;
 }
 
@@ -211,6 +212,14 @@ class ShortcutsService implements IShortcutsService {
         if (globalShortcuts && _.isArray(globalShortcuts)) {
             this._config.globalShortcuts = globalShortcuts;    
         }
+        if (localShortcuts && _.isArray(localShortcuts)) {
+            this._config.localShortcuts = localShortcuts;    
+        }        
+
+        this.sendChangeEvent();
+    }
+
+    public onLocal(localShortcuts?: ShortcutItem[]): void {
         if (localShortcuts && _.isArray(localShortcuts)) {
             this._config.localShortcuts = localShortcuts;    
         }        

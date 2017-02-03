@@ -3,7 +3,6 @@ declare module pip.behaviors {
 
 
 
-
 export class ShortcutOption {
     Type: KeyboardEvent;
     Propagate: boolean;
@@ -80,6 +79,7 @@ export interface IShortcutsService {
     globalShortcuts: ShortcutItem[];
     localShortcuts: ShortcutItem[];
     on(globalShortcuts?: ShortcutItem[], localShortcuts?: ShortcutItem[]): void;
+    onLocal(localShortcuts?: ShortcutItem[]): void;
     off(): void;
 }
 export interface IShortcutsProvider extends ng.IServiceProvider {
@@ -88,6 +88,7 @@ export interface IShortcutsProvider extends ng.IServiceProvider {
     localShortcuts: ShortcutItem[];
     defaultOptions: ShortcutOption;
 }
+
 
 
 
