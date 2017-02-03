@@ -12,7 +12,7 @@ import  {
 
 export let ShortcutsChangedEvent = 'pipShortcutsChanged';
 
-export class SimpleShortcutItem {
+export class ShortcutItem {
     // Shortcut combination
     public shortcut: string;
     // target object 
@@ -39,9 +39,9 @@ export class SimpleShortcutItem {
     public options?: ShortcutOption;    
 }
 
-export class ShortcutItem extends SimpleShortcutItem {
-    public shortcuts: SimpleShortcutItem[];
-}
+// export class ShortcutItem extends SimpleShortcutItem {
+//     public shortcuts: SimpleShortcutItem[];
+// }
 
 export class ShortcutsConfig {
     // Global shortcut 
@@ -121,7 +121,7 @@ class ShortcutsService implements IShortcutsService {
         });
     }
 
-    private keypressShortcut(shorcut: SimpleShortcutItem, event: JQueryEventObject) {
+    private keypressShortcut(shorcut: ShortcutItem, event: JQueryEventObject) {
         if (shorcut.access && _.isFunction(shorcut.access)) {
             if (!shorcut.access(event)) {
                 return;

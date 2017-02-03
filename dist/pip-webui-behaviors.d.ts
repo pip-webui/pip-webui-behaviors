@@ -3,6 +3,7 @@ declare module pip.behaviors {
 
 
 
+
 export class ShortcutOption {
     Type: KeyboardEvent;
     Propagate: boolean;
@@ -53,7 +54,7 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
 
 
 export let ShortcutsChangedEvent: string;
-export class SimpleShortcutItem {
+export class ShortcutItem {
     shortcut: string;
     target?: any;
     targetId?: string;
@@ -65,9 +66,6 @@ export class SimpleShortcutItem {
     event?: string;
     keypress?: (event: JQueryEventObject) => void;
     options?: ShortcutOption;
-}
-export class ShortcutItem extends SimpleShortcutItem {
-    shortcuts: SimpleShortcutItem[];
 }
 export class ShortcutsConfig {
     globalShortcuts: ShortcutItem[];
@@ -88,7 +86,6 @@ export interface IShortcutsProvider extends ng.IServiceProvider {
     localShortcuts: ShortcutItem[];
     defaultOptions: ShortcutOption;
 }
-
 
 
 
