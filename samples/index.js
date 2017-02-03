@@ -50,7 +50,7 @@
                 $stateProvider.state(contentItem.state, contentItem);
             }
 
-            $urlRouterProvider.otherwise('/Focused');
+            $urlRouterProvider.otherwise('/focused');
         } 
     );
 
