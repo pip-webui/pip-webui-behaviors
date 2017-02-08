@@ -4,6 +4,7 @@ declare module pip.behaviors {
 
 
 
+
 export class ShortcutOption {
     Type: KeyboardEvent;
     Propagate: boolean;
@@ -86,7 +87,6 @@ export interface IShortcutsProvider extends ng.IServiceProvider {
     localShortcuts: ShortcutItem[];
     defaultOptions: ShortcutOption;
 }
-
 
 
 }

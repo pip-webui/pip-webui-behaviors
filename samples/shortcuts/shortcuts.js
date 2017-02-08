@@ -27,16 +27,21 @@
     thisModule.controller('ShortcutsController',
         function($scope, $timeout, pipShortcutsRegister, pipShortcuts) {
             let textareaShortcut = 'shift+q';
-            let documentShortcut = 'alt+g';
+            let documentShortcut = 'shift+alt+t';
+            let documentShortcut1 = 'alt+t';
             let textareaOptions = { Target: 'textarea_shortcut' };
 
 
             pipShortcutsRegister.add(textareaShortcut, (e) => {
-                console.log('textareaShortcut11111111111111111111111111', e);
+                console.log('text area shift+q', e);
             }, textareaOptions);
 
+
             pipShortcutsRegister.add(documentShortcut, (e) => {
-                console.log('documentShortcut22222222222222222222', e);
+                console.log('shift+alt+t', e);
+            });
+            pipShortcutsRegister.add(documentShortcut1, (e) => {
+                console.log('alt+t', e);
             });
 
             // pipShortcuts.on(globalShorcuts, []);

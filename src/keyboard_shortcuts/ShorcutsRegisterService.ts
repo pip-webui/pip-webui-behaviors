@@ -76,6 +76,7 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
     }
 
     public add(shorcutName: string, callback: (e: JQueryEventObject) => void, option: ShortcutOption): void {
+        this.remove(shorcutName);
         let shorcutOption: ShortcutOption = option ? _.defaults(option, this._defaultOption) : this._defaultOption;
         let shorcutCombination: string = shorcutName.toLowerCase();
         let element = shorcutOption.Target;
