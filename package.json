@@ -1,32 +1,34 @@
 {
-    "name": "pip-webui-behaviors",
-    "version": "1.5.0",
-    "author": "Digital Living Software Corp. <www.digitallivingsoftware.com>",
-    "description": "Attachable behaviors for Pip.WebUI",
-    "contributors": [
-        {
-            "name": "Sergey Seroukhov",
-            "email": "seroukhov@gmail.com"
-        },
-        {
-            "name": "Alexey Dvoikin",
-            "email": "94dvoikin@gmail.com"
-        },
-        {
-            "name": "Mark Zontak",
-            "email": "mark@zontak.me"
-        }
-    ],
-    "keywords": [
-        "pip",
-        "webui",
-        "behaviors"
-    ],
-    "noAnalyze": true,
-    "license": "MIT",
-    "private": false,
-    "dependencies": {},
-    "devDependencies": {
-        "pip-webui-tasks": "git+https://github.com/pip-webui/pip-webui-tasks.git"
-    }
+    "name":  "pip-webui-behaviors",
+    "version":  "1.5.0",
+    "author":  "Digital Living Software Corp. <www.digitallivingsoftware.com>",
+    "description":  "Attachable behaviors for Pip.WebUI",
+    "contributors":  [
+                         {
+                             "name":  "Sergey Seroukhov",
+                             "email":  "seroukhov@gmail.com"
+                         },
+                         {
+                             "name":  "Alexey Dvoikin",
+                             "email":  "94dvoikin@gmail.com"
+                         },
+                         {
+                             "name":  "Mark Zontak",
+                             "email":  "mark@zontak.me"
+                         }
+                     ],
+    "keywords":  [
+                     "pip",
+                     "webui",
+                     "behaviors"
+                 ],
+    "noAnalyze":  true,
+    "license":  "MIT",
+    "private":  false,
+    "dependencies":  {
+
+                     },
+    "devDependencies":  {
+                            "pip-webui-tasks":  "^1.8.0"
+                        }
 }
