@@ -1,0 +1,7 @@
+.pip-focusable.md-focused.md-focused-opacity {
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+input:focus , p:focus , div:focus , li:focus , md-list-item:focus , md-list:focus , a:focus , md-autocomplete:focus , span:focus , button:focus , md-icon:focus , tr:focus , td:focus  {
+    outline-width: 0 !important;
+}   
