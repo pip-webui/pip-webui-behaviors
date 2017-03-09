@@ -10,6 +10,7 @@
         'pipShortcuts'
     ]);
 })();
+
 },{}],2:[function(require,module,exports){
 (function () {
     'use strict';
@@ -466,6 +467,7 @@
         };
     });
 })();
+
 },{}],3:[function(require,module,exports){
 (function () {
     'use strict';
@@ -581,6 +583,7 @@
         };
     }]);
 })();
+
 },{}],4:[function(require,module,exports){
 (function () {
     'use strict';
@@ -747,6 +750,7 @@
         };
     }]);
 })();
+
 },{}],5:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -952,6 +956,7 @@ var KeyboardShortcut = (function () {
     return KeyboardShortcut;
 }());
 exports.KeyboardShortcut = KeyboardShortcut;
+
 },{}],6:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1068,6 +1073,7 @@ var ShortcutsRegisterProvider = (function () {
 angular
     .module('pipShortcuts')
     .provider('pipShortcutsRegister', ShortcutsRegisterProvider);
+
 },{"./KeyboardShortcut":5}],7:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1117,6 +1123,7 @@ var ShortcutController = (function () {
         .module('pipShortcuts')
         .directive('pipShortcut', shortcutsDirective);
 })();
+
 },{}],8:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1324,6 +1331,7 @@ var ShortcutsProvider = (function () {
 angular
     .module('pipShortcuts')
     .provider('pipShortcuts', ShortcutsProvider);
+
 },{}],9:[function(require,module,exports){
 'use strict';
 function __export(m) {
@@ -1336,6 +1344,7 @@ require("./ShortcutsService");
 require("./ShortcutDirective");
 __export(require("./ShortcutsService"));
 __export(require("./ShorcutsRegisterService"));
+
 },{"./ShorcutsRegisterService":6,"./ShortcutDirective":7,"./ShortcutsService":8}],10:[function(require,module,exports){
 (function () {
     'use strict';
@@ -1578,6 +1587,7 @@ __export(require("./ShorcutsRegisterService"));
         };
     }]);
 })();
+
 },{}],11:[function(require,module,exports){
 (function () {
     'use strict';
@@ -1616,6 +1626,7 @@ __export(require("./ShorcutsRegisterService"));
         };
     }]);
 })();
+
 },{}]},{},[1,2,3,4,9,5,6,7,8,10,11])(11)
 });
 
