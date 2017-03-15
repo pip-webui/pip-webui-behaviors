@@ -1,6 +1,4 @@
-'use strict';
-
-import  {
+import {
     KeyboardShortcut,
     ShortcutOption,
     KeyboardEvent
@@ -21,7 +19,7 @@ export interface IShortcutsRegisterProvider extends ng.IServiceProvider {
     option: ShortcutOption;
 }
 
-export class ShortcutsRegister implements IShortcutsRegisterService {
+export class ShortcutsRegisterService implements IShortcutsRegisterService {
     private _log: ng.ILogService;
     private _defaultOption: ShortcutOption;
     private _shortcuts: IKeyboardShortcuts;
@@ -89,72 +87,72 @@ export class ShortcutsRegister implements IShortcutsRegisterService {
         }
 
         if (!this.checkAddShortcut(element, shorcutCombination, callback)) {
-            
+
             return
         }
 
         let newKeyboardShortcut = new KeyboardShortcut(element, shorcutCombination, shorcutOption, callback);
 
-		this._shortcuts[shorcutCombination] = newKeyboardShortcut;
+        this._shortcuts[shorcutCombination] = newKeyboardShortcut;
 
-		//Attach the function with the event
-		if (element.addEventListener) { 
+        //Attach the function with the event
+        if (element.addEventListener) {
             element.addEventListener(shorcutOption.Type, newKeyboardShortcut.eventCallback, false);
-        } else if (element.attachEvent) { 
+        } else if (element.attachEvent) {
             element.attachEvent('on' + shorcutOption.Type, newKeyboardShortcut.eventCallback);
-        } else { 
-            element.on(shorcutOption.Type, newKeyboardShortcut.eventCallback); 
+        } else {
+            element.on(shorcutOption.Type, newKeyboardShortcut.eventCallback);
         }
     }
 
     public remove(shorcutName: string): void {
-		let shortcutCombination = shorcutName.toLowerCase();
-		let binding: KeyboardShortcut = this._shortcuts[shortcutCombination];
+        let shortcutCombination = shorcutName.toLowerCase();
+        let binding: KeyboardShortcut = this._shortcuts[shortcutCombination];
 
-		delete(this._shortcuts[shortcutCombination])
-		if (!binding) return;
+        delete(this._shortcuts[shortcutCombination])
+        if (!binding) return;
 
-		let type = binding.event;
-		let element = binding.target;
-		let callback = binding.eventCallback;
+        let type = binding.event;
+        let element = binding.target;
+        let callback = binding.eventCallback;
 
-		if (element.detachEvent) {
+        if (element.detachEvent) {
             element.detachEvent('on' + type, callback);
-        } else if (element.removeEventListener) { 
+        } else if (element.removeEventListener) {
             element.removeEventListener(type, callback, false);
-        } else { 
+        } else {
             // element['on' + type] = false;
             element.off(type, callback);
         }
     }
 }
 
+{
+    class ShortcutsRegisterProvider implements IShortcutsRegisterProvider {
+        private _service: ShortcutsRegisterService;
+        private _option: ShortcutOption;
 
+        public get option(): ShortcutOption {
+            return this._option;
+        }
 
-class ShortcutsRegisterProvider implements IShortcutsRegisterProvider {
-    private _service: ShortcutsRegister;
-    private _option: ShortcutOption;
+        public set option(value: ShortcutOption) {
+            this._option = value || new ShortcutOption();
+        }
 
-    public get option(): ShortcutOption {
-        return this._option;
+        public $get(
+            $log: ng.ILogService
+        ) {
+            "ngInject";
+
+            if (this._service == null)
+                this._service = new ShortcutsRegisterService($log, this._option);
+
+            return this._service;
+        }
     }
 
-    public set option(value: ShortcutOption) {
-        this._option = value || new ShortcutOption();
-    }
-
-    public $get(
-        $log: ng.ILogService
-    ) {
-        "ngInject";
-
-        if (this._service == null)
-            this._service = new ShortcutsRegister($log, this._option);
-
-        return this._service;
-    }
+    angular
+        .module('pipShortcuts')
+        .provider('pipShortcutsRegister', ShortcutsRegisterProvider);
 }
-
-angular
-    .module('pipShortcuts')
-    .provider('pipShortcutsRegister', ShortcutsRegisterProvider);

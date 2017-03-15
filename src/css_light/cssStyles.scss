@@ -1,5 +1,5 @@
-.text-hide            { .text-hide(); }
-.text-overflow        { .text-overflow(); }
+.text-hide            { @include text-hide(); }
+.text-overflow        { @include text-overflow(); }
 
 .text-display4        { font: $font-display4 }
 .text-display3        { font: $font-display3 }
@@ -17,10 +17,10 @@
 .text-caption         { font: $font-caption }
 .text-button          { font: $font-button  }
 
-.flex-fixed           { .flex-fixed();   }
-.flex-var             { .flex-var();     }
-.flex-grow            { .flex-grow();    }
-.flex-shrink          { .flex-shrink();  }
+.flex-fixed           { @include flex-fixed();   }
+.flex-var             { @include flex-var();     }
+.flex-grow            { @include flex-grow();    }
+.flex-shrink          { @include flex-shrink();  }
 
 .opacity-secondary { opacity: $opacity-secondary; }
 .opacity-primary   { opacity: $opacity-primary; }
@@ -29,8 +29,6 @@
 .no-divider { border: none !important;  }
 .divider    { border: $divider-border;  }
 
-input, p, div, li, md-list-item, md-list, a, md-autocomplete, span, button {
-    &:focus {
-        outline-width: 0 !important;
-    }
+input:focus, p:focus, div:focus, li:focus, md-list-item:focus, md-list:focus, a:focus, md-autocomplete:focus, span:focus, button:focus {
+    outline-width: 0 !important;
 } 

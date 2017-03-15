@@ -1,8 +1,5 @@
 /// <reference path="../../typings/tsd.d.ts" />
-
-(function () {
-    'use strict';
-
+{
     var thisModule = angular.module("pipDraggable", []);
 
     thisModule.service('pipDraggable', function () {
@@ -533,107 +530,6 @@
         };
     });
 
-    //thisModule.directive('pipDragClone', function ($parse, $timeout, pipDraggable) {
-    //    return {
-    //        restrict: 'A',
-    //        link: function (scope, element, attrs) {
-    //            var img, _allowClone = true;
-    //            var _dragOffset = null;
-    //            scope.clonedData = {};
-    //            initialize();
-    //            return;
-
-    //            function initialize() {
-//
-    //                img = element.find('img');
-    //                element.attr('pip-draggable', 'false');
-    //                img.attr('draggable', 'false');
-    //                reset();
-    //                toggleListeners(true);
-    //            }
-//
-//
-    //            function toggleListeners(enable) {
-    //                // remove listeners
-//
-    //                if (!enable)return;
-    //                // add listeners.
-    //                scope.$on('draggable:start', onDragStart);
-    //                scope.$on('draggable:move', onDragMove);
-    //                scope.$on('draggable:end', onDragEnd);
-    //                preventContextMenu();
-//
-    //            }
-
-    //            function preventContextMenu() {
-    //                //  element.off('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
-    //                img.off('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
-    //                //  element.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
-    //                img.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
-    //            }
-
-    //            function onDragStart(evt, obj, elm) {
-    //                _allowClone = true;
-    //                if (angular.isDefined(obj.data.allowClone)) {
-    //                    _allowClone = obj.data.allowClone;
-    //                }
-    //                if (_allowClone) {
-    //                    scope.$apply(function () {
-    //                        scope.clonedData = obj.data;
-    //                    });
-    //                    element.css('width', obj.element[0].offsetWidth);
-    //                    element.css('height', obj.element[0].offsetHeight);
-//
-    //                    moveElement(obj.tx, obj.ty);
-    //                }
-//
-    //            }
-
-    //            function onDragMove(evt, obj) {
-    //                if (_allowClone) {
-//
-    //                    _tx = obj.tx + obj.dragOffset.left;
-    //                    _ty = obj.ty + obj.dragOffset.top;
-//
-    //                    moveElement(_tx, _ty);
-    //                }
-    //            }
-
-    //            function onDragEnd(evt, obj) {
-    //                //moveElement(obj.tx,obj.ty);
-    //                if (_allowClone) {
-    //                    reset();
-    //                }
-    //            }
-//
-    //            function reset() {
-    //                element.css({left: 0, top: 0, position: 'fixed', 'z-index': -1, visibility: 'hidden'});
-    //            }
-
-    //            function moveElement(x, y) {
-    //                element.css({
-    //                    transform: 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0, 1)',
-    //                    'z-index': 99999,
-    //                    'visibility': 'visible',
-    //                    '-webkit-transform': 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0, 1)',
-    //                    '-ms-transform': 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
-    //                    //,margin: '0'  don't monkey with the margin,
-    //                });
-    //            }
-//
-    //            function absorbEvent_(event) {
-    //                var e = event;//.originalEvent;
-    //                e.preventDefault && e.preventDefault();
-    //                e.stopPropagation && e.stopPropagation();
-    //                e.cancelBubble = true;
-    //                e.returnValue = false;
-    //                return false;
-    //            }
-//
-    //        }
-    //    };
-    //});
-
     thisModule.directive('pipPreventDrag', function ($parse, $timeout) {
         return {
             restrict: 'A',
@@ -675,5 +571,5 @@
             }
         };
     });
-})();
+}
 

@@ -1,13 +1,4 @@
-/**
- * @file Keyboard navigation over few focusable controls
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function () {
-    'use strict';
-
+{
     var thisModule = angular.module("pipFocused", []);
 
     thisModule.directive('pipFocused', function ($timeout, $mdConstant, $window) {
@@ -156,6 +147,5 @@
             }
         };
     });
-
-})();
+}
 

@@ -1,5 +1,3 @@
-'use strict';
-
 import  {
     ShortcutOption,
 } from "./KeyboardShortcut";
@@ -8,36 +6,32 @@ import  {
     IShortcutsRegisterService,
 } from "./ShorcutsRegisterService";
 
+interface ShortcutAttributes extends ng.IAttributes {
+    pipShortcutAction: any;
+    pipShortcutName: any;
+    pipShorcutOptions: ShortcutOption;
+}
 
-    // thisModule.directive('pipSelected', function ($parse, $mdConstant, $timeout) {
-    //     return {
-    //         restrict: 'A',
-    //         scope: false,
-
-class ShortcutController {
-    private _log: ng.ILogService;
-
+class ShortcutController implements ng.IController  {
     private actionShortcuts: Function;
     private nameShortcuts: string;
     private options: ShortcutOption;
 
     constructor(
-        $element: any,
-        $attrs: any,
+        $element: JQuery,
+        $attrs: ShortcutAttributes,
         $scope: ng.IScope,
         $log: ng.ILogService,
-        $parse: any,
+        $parse: ng.IParseService,
         pipShortcutsRegister: IShortcutsRegisterService
     ) {
         "ngInject";
-        this._log = $log;
 
         if ($attrs.pipShortcutAction) {
             this.actionShortcuts = $parse($attrs.pipShortcutAction);
-            let a1 = $attrs.pipShortcutAction;
             this.actionShortcuts($scope, {$event: {}});
         } else {
-            this._log.error('Shorcunt action does not set.');
+            $log.error('Shorcunt action does not set.');
 
             return
         }
@@ -45,14 +39,14 @@ class ShortcutController {
         if ($attrs.pipShortcutName && _.isString($attrs.pipShortcutName)) {
             this.nameShortcuts = $attrs.pipShortcutName;
         } else {
-            this._log.error('Shorcunt name does not set.');
+            $log.error('Shorcunt name does not set.');
 
             return
         }
 
         this.options = $attrs.pipShorcutOptions ? <ShortcutOption>$attrs.pipShorcutOptions : <ShortcutOption>{};
         this.options.Target = $element;
-        // regester keyboard shortcut
+        // Registration of keybord shortcuts
         pipShortcutsRegister.add(this.nameShortcuts, (e?: any) => {
             this.actionShortcuts($scope, {$event: {'e': e}});          
         }, this.options);
@@ -64,9 +58,8 @@ class ShortcutController {
 }
 
 // Prevent junk from going into typescript definitions
-(() => {
-
-    function shortcutsDirective($parse) {
+{
+    const shortcutsDirective = function(): ng.IDirective {
         return {
             restrict: 'A',
             scope: false,            
@@ -77,4 +70,4 @@ class ShortcutController {
     angular
         .module('pipShortcuts')
         .directive('pipShortcut', shortcutsDirective);
-})();
+}

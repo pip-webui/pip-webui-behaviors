@@ -1,8 +1,5 @@
-'use strict';
-
-
 import {
-    ShortcutsRegister
+    IShortcutsRegisterService
 } from "./ShorcutsRegisterService"
 import  {
     KeyboardShortcut,
@@ -15,15 +12,15 @@ export let ShortcutsChangedEvent = 'pipShortcutsChanged';
 export class ShortcutItem {
     // Shortcut combination
     public shortcut: string;
-    // target object 
+    // Target object 
     public target?: any;
-    // target element by Id
+    // Target element by Id
     public targetId?: string;
-    // // target element by class (firstelement??)
-    // public targetClass?: string;
+    // Target element by class (firstelement??)
+    // Public targetClass?: string;
     // Access function
     public access?: (event: JQueryEventObject) => boolean;
-    // window.location.href
+    // Window.location.href
     public href?: string;
     // $location.url
     public url?: string;
@@ -35,7 +32,7 @@ export class ShortcutItem {
     public event?: string;
     // Click callback
     public keypress?: (event: JQueryEventObject) => void;
-    // default options
+    // Default options
     public options?: ShortcutOption;    
 }
 
@@ -48,7 +45,7 @@ export class ShortcutsConfig {
     public globalShortcuts: ShortcutItem[] = [];
     // Local shortcut 
     public localShortcuts: ShortcutItem[] = [];
-    // default options
+    // Default options
     public defaultOptions: ShortcutOption = null;
 }
 
@@ -72,52 +69,42 @@ export interface IShortcutsProvider extends ng.IServiceProvider {
 }
 
 class ShortcutsService implements IShortcutsService {
-    private _config: ShortcutsConfig;
     private _oldConfig: ShortcutsConfig;
-    private _rootScope: ng.IRootScopeService;
-    private _window: ng.IWindowService;
-    private _location: ng.ILocationService;
-    private _injector: ng.auto.IInjectorService;    
-    private _pipShortcutsRegister: ShortcutsRegister;
+    private _config: ShortcutsConfig;
 
     public constructor(
         config: ShortcutsConfig,
-        $rootScope: ng.IRootScopeService,
-        $window: ng.IWindowService, 
-        $location: ng.ILocationService, 
-        $injector: ng.auto.IInjectorService,
-        pipShortcutsRegister: ShortcutsRegister
+        private $rootScope: ng.IRootScopeService,
+        private $window: ng.IWindowService, 
+        private $location: ng.ILocationService, 
+        private $injector: ng.auto.IInjectorService,
+        private pipShortcutsRegister: IShortcutsRegisterService
     ) {
-        this._config = config;
-        this._oldConfig = _.cloneDeep(this._config);
-        this._rootScope = $rootScope;
-        this._window = $window;
-        this._location = $location;
-        this._injector = $injector;    
-        this._pipShortcutsRegister = pipShortcutsRegister;
+        this._config = this.config;
+        this._oldConfig = _.cloneDeep(this.config);
 
-        // add shortcuts
-        this.addShortcuts(this._config.globalShortcuts);
-        this.addShortcuts(this._config.localShortcuts);        
+        // Add shortcuts
+        this.addShortcuts(this.config.globalShortcuts);
+        this.addShortcuts(this.config.localShortcuts);        
     }
 
-    // private declaration 
+    // Describe private functions
     private sendChangeEvent() {
-        // remove shortcuts
+        // Remove shortcuts
         this.removeShortcuts(this._oldConfig.globalShortcuts);
         this.removeShortcuts(this._oldConfig.localShortcuts);
-        // add shortcuts
-        this.addShortcuts(this._config.globalShortcuts);
-        this.addShortcuts(this._config.localShortcuts);
+        // Add shortcuts
+        this.addShortcuts(this.config.globalShortcuts);
+        this.addShortcuts(this.config.localShortcuts);
 
-        this._rootScope.$emit(ShortcutsChangedEvent, this._config);
-        // save current config to oldConfig
-        this._oldConfig = _.cloneDeep(this._config);
+        this.$rootScope.$emit(ShortcutsChangedEvent, this.config);
+        // Save current config to oldConfig
+        this._oldConfig = _.cloneDeep(this.config);
     }
 
     private removeShortcuts(collection: ShortcutItem[]): void {
         _.each(collection, (k) => {
-            this._pipShortcutsRegister.remove(k.shortcut);
+            this.pipShortcutsRegister.remove(k.shortcut);
         });
     }
 
@@ -134,33 +121,33 @@ class ShortcutsService implements IShortcutsService {
         }
 
         if (shorcut.href) {
-            this._window.location.href = shorcut.href;
+            this.$window.location.href = shorcut.href;
             return;
         }
 
         if (shorcut.url) {
-            this._location.url(shorcut.url);
+            this.$location.url(shorcut.url);
             return;
         }
 
         if (shorcut.state) {
-            if (this._injector.has('$state')) {
-                var $state = this._injector.get('$state');
+            if (this.$injector.has('$state')) {
+                var $state = this.$injector.get('$state');
                 $state['go'](shorcut.state, shorcut.stateParams);
             }
             return;
         }
 
         if (shorcut.event) {
-            this._rootScope.$broadcast(shorcut.event);
+            this.$rootScope.$broadcast(shorcut.event);
         } else {
             // Otherwise raise notification
-            this._rootScope.$broadcast('pipShortcutKeypress', shorcut.shortcut);
+            this.$rootScope.$broadcast('pipShortcutKeypress', shorcut.shortcut);
         }
     }
 
     private addShortcuts(collection: ShortcutItem[]): void {
-        let generalOptions: ShortcutOption = this._config.defaultOptions ? this._config.defaultOptions : <ShortcutOption>{};
+        let generalOptions: ShortcutOption = this.config.defaultOptions ? this.config.defaultOptions : <ShortcutOption>{};
         
         _.each(collection, (k) => {
             let option: ShortcutOption = k.options ? k.options : generalOptions;
@@ -168,15 +155,14 @@ class ShortcutsService implements IShortcutsService {
 
             target = k.target ? k.target : k.targetId;
             option.Target = target;
-            // regester keyboard shortcut
-            this._pipShortcutsRegister.add(k.shortcut, (e?: any) => {
+            // Registration of keyboard shortcut
+            this.pipShortcutsRegister.add(k.shortcut, (e?: any) => {
                 this.keypressShortcut(k, e);        
             }, option);              
         });
     }
 
-    // public declaration 
-
+    // Describe public functions 
     public get config(): ShortcutsConfig {
         return this._config;
     }
@@ -275,7 +261,7 @@ class ShortcutsProvider implements IShortcutsProvider {
         $window: ng.IWindowService, 
         $location: ng.ILocationService, 
         $injector: ng.auto.IInjectorService,
-        pipShortcutsRegister: ShortcutsRegister
+        pipShortcutsRegister: IShortcutsRegisterService
     ) {
         "ngInject";
 

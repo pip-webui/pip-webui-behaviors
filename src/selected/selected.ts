@@ -1,13 +1,4 @@
-/**
- * @file Keyboard navigation with scrolling over non-focusable controls
- * @copyright Digital Living Software Corp. 2014-2016
- */
-
-/* global angular */
-
-(function () {
-    'use strict';
-
+{
     var thisModule = angular.module("pipSelected", []);
 
     thisModule.directive('pipSelected', function ($parse, $mdConstant, $timeout) {
@@ -22,9 +13,9 @@
                     idSetter = idGetter ? idGetter.assign : null,
                     changeGetter = $attrs.pipSelect ? $parse($attrs.pipSelect) : null,
                     enterSpaceGetter = $attrs.pipEnterSpacePress ? $parse($attrs.pipEnterSpacePress) : null,
-                    noScroll = toBoolean($attrs.pipNoScroll),
-                    modifier = toBoolean($attrs.pipSkipHidden) ? ':visible' : '',
-                    className = toBoolean($attrs.pipTreeList) ? '.pip-selectable-tree' : '.pip-selectable',
+                    noScroll = $attrs.pipNoScroll,
+                    modifier = $attrs.pipSkipHidden ? ':visible' : '',
+                    className = $attrs.pipTreeList ? '.pip-selectable-tree' : '.pip-selectable',
                     selectedIndex = indexGetter($scope),
                     currentElementTabinex = $element.attr('tabindex'),
                     pipSelectedWatch = $attrs.pipSelectedWatch,
@@ -39,7 +30,7 @@
 
                 // Set tabindex if it's not set yet
                 $element.attr('tabindex', currentElementTabinex || 0);
-                
+
                 $element.on('click', className, onClickEvent);
                 $element.on('touchstart', className, onTouchStart);
                 $element.on('touchmove', className, onTouchMove);
@@ -50,14 +41,19 @@
                 $element.on('focusout', onFocusOut);
 
                 // Watch selected item index
-                if (!toBoolean($attrs.pipTreeList)) {
+                if (!$attrs.pipTreeList) {
                     $scope.$watch(indexGetter, function (newSelectedIndex) {
-                        selectItem({ itemIndex: newSelectedIndex });
+                        selectItem({
+                            itemIndex: newSelectedIndex
+                        });
                     });
                 } else {
                     $scope.$watch(idGetter, function (newSelectedId) {
                         setTimeout(function () {
-                            selectItem({ itemId: newSelectedId, raiseEvent: true });
+                            selectItem({
+                                itemId: newSelectedId,
+                                raiseEvent: true
+                            });
                         }, 0);
                     });
                 }
@@ -68,21 +64,18 @@
                         // Delay update to allow ng-repeat to update DOM
                         setTimeout(function () {
                             selectedIndex = indexGetter($scope);
-                            selectItem({ itemIndex: selectedIndex });
+                            selectItem({
+                                itemIndex: selectedIndex
+                            });
                         }, 100);
                     });
                 }
 
                 // Select item defined by index
-                selectItem({ itemIndex: selectedIndex, items: $element.find(className) });
-
-                // Converts value into boolean
-                function toBoolean(value) {
-                    if (value == null) return false;
-                    if (!value) return false;
-                    value = value.toString().toLowerCase();
-                    return value == '1' || value == 'true';
-                };
+                selectItem({
+                    itemIndex: selectedIndex,
+                    items: $element.find(className)
+                });
 
                 // Functions and listeners
                 function selectItem(itemParams) {
@@ -99,7 +92,7 @@
                             if (itemIndex >= 0 && itemIndex < itemsLength) {
                                 return items[itemIndex]
                             }
-                        } ()),
+                        }()),
                         raiseEvent = itemParams.raiseEvent;
 
                     if (item) {
@@ -177,8 +170,7 @@
 
                     if (containerTop > itemTop) {
                         $element.scrollTop(containerScrollTop + itemTop - containerTop);
-                    }
-                    else if (containerBottom < itemBottom) {
+                    } else if (containerBottom < itemBottom) {
                         $element.scrollTop(containerScrollTop + itemBottom - containerBottom);
                     }
 
@@ -194,7 +186,8 @@
                 };
 
                 function touchHasMoved(event) {
-                    var touch = event.changedTouches[0], boundary = touchBoundary; //Touchmove boundary, beyond which a click will be cancelled.
+                    var touch = event.changedTouches[0],
+                        boundary = touchBoundary; //Touchmove boundary, beyond which a click will be cancelled.
 
                     if (Math.abs(touch.pageX - touchStartX) > boundary || Math.abs(touch.pageY - touchStartY) > boundary) {
                         return true;
@@ -204,7 +197,10 @@
                 };
 
                 function onClickEvent(event) {
-                    selectItem({ item: event.currentTarget, raiseEvent: true });
+                    selectItem({
+                        item: event.currentTarget,
+                        raiseEvent: true
+                    });
                 }
 
                 function onTouchStart(ev) {
@@ -225,7 +221,7 @@
                     touchStartY = touch.pageY;
 
                     if ((event.timeStamp - lastClickTime) < tapdelay) {
-                      //  event.preventDefault();
+                        //  event.preventDefault();
                     }
 
                     return true;
@@ -271,7 +267,10 @@
                     trackingClick = false;
                     trackingClickStart = 0;
 
-                    selectItem({ item: ev.currentTarget, raiseEvent: true });
+                    selectItem({
+                        item: ev.currentTarget,
+                        raiseEvent: true
+                    });
 
                     return false;
                 }
@@ -300,20 +299,24 @@
                         }
 
                     } else
-                        if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW || keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
-                            keyCode == $mdConstant.KEY_CODE.UP_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
+                    if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW || keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
+                        keyCode == $mdConstant.KEY_CODE.UP_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
 
-                            e.preventDefault();
-                            e.stopPropagation();
+                        e.preventDefault();
+                        e.stopPropagation();
 
-                            // Get next selectable control index
-                            var items = $element.find(className + modifier),
-                                inc = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1,
-                                newSelectedIndex = selectedIndex + inc;
+                        // Get next selectable control index
+                        var items = $element.find(className + modifier),
+                            inc = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1,
+                            newSelectedIndex = selectedIndex + inc;
 
-                            // Set next control as selected
-                            selectItem({ itemIndex: newSelectedIndex, items: items, raiseEvent: true });
-                        }
+                        // Set next control as selected
+                        selectItem({
+                            itemIndex: newSelectedIndex,
+                            items: items,
+                            raiseEvent: true
+                        });
+                    }
                 }
 
                 function onFocusIn(event) {
@@ -327,7 +330,11 @@
                     if (selectedItem.length === 0) {
                         selectedIndex = indexGetter($scope);
                         items = $element.find(className + modifier);
-                        selectItem({ itemIndex: selectedIndex || 0, items: items, raiseEvent: true });
+                        selectItem({
+                            itemIndex: selectedIndex || 0,
+                            items: items,
+                            raiseEvent: true
+                        });
                     }
                 }
 
@@ -337,6 +344,4 @@
             }
         };
     });
-
-})();
-
+}

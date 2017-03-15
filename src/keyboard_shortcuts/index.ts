@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('pipShortcuts', ['ngMaterial', 'ui.router']);
 
 import './ShorcutsRegisterService';

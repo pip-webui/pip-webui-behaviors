@@ -1,10 +1,8 @@
-'use strict';
-
 export class ShortcutOption {
     Type: KeyboardEvent;
     Propagate: boolean;
     DisableInInput: boolean;
-    Target: any; // event target object
+    Target: any; // Event target object
     Keycode: number;
 }
 
@@ -95,7 +93,7 @@ export class KeyboardShortcut {
         shift: { wanted: false, pressed: false },
         ctrl: { wanted: false, pressed: false },
         alt: { wanted: false, pressed: false },
-        meta: { wanted: false, pressed: false }	//Meta is Mac specific
+        meta: { wanted: false, pressed: false }	// Meta is Mac specific
     };
 
     public eventCallback: Function;
@@ -123,7 +121,7 @@ export class KeyboardShortcut {
             let e: JQueryEventObject = event || <JQueryEventObject>window.event;
             let code: number;
 
-            if (this.option.DisableInInput) { //Don't enable shortcut keys in Input, Textarea fields
+            if (this.option.DisableInInput) { // Disable shortcut keys in Input, Textarea fields
                 let element;
                 if (e.target) {
                     element = e.target;
@@ -136,7 +134,7 @@ export class KeyboardShortcut {
                 }
                 if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') return;
             }
-            //Find Which key is pressed
+            // Find Which key is pressed
             if (e.keyCode) {
                 code = e.keyCode;
             } else if (e.which) {
@@ -145,11 +143,11 @@ export class KeyboardShortcut {
 
             let character = String.fromCharCode(code).toLowerCase();
 
-            if (code == 188) character = ","; //If the user presses , when the type is onkeydown
-            if (code == 190) character = "."; //If the user presses , when the type is onkeydown
+            if (code == 188) character = ","; // If the user presses, when the type is onkeydown
+            if (code == 190) character = "."; // If the user presses, when the type is onkeydown
 
             let keys: string[] = this.shorcut.split("+");
-            //Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
+            // Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
             let kp: number = 0;
 
             if (e.ctrlKey) this.modifiers.ctrl.pressed = e.ctrlKey;
@@ -160,7 +158,7 @@ export class KeyboardShortcut {
             let i: number = 0;
             for (i = 0; i < keys.length; i++) {
                 let k: string = keys[i];
-                //Modifiers
+                // Modifiers
                 if (k == 'ctrl' || k == 'control') {
                     kp++;
                     this.modifiers.ctrl.wanted = true;
@@ -173,16 +171,16 @@ export class KeyboardShortcut {
                 } else if (k == 'meta') {
                     kp++;
                     this.modifiers.meta.wanted = true;
-                } else if (k.length > 1) { //If it is a special key
+                } else if (k.length > 1) { // If it is a special key
                     if (this.special_keys[k] == code) {
                         kp++;
                     }
                 } else if (this.option.Keycode) {
                     if (this.option.Keycode == code) kp++;
-                } else { //The special keys did not match
+                } else { // The special keys did not match
                     if (character == k) kp++;
                     else {
-                        if (this.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
+                        if (this.shift_nums[character] && e.shiftKey) { // Stupid Shift key bug created by using lowercase
                             character = this.shift_nums[character];
                             if (character == k) {
                                 kp++;
@@ -200,12 +198,12 @@ export class KeyboardShortcut {
 
                 this.callback(e);
 
-                if (!this.option.Propagate) { //Stop the event
-                    //e.cancelBubble is supported by IE - this will kill the bubbling process.
+                if (!this.option.Propagate) { // Stop the event
+                    // e.cancelBubble is supported by IE - this will kill the bubbling process.
                     e.cancelBubble = true;
                     e.returnValue = false;
 
-                    //e.stopPropagation works in Firefox.
+                    // e.stopPropagation works in Firefox.
                     if (e.stopPropagation) {
                         e.stopPropagation();
                         e.preventDefault();
