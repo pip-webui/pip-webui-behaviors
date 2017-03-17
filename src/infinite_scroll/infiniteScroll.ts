@@ -216,7 +216,7 @@
         $rootScope: ng.IRootScopeService,
         $window: ng.IWindowService,
         $interval: ng.IIntervalService
-    ) {
+    ): ng.IDirective {
         return {
             scope: {
                 pipInfiniteScroll: '&',

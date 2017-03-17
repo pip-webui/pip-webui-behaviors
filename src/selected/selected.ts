@@ -1,347 +1,412 @@
 {
-    var thisModule = angular.module("pipSelected", []);
 
-    thisModule.directive('pipSelected', function ($parse, $mdConstant, $timeout) {
-        return {
-            restrict: 'A',
-            scope: false,
-            link: function ($scope: any, $element, $attrs: any) {
-                var
-                    indexGetter = $attrs.pipSelected ? $parse($attrs.pipSelected) : null,
-                    indexSetter = indexGetter ? indexGetter.assign : null,
-                    idGetter = $attrs.pipSelectedId ? $parse($attrs.pipSelectedId) : null,
-                    idSetter = idGetter ? idGetter.assign : null,
-                    changeGetter = $attrs.pipSelect ? $parse($attrs.pipSelect) : null,
-                    enterSpaceGetter = $attrs.pipEnterSpacePress ? $parse($attrs.pipEnterSpacePress) : null,
-                    noScroll = $attrs.pipNoScroll,
-                    modifier = $attrs.pipSkipHidden ? ':visible' : '',
-                    className = $attrs.pipTreeList ? '.pip-selectable-tree' : '.pip-selectable',
-                    selectedIndex = indexGetter($scope),
-                    currentElementTabinex = $element.attr('tabindex'),
-                    pipSelectedWatch = $attrs.pipSelectedWatch,
-                    isScrolled = false;
+    interface SelectedAttributes extends ng.IAttributes {
+        pipSelected: any;
+        pipSelectedId: any;
+        pipSelect: any;
+        pipEnterSpacePress: any;
+        pipNoScroll: any;
+        pipSkipHidden: any;
+        pipTreeList: any;
+        pipSelectedWatch: any;
+    }
 
-                // variables for touch    
-                var touchStartX, touchStartY, trackingClick, trackingClickStart, targetElement, lastClickTime, cancelNextClick;
-                // constant for touch
-                var touchBoundary = 10,
-                    tapdelay = 200,
-                    tapTimeout = 700;
+    class SelectedLink {
+        private indexGetter: any;
+        private indexSetter: any;
+        private idSetter: any;
+        private idGetter: any;
+        private changeGetter: any;
+        private enterSpaceGetter: any;
+        private noScroll: any;
+        private modifier: any;
+        private className: any;
+        private selectedIndex: any;
+        private currentElementTabinex: any;
+        private pipSelectedWatch: any;
+        private isScrolled: any;
+        // Variables for touch functions
+        private touchStartX: any;
+        private touchStartY: any;
+        private trackingClick: any;
+        private trackingClickStart: any;
+        private targetElement: any;
+        private lastClickTime: any;
+        private cancelNextClick: any;
+        // Constants for touch functions
+        private touchBoundary: number = 10;
+        private tapdelay: number = 200;
+        private tapTimeout: number = 700;
 
-                // Set tabindex if it's not set yet
-                $element.attr('tabindex', currentElementTabinex || 0);
+        constructor(
+            $parse: ng.IParseService,
+            private $mdConstant: any,
+            private $timeout: ng.ITimeoutService,
+            private $scope: ng.IScope,
+            private $element: JQuery,
+            private $attrs: SelectedAttributes
+        ) {
+            this.indexGetter = $attrs.pipSelected ? $parse($attrs.pipSelected) : null;
+            this.indexSetter = this.indexGetter ? this.indexGetter.assign : null;
+            this.idGetter = $attrs.pipSelectedId ? $parse($attrs.pipSelectedId) : null;
+            this.idSetter = this.idGetter ? this.idGetter.assign : null;
+            this.changeGetter = $attrs.pipSelect ? $parse($attrs.pipSelect) : null;
+            this.enterSpaceGetter = $attrs.pipEnterSpacePress ? $parse($attrs.pipEnterSpacePress) : null;
+            this.noScroll = $attrs.pipNoScroll;
+            this.modifier = $attrs.pipSkipHidden ? ':visible' : '';
+            this.className = $attrs.pipTreeList ? '.pip-selectable-tree' : '.pip-selectable';
+            this.selectedIndex = this.indexGetter($scope);
+            this.currentElementTabinex = $element.attr('tabindex');
+            this.pipSelectedWatch = $attrs.pipSelectedWatch;
+            this.isScrolled = false;
 
-                $element.on('click', className, onClickEvent);
-                $element.on('touchstart', className, onTouchStart);
-                $element.on('touchmove', className, onTouchMove);
-                $element.on('touchend', className, onTouchEnd);
-                $element.on('touchcancel', className, onTouchCancel);
-                $element.on('keydown', onKeyDown);
-                $element.on('focusin', onFocusIn);
-                $element.on('focusout', onFocusOut);
+            $element.attr('tabindex', this.currentElementTabinex || 0);
 
-                // Watch selected item index
-                if (!$attrs.pipTreeList) {
-                    $scope.$watch(indexGetter, function (newSelectedIndex) {
-                        selectItem({
-                            itemIndex: newSelectedIndex
-                        });
+            $element.on('click', this.className, (event) => {
+                this.onClickEvent(event);
+            });
+            $element.on('touchstart', this.className, (event) => {
+                this.onTouchStart(event);
+            });
+            $element.on('touchmove', this.className, (event) => {
+                this.onTouchMove(event);
+            });
+            $element.on('touchend', this.className, (event) => {
+                this.onTouchEnd(event);
+            });
+            $element.on('touchcancel', this.className, (event) => {
+                this.onTouchCancel(event);
+            });
+            $element.on('keydown', (event) => {
+                this.onKeyDown(event);
+            });
+            $element.on('focusin', (event) => {
+                this.onFocusIn(event);
+            });
+            $element.on('focusout', (event) => {
+                this.onFocusOut(event);
+            });
+
+            // Watch selected item index
+            if (!$attrs.pipTreeList) {
+                $scope.$watch(this.indexGetter, (newSelectedIndex) => {
+                    this.selectItem({
+                        itemIndex: newSelectedIndex
                     });
-                } else {
-                    $scope.$watch(idGetter, function (newSelectedId) {
-                        setTimeout(function () {
-                            selectItem({
-                                itemId: newSelectedId,
-                                raiseEvent: true
-                            });
-                        }, 0);
-                    });
-                }
-
-                // Watch resync selection
-                if (pipSelectedWatch) {
-                    $scope.$watch(pipSelectedWatch, function () {
-                        // Delay update to allow ng-repeat to update DOM
-                        setTimeout(function () {
-                            selectedIndex = indexGetter($scope);
-                            selectItem({
-                                itemIndex: selectedIndex
-                            });
-                        }, 100);
-                    });
-                }
-
-                // Select item defined by index
-                selectItem({
-                    itemIndex: selectedIndex,
-                    items: $element.find(className)
                 });
+            } else {
+                $scope.$watch(this.idGetter, (newSelectedId) => {
+                    $timeout(() => {
+                        this.selectItem({
+                            itemId: newSelectedId,
+                            raiseEvent: true
+                        });
+                    }, 0);
+                });
+            }
 
-                // Functions and listeners
-                function selectItem(itemParams) {
-                    if (isScrolled) return;
-                    var itemIndex = itemParams.itemIndex,
-                        itemId = itemParams.itemId,
-                        items = itemParams.items || $element.find(className + modifier),
-                        itemsLength = items.length,
-                        item = (function () {
-                            if (itemParams.item) return itemParams.item;
-                            if (itemIndex === undefined && itemIndex === -1) {
-                                itemIndex = items.index(items.filter('[pip-id=' + itemId + ']'));
-                            }
-                            if (itemIndex >= 0 && itemIndex < itemsLength) {
-                                return items[itemIndex]
-                            }
-                        }()),
-                        raiseEvent = itemParams.raiseEvent;
-
-                    if (item) {
-                        $element.find(className).removeClass('selected md-focused');
-                        item = angular.element(item)
-                            .addClass('selected md-focused')
-                            .focus(); // todo сдвигает список тут, на первом проходе
-                        if (!noScroll) scrollToItem(item);
-                        if (raiseEvent) defineSelectedIndex(items);
-                    }
-                };
-
-                function defineSelectedIndex(items) {
-                    var oldSelectedIndex = selectedIndex;
-                    selectedIndex = -1;
-                    for (var index = 0; index < items.length; index++) {
-                        if ($(items[index]).hasClass('selected')) {
-                            selectedIndex = index;
-
-                            break;
-                        }
-                    }
-
-                    // Execute callback to notify about item select
-                    if (oldSelectedIndex != selectedIndex && selectedIndex !== -1) {
-                        $scope.$apply(updateIndex);
-                    } else {
-                        $scope.$apply(onSelect);
-                    }
-
-                    function updateIndex() {
-                        var selectedItem = angular.element(items[selectedIndex]),
-                            selectedId = selectedItem.attr('pip-id');
-
-                        if (indexSetter) indexSetter($scope, selectedIndex);
-                        if (idSetter) idSetter($scope, selectedId);
-                        onSelect();
-                    };
-
-                    function onSelect() {
-                        var selectedItem = angular.element(items[selectedIndex]),
-                            selectedId = selectedItem.attr('pip-id');
-
-                        if (changeGetter) {
-                            changeGetter($scope, {
-                                $event: {
-                                    target: $element,
-                                    item: selectedItem,
-                                    index: selectedIndex,
-                                    id: selectedId,
-                                    newIndex: selectedIndex,
-                                    oldIndex: oldSelectedIndex
-                                }
-                            });
-                        }
-                    }
-                };
-
-                function scrollToItem($item) {
-                    if (noScroll) return;
-
-                    var
-                        containerTop = $element.offset().top,
-                        containerHeight = $element.height(),
-                        containerBottom = containerTop + containerHeight,
-                        itemTop = $item.offset().top,
-                        itemHeight = $item.outerHeight(true),
-                        itemBottom = itemTop + itemHeight,
-                        containerScrollTop = $element.scrollTop();
-
-                    isScrolled = true;
-                    setTimeout(function () {
-                        isScrolled = false;
+            // Watch resync selection
+            if (this.pipSelectedWatch) {
+                $scope.$watch(this.pipSelectedWatch, () => {
+                    // Delay update to allow ng-repeat to update DOM
+                    $timeout(() => {
+                        this.selectedIndex = this.indexGetter($scope);
+                        this.selectItem({
+                            itemIndex: this.selectedIndex
+                        });
                     }, 100);
+                });
+            }
 
-                    if (containerTop > itemTop) {
-                        $element.scrollTop(containerScrollTop + itemTop - containerTop);
-                    } else if (containerBottom < itemBottom) {
-                        $element.scrollTop(containerScrollTop + itemBottom - containerBottom);
+            // Select item defined by index
+            this.selectItem({
+                itemIndex: this.selectedIndex,
+                items: $element.find(this.className)
+            });
+        }
+
+        private selectItem(itemParams) {
+            if (this.isScrolled) return;
+            let itemIndex = itemParams.itemIndex,
+                itemId = itemParams.itemId,
+                items = itemParams.items || this.$element.find(this.className + this.modifier),
+                itemsLength = items.length,
+                item = () => {
+                    if (itemParams.item) return itemParams.item;
+                    if (itemIndex === undefined && itemIndex === -1) {
+                        itemIndex = items.index(items.filter('[pip-id=' + itemId + ']'));
                     }
-
-                };
-
-                function getTargetElementFromEventTarget(eventTarget) {
-                    // On some older browsers the event target may be a text node.
-                    if (eventTarget.nodeType === Node.TEXT_NODE) {
-                        return eventTarget.parentNode;
-                    }
-
-                    return eventTarget;
-                };
-
-                function touchHasMoved(event) {
-                    var touch = event.changedTouches[0],
-                        boundary = touchBoundary; //Touchmove boundary, beyond which a click will be cancelled.
-
-                    if (Math.abs(touch.pageX - touchStartX) > boundary || Math.abs(touch.pageY - touchStartY) > boundary) {
-                        return true;
+                    if (itemIndex >= 0 && itemIndex < itemsLength) {
+                        return items[itemIndex]
                     }
 
                     return false;
-                };
+                },
+                raiseEvent = itemParams.raiseEvent;
+                item = item();
+            if (item) {
+                this.$element.find(this.className).removeClass('selected md-focused');
+                item = <any>angular.element(item)
+                    .addClass('selected md-focused')
+                    .focus();
+                if (!this.noScroll) this.scrollToItem(item);
+                if (raiseEvent) this.defineSelectedIndex(items);
+            }
+        };
 
-                function onClickEvent(event) {
-                    selectItem({
-                        item: event.currentTarget,
-                        raiseEvent: true
-                    });
+        private defineSelectedIndex(items) {
+            const oldSelectedIndex = this.selectedIndex;
+            this.selectedIndex = -1;
+            for (var index = 0; index < items.length; index++) {
+                if ($(items[index]).hasClass('selected')) {
+                    this.selectedIndex = index;
+
+                    break;
                 }
+            }
 
-                function onTouchStart(ev) {
-                    //ev.preventDefault();
+            // Execute callback to notify about item select
+            if (oldSelectedIndex != this.selectedIndex && this.selectedIndex !== -1) {
+                this.$scope.$apply(updateIndex);
+            } else {
+                this.$scope.$apply(onSelect);
+            }
 
-                    let event = ev.originalEvent;
-                    if (event['targetTouches'].length > 1) {
-                        return true;
-                    }
-                    let targetElement = getTargetElementFromEventTarget(event.target);
-                    let touch = event['targetTouches'][0];
+            function updateIndex() {
+                const selectedItem = angular.element(items[this.selectedIndex]),
+                    selectedId = selectedItem.attr('pip-id');
 
-                    trackingClick = true;
-                    trackingClickStart = event.timeStamp;
-                    targetElement = targetElement;
+                if (this.indexSetter) this.indexSetter(this.$scope, this.selectedIndex);
+                if (this.idSetter) this.idSetter(this.$scope, selectedId);
+                onSelect();
+            };
 
-                    touchStartX = touch.pageX;
-                    touchStartY = touch.pageY;
+            function onSelect() {
+                const selectedItem = angular.element(items[this.selectedIndex]),
+                    selectedId = selectedItem.attr('pip-id');
 
-                    if ((event.timeStamp - lastClickTime) < tapdelay) {
-                        //  event.preventDefault();
-                    }
-
-                    return true;
-                }
-
-                function onTouchMove(ev) {
-                    if (!trackingClick) {
-                        return true;
-                    }
-                    let event = ev.originalEvent;
-                    // If the touch has moved, cancel the click tracking
-                    if (targetElement !== getTargetElementFromEventTarget(event.target) || touchHasMoved(event)) {
-                        trackingClick = false;
-                        targetElement = null;
-                    }
-
-                    return true;
-                }
-
-                function onTouchEnd(ev) {
-                    var forElement, newTrackingClickStart, targetTagName, scrollParent, touch, newtargetElement = targetElement;
-
-                    if (!trackingClick) {
-                        return true;
-                    }
-                    event = ev.originalEvent;
-                    // Prevent phantom clicks on fast double-tap 
-                    if ((event.timeStamp - lastClickTime) < tapdelay) {
-                        cancelNextClick = true;
-                        return true;
-                    }
-
-                    if ((event.timeStamp - trackingClickStart) > tapTimeout) {
-                        return true;
-                    }
-
-                    // Reset to prevent wrong click cancel on input 
-                    cancelNextClick = false;
-
-                    lastClickTime = event.timeStamp;
-
-                    newTrackingClickStart = trackingClickStart;
-                    trackingClick = false;
-                    trackingClickStart = 0;
-
-                    selectItem({
-                        item: ev.currentTarget,
-                        raiseEvent: true
-                    });
-
-                    return false;
-                }
-
-                function onTouchCancel(ev) {
-                    trackingClick = false;
-                    targetElement = null;
-                }
-
-                function onKeyDown(e) {
-                    var keyCode = e.which || e.keyCode;
-
-                    // Check control keyCode
-                    if (keyCode == $mdConstant.KEY_CODE.ENTER || keyCode == $mdConstant.KEY_CODE.SPACE) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        if (enterSpaceGetter) {
-                            enterSpaceGetter($scope, {
-                                $event: {
-                                    target: $element,
-                                    index: selectedIndex,
-                                    item: $element.find('.selected')
-                                }
-                            });
+                if (this.changeGetter) {
+                    this.changeGetter(this.$scope, {
+                        $event: {
+                            target: this.$element,
+                            item: selectedItem,
+                            index: this.selectedIndex,
+                            id: selectedId,
+                            newIndex: this.selectedIndex,
+                            oldIndex: oldSelectedIndex
                         }
-
-                    } else
-                    if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW || keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.UP_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
-
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        // Get next selectable control index
-                        var items = $element.find(className + modifier),
-                            inc = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1,
-                            newSelectedIndex = selectedIndex + inc;
-
-                        // Set next control as selected
-                        selectItem({
-                            itemIndex: newSelectedIndex,
-                            items: items,
-                            raiseEvent: true
-                        });
-                    }
-                }
-
-                function onFocusIn(event) {
-                    // Choose selected element
-                    var items,
-                        selectedItem = $element.find(className + '.selected');
-
-                    selectedItem.addClass('md-focused');
-
-                    // If there are not selected elements then pick the first one
-                    if (selectedItem.length === 0) {
-                        selectedIndex = indexGetter($scope);
-                        items = $element.find(className + modifier);
-                        selectItem({
-                            itemIndex: selectedIndex || 0,
-                            items: items,
-                            raiseEvent: true
-                        });
-                    }
-                }
-
-                function onFocusOut(event) {
-                    $element.find(className + '.md-focused' + modifier).removeClass('md-focused');
+                    });
                 }
             }
         };
-    });
+
+        private scrollToItem($item) {
+            if (this.noScroll || !$item.offset()) return;
+
+            const
+                containerTop = this.$element.offset().top,
+                containerHeight = this.$element.height(),
+                containerBottom = containerTop + containerHeight,
+                itemTop = $item.offset().top,
+                itemHeight = $item.outerHeight(true),
+                itemBottom = itemTop + itemHeight,
+                containerScrollTop = this.$element.scrollTop();
+
+            this.isScrolled = true;
+            this.$timeout(() => {
+                this.isScrolled = false;
+            }, 100);
+
+            if (containerTop > itemTop) {
+                this.$element.scrollTop(containerScrollTop + itemTop - containerTop);
+            } else if (containerBottom < itemBottom) {
+                this.$element.scrollTop(containerScrollTop + itemBottom - containerBottom);
+            }
+        };
+
+        private getTargetElementFromEventTarget(eventTarget) {
+            // On some older browsers the event target may be a text node.
+            if (eventTarget.nodeType === Node.TEXT_NODE) {
+                return eventTarget.parentNode;
+            }
+
+            return eventTarget;
+        };
+
+        private touchHasMoved(event) {
+            const touch = event.changedTouches[0],
+                boundary = this.touchBoundary; // Touchmove boundary, beyond which a click will be cancelled.
+
+            if (Math.abs(touch.pageX - this.touchStartX) > boundary || Math.abs(touch.pageY - this.touchStartY) > boundary) {
+                return true;
+            }
+
+            return false;
+        };
+
+        private onClickEvent(event) {
+            this.selectItem({
+                item: event.currentTarget,
+                raiseEvent: true
+            });
+        }
+
+        private onTouchStart(event) {
+            const ev = event.originalEvent;
+            if (ev['targetTouches'].length > 1) {
+                return true;
+            }
+            const targetElement = this.getTargetElementFromEventTarget(ev.target),
+                touch = ev['targetTouches'][0];
+
+            this.trackingClick = true;
+            this.trackingClickStart = ev.timeStamp;
+            this.targetElement = targetElement;
+
+            this.touchStartX = touch.pageX;
+            this.touchStartY = touch.pageY;
+
+            /*if ((ev.timeStamp - this.lastClickTime) < this.tapdelay) {
+                //  event.preventDefault();
+            }*/
+
+            return true;
+        }
+
+        private onTouchMove(event) {
+            if (!this.trackingClick) {
+                return true;
+            }
+            const ev = event.originalEvent;
+            // If the touch has moved, cancel the click tracking
+            if (this.targetElement !== this.getTargetElementFromEventTarget(ev.target) || this.touchHasMoved(ev)) {
+                this.trackingClick = false;
+                this.targetElement = null;
+            }
+
+            return true;
+        }
+
+        private onTouchEnd(event) {
+            let forElement, newTrackingClickStart, targetTagName, scrollParent, touch, newtargetElement = this.targetElement;
+
+            if (!this.trackingClick) {
+                return true;
+            }
+            const ev = event.originalEvent;
+            // Prevent phantom clicks on fast double-tap 
+            if ((ev.timeStamp - this.lastClickTime) < this.tapdelay) {
+                this.cancelNextClick = true;
+                return true;
+            }
+
+            if ((ev.timeStamp - this.trackingClickStart) > this.tapTimeout) {
+                return true;
+            }
+
+            // Reset to prevent wrong click cancel on input 
+            this.cancelNextClick = false;
+
+            this.lastClickTime = event.timeStamp;
+
+            newTrackingClickStart = this.trackingClickStart;
+            this.trackingClick = false;
+            this.trackingClickStart = 0;
+
+            this.selectItem({
+                item: event.currentTarget,
+                raiseEvent: true
+            });
+
+            return false;
+        }
+
+        private onTouchCancel(event) {
+            this.trackingClick = false;
+            this.targetElement = null;
+        }
+
+        private onKeyDown(event) {
+            var keyCode = event.which || event.keyCode;
+
+            // Check control keyCode
+            if (keyCode == this.$mdConstant.KEY_CODE.ENTER || keyCode == this.$mdConstant.KEY_CODE.SPACE) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (this.enterSpaceGetter) {
+                    this.enterSpaceGetter(this.$scope, {
+                        $event: {
+                            target: this.$element,
+                            index: this.selectedIndex,
+                            item: this.$element.find('.selected')
+                        }
+                    });
+                }
+
+            } else
+            if (keyCode == this.$mdConstant.KEY_CODE.LEFT_ARROW || keyCode == this.$mdConstant.KEY_CODE.RIGHT_ARROW ||
+                keyCode == this.$mdConstant.KEY_CODE.UP_ARROW || keyCode == this.$mdConstant.KEY_CODE.DOWN_ARROW
+            ) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Get next selectable control index
+                const items = this.$element.find(this.className + this.modifier),
+                    inc = (keyCode == this.$mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == this.$mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1,
+                    newSelectedIndex = this.selectedIndex + inc;
+
+                // Set next control as selected
+                this.selectItem({
+                    itemIndex: newSelectedIndex,
+                    items: items,
+                    raiseEvent: true
+                });
+            }
+        }
+
+        private onFocusIn(event) {
+            // Choose selected element
+            let items,
+                selectedItem = this.$element.find(this.className + '.selected');
+
+            selectedItem.addClass('md-focused');
+
+            // If there are not selected elements then pick the first one
+            if (selectedItem.length === 0) {
+                this.selectedIndex = this.indexGetter(this.$scope);
+                items = this.$element.find(this.className + this.modifier);
+                this.selectItem({
+                    itemIndex: this.selectedIndex || 0,
+                    items: items,
+                    raiseEvent: true
+                });
+            }
+        }
+
+        private onFocusOut(event) {
+            this.$element.find(this.className + '.md-focused' + this.modifier).removeClass('md-focused');
+        }
+    }
+
+    const Selected = function (
+        $parse: ng.IParseService,
+        $mdConstant: any,
+        $timeout: ng.ITimeoutService
+    ): ng.IDirective {
+        return {
+            restrict: 'A',
+            scope: false,
+            link: function (
+                $scope: ng.IScope,
+                $element: JQuery,
+                $attrs: SelectedAttributes
+            ) {
+                new SelectedLink($parse, $mdConstant, $timeout, $scope, $element, $attrs);
+            }
+        }
+    }
+
+    angular.module("pipSelected", [])
+        .directive('pipSelected', Selected);
 }
