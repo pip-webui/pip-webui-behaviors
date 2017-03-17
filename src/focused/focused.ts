@@ -1,151 +1,179 @@
 {
-    var thisModule = angular.module("pipFocused", []);
+    interface FocusedScope extends ng.IScope {
+        pipFocusedColor: Function;
+        pipFocusedRebind: Function;
+        pipFocusedTabindex: Function;
+        pipFocusedOpacity: Function;
+        pipFocusedData: Function;
+        pipWithHidden: Function;
+        pipRebind: Function;
+    }
 
-    thisModule.directive('pipFocused', function ($timeout, $mdConstant, $window) {
-        return {
-            // restrict: 'EA',
-            require: "?ngModel",
-            link: function ($scope: any, $element, $attrs: any) {
-                var controls, controlsLength,
-                    withHidden = $attrs.pipWithHidden,
-                    opacityDelta = 0.4,
-                    opacityLimit = 0.5,
-                    _color,
-                    focusedColor = $attrs.pipFocusedColor ? $attrs.pipFocusedColor : null,
-                    reInit = $attrs.pipFocusedRebind ? $attrs.pipFocusedRebind : null,
-                    focusedTabindex = $attrs.pipFocusedTabindex ? parseInt($attrs.pipFocusedTabindex) || 0 : 0,
-                    isOpacity = $attrs.pipFocusedOpacity ? toBoolean($attrs.pipFocusedOpacity) : false;
+    interface FocusedAttributes extends ng.IAttributes {
+        ngModel: any;
+        pipFocusedData: any;
+    }
 
-                $timeout(init);
-                $element.on('keydown', keydownListener);
+    class FocusedLink implements ng.IDirective {
+        private controls: JQuery;
+        private controlsLength: number;
+        private color: string;
+        private opacityDelta: number = 0.4;
+        private opacityLimit: number = 0.5;
 
-                if ($attrs.ngModel) {
-                    $scope.$watch($attrs.ngModel, function () {
-                        $timeout(init);
-                    }, true);
+        constructor(
+            private $scope: FocusedScope,
+            private $element: JQuery,
+            $attrs: FocusedAttributes,
+            private $timeout: ng.ITimeoutService,
+            private $mdConstant: any,
+            private $window: ng.IWindowService
+        ) {
+
+            $element.on('keydown', (e) => {
+                this.keydownListener(e);
+            });
+
+            $timeout(() => {
+                this.init();
+            });
+
+            if ($attrs.ngModel) {
+                $scope.$watch('ngModel', function () {
+                    $timeout(this.init);
+                }, true);
+            }
+
+            if ($attrs.pipFocusedData) {
+                $scope.$watch('pipFocusedData', function () {
+                    $timeout(this.init);
+                }, true);
+            }
+        }
+
+        private init() {
+            const selector = this.$scope.pipWithHidden && this.$scope.pipWithHidden() ? '.pip-focusable' : '.pip-focusable:visible';
+            this.controls = this.$element.find(selector);
+            this.controlsLength = this.controls.length;
+            this.checkTabindex(this.controls);
+            // Add event listeners
+            this.controls.on('focus', (event) => {
+                const target = event.currentTarget;
+                if ($(target).hasClass('md-focused')) {
+                    return;
+                }
+                if (this.$scope.pipRebind && this.$scope.pipRebind()) {
+                    this.init();
+                }
+                this.$element.addClass('pip-focused-container');
+                if (!this.$scope.pipFocusedOpacity || !this.$scope.pipFocusedOpacity()) {
+
+                    this.color = $(target).css('backgroundColor');
+                    $(target).css('backgroundColor', this.rgba(this.color));
+                    $(target).addClass('md-focused');
+                } else {
+                    $(target).addClass('md-focused md-focused-opacity');
                 }
 
-                if ($attrs.pipFocusedData) {
-                    $attrs.$observe('pipFocusedData', function () {
-                        $timeout(init);
-                    }, true);
-                }      
-                          
-                // Converts value into boolean
-                function toBoolean(value) {
-                    if (value == null) return false;
-                    if (!value) return false;
-                    value = value.toString().toLowerCase();
-                    return value == '1' || value == 'true';
-                };
-
-                function rgba(color) {
-                    if (focusedColor) {
-                        return focusedColor;
-                    }
-
-                    var arr = color.split("(")[1].split(")")[0].split(",");
-
-                    if (!arr || arr.length < 3) {
-                        return ''
-                    }
-
-                    let red, blue, green, opacity;
-
-                    opacity = arr.length == 3 ? 1 : parseFloat(arr[3]);
-                    red = arr[0];
-                    blue = arr[1];
-                    green = arr[2];
-
-                    if (opacity < opacityLimit) {
-                        opacity += opacityDelta;
-                    } else {
-                        opacity -= opacityDelta;
-                    }
-
-                    return 'rgba(' + red + ', ' + blue + ', ' + green + ', ' + opacity + ')';
+            }).on('focusout', (event) => {
+                const target = event.currentTarget;
+                if (!$(target).hasClass('md-focused')) {
+                    return;
                 }
+                this.$element.removeClass('pip-focused-container');
 
-                function setTabindex(element, value) {
-                    element.attr('tabindex', value);
+                if (!this.$scope.pipFocusedOpacity || !this.$scope.pipFocusedOpacity()) {
+                    // $(this).css('backgroundColor', _color);
+                    $(target).css('backgroundColor', "");
+                    $(target).removeClass('md-focused md-focused-opacity');
+                } else {
+                    $(target).removeClass('md-focused');
                 }
+            });
+        }
 
-                function checkTabindex(controls) {
-                    let index = _.findIndex(controls, (c) => {
-                        return c['tabindex'] > -1;
-                    });
+        private rgba(color) {
+            if (this.$scope.pipFocusedColor && this.$scope.pipFocusedColor()) {
+                return this.$scope.pipFocusedColor();
+            }
 
-                    if (index == -1 && controls.length > 0) {
-                        // let el = controls[0];
-                        setTabindex(angular.element(controls[0]), focusedTabindex);
-                    }
-                }
+            const arr = color.split("(")[1].split(")")[0].split(",");
 
-                function init() {
-                    var selector = withHidden ? '.pip-focusable' : '.pip-focusable:visible';
-                    controls = $element.find(selector);
-                    controlsLength = controls.length;
-                    checkTabindex(controls);
-                    // add needed event listeners
-                    controls.on('focus', function () {
-                        if ($(this).hasClass('md-focused')) {
-                            return;
-                        }
-                        if (reInit) {
-                            init();
-                        }
-                        $element.addClass('pip-focused-container');
-                        if (isOpacity) {
-                            let ell = angular.element($(this)[0]);
+            if (!arr || arr.length < 3) {
+                return ''
+            }
 
-                            _color = $(this).css('backgroundColor');
-                            // _color = $window.getComputedStyle($(this)[0], null).backgroundColor;
-                            $(this).css('backgroundColor', rgba(_color));
-                            $(this).addClass('md-focused');
-                        } else {
-                            $(this).addClass('md-focused md-focused-opacity');
-                        }
-                        
-                        // setTabindex(angular.element($(this)[0]), 0);
-                    }).on('focusout', function () {
-                        if (!$(this).hasClass('md-focused')) {
-                            return;
-                        }                        
-                        $element.removeClass('pip-focused-container');
+            let red, blue, green, opacity;
 
-                        if (isOpacity) {
-                            // $(this).css('backgroundColor', _color);
-                            $(this).css('backgroundColor', "");
-                            $(this).removeClass('md-focused md-focused-opacity');
-                        } else {
-                            $(this).removeClass('md-focused');
-                        }
-                        // if I go from block all element have tabindex = -1
-                        // setTabindex(angular.element($(this)[0]), -1);
-                    });
-                }
+            opacity = arr.length == 3 ? 1 : parseFloat(arr[3]);
+            red = arr[0];
+            blue = arr[1];
+            green = arr[2];
 
-                function keydownListener(e) {
-                    var keyCode = e.which || e.keyCode;
-                    // Check control keyCode
-                    if (keyCode == $mdConstant.KEY_CODE.LEFT_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.UP_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW ||
-                        keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) {
+            if (opacity < this.opacityLimit) {
+                opacity += this.opacityDelta;
+            } else {
+                opacity -= this.opacityDelta;
+            }
 
-                        e.preventDefault();
+            return 'rgba(' + red + ', ' + blue + ', ' + green + ', ' + opacity + ')';
+        }
 
-                        var
-                            increment = (keyCode == $mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == $mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1,
-                            moveToControl = controls.index(controls.filter(".md-focused")) + increment;
-                        // Move focus to next control
-                        if (moveToControl >= 0 && moveToControl < controlsLength) {
-                            controls[moveToControl].focus();
-                        }
-                    }
+        private setTabindex(element, value) {
+            element.attr('tabindex', value);
+        }
+
+        private checkTabindex(controls) {
+            const index = _.findIndex(controls, (c) => {
+                return c['tabindex'] > -1;
+            });
+
+            if (index == -1 && controls.length > 0 && this.$scope.pipFocusedTabindex) {
+                this.setTabindex(angular.element(controls[0]), this.$scope.pipFocusedTabindex());
+            }
+        }
+
+        private keydownListener(e) {
+            const keyCode = e.which || e.keyCode;
+            // Check control keyCode
+            if (keyCode == this.$mdConstant.KEY_CODE.LEFT_ARROW ||
+                keyCode == this.$mdConstant.KEY_CODE.UP_ARROW ||
+                keyCode == this.$mdConstant.KEY_CODE.RIGHT_ARROW ||
+                keyCode == this.$mdConstant.KEY_CODE.DOWN_ARROW
+            ) {
+                e.preventDefault();
+
+                const
+                    increment = (keyCode == this.$mdConstant.KEY_CODE.RIGHT_ARROW || keyCode == this.$mdConstant.KEY_CODE.DOWN_ARROW) ? 1 : -1,
+                    moveToControl = this.controls.index(this.controls.filter(".md-focused")) + increment;
+                // Move focus to next control
+                if (moveToControl >= 0 && moveToControl < this.controlsLength) {
+                    this.controls[moveToControl].focus();
                 }
             }
-        };
-    });
-}
+        }
+    }
 
+    const Focused = function ($timeout: ng.ITimeoutService, 
+        $mdConstant: any, 
+        $window: ng.IWindowService
+    ): ng.IDirective {
+        return {
+            scope: {
+                pipFocusedColor: '&?',
+                pipFocusedRebind: '&?',
+                pipFocusedTabindex: '&?',
+                pipFocusedOpacity: '&?',
+                pipFocusedData: '&?',
+                pipWithHidden: '&?',
+                pipRebind: '&?'
+            },
+            link: function($scope: FocusedScope, $element: JQuery, $attrs: FocusedAttributes) {
+                new FocusedLink($scope, $element, $attrs, $timeout, $mdConstant, $window);
+            }
+        }
+    }
+
+    angular.module("pipFocused", [])
+        .directive('pipFocused', Focused);
+}
