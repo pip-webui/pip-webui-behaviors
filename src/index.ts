@@ -1,6 +1,6 @@
-﻿import 'unsaved_changes/UnsavedChanges';
-import 'keyboard_shortcuts';
-import 'focused/Focused';
+﻿import './unsaved_changes/UnsavedChanges';
+import './keyboard_shortcuts';
+import './focused/Focused';
 
 angular.module('pipBehaviors', [
     'pipFocused',
