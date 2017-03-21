@@ -4,7 +4,7 @@ export class KeyboardEvent {
     static Keypress: string = 'keypress';
 }
 
-export class ShortcutOption {
+export class ShortcutOptions {
     Type: KeyboardEvent;
     Propagate: boolean;
     DisableInInput: boolean;
@@ -99,14 +99,14 @@ export class Shortcut {
     public eventCallback: Function;
     public target: any;
     public event: KeyboardEvent;
-    public option: ShortcutOption;
+    public option: ShortcutOptions;
     public shorcut: string;
     public callback: Function;
 
     public constructor(
         element: any,
         shorcutCombination: string,
-        option: ShortcutOption,
+        option: ShortcutOptions,
         callback: (e?: JQueryEventObject) => void
     ) {
         "ngInject";

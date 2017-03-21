@@ -32,7 +32,7 @@
     });
 
     thisModule.controller('ShortcutsController',
-        function ($scope, $timeout, $mdToast, pipShortcutsRegister, pipShortcuts) {
+        function ($scope, $timeout, $mdToast, pipShortcutBinding, pipShortcuts) {
             let textareaShortcut = 'shift+q';
             let documentShortcut = 'shift+alt+t';
             let documentShortcut1 = 'alt+t';
@@ -41,7 +41,7 @@
             };
 
 
-            pipShortcutsRegister.add(textareaShortcut, (e) => {
+            pipShortcutBinding.add(textareaShortcut, (e) => {
                 $mdToast.show(
                     $mdToast.simple()
                         .textContent('Pressed shift + Q in first textarea')
@@ -52,7 +52,7 @@
             }, textareaOptions);
 
 
-            pipShortcutsRegister.add(documentShortcut, (e) => {
+            pipShortcutBinding.add(documentShortcut, (e) => {
                 console.log('shift+alt+t', e);
                 $mdToast.show(
                     $mdToast.simple()
@@ -61,7 +61,7 @@
                         .hideDelay(3000)
                 );
             });
-            pipShortcutsRegister.add(documentShortcut1, (e) => {
+            pipShortcutBinding.add(documentShortcut1, (e) => {
                 console.log('alt+t', e);
                 $mdToast.show(
                     $mdToast.simple()

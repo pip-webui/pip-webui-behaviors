@@ -1,4 +1,4 @@
-import { ShortcutOption } from "./Shortcut";
+import { ShortcutOptions } from "./Shortcut";
 
 export class ShortcutItem {
     // Shortcut combination
@@ -24,7 +24,7 @@ export class ShortcutItem {
     // Click callback
     public keypress?: (event: JQueryEventObject) => void;
     // Default options
-    public options?: ShortcutOption;    
+    public options?: ShortcutOptions;    
 }
 
 // export class ShortcutItem extends SimpleShortcutItem {
@@ -37,7 +37,7 @@ export class ShortcutsConfig {
     // Local shortcut 
     public localShortcuts: ShortcutItem[] = [];
     // Default options
-    public defaultOptions: ShortcutOption = null;
+    public defaultOptions: ShortcutOptions = null;
 }
 
 export interface IShortcutsService {
@@ -45,16 +45,11 @@ export interface IShortcutsService {
 
     globalShortcuts: ShortcutItem[];
     localShortcuts: ShortcutItem[];
-
-    on(globalShortcuts?: ShortcutItem[], localShortcuts?: ShortcutItem[]): void;
-    onLocal(localShortcuts?: ShortcutItem[]): void;
-    off(): void;
 }
 
 export interface IShortcutsProvider extends ng.IServiceProvider {
     config: ShortcutsConfig;
     
     globalShortcuts: ShortcutItem[];
-    localShortcuts: ShortcutItem[];
-    defaultOptions: ShortcutOption;
+    defaultOptions: ShortcutOptions;
 }

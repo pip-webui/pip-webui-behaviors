@@ -1,16 +1,16 @@
-import { ShortcutOption } from "./Shortcut";
-import { IShortcutsRegisterService } from "./ShorcutsRegisterService";
+import { ShortcutOptions } from "./Shortcut";
+import { IShortcutBindingService } from "./IShortcutBindingService";
 
 interface ShortcutAttributes extends ng.IAttributes {
     pipShortcutAction: any;
     pipShortcutName: any;
-    pipShorcutOptions: ShortcutOption;
+    pipShorcutOptions: ShortcutOptions;
 }
 
 class ShortcutController implements ng.IController  {
     private actionShortcuts: Function;
     private nameShortcuts: string;
-    private options: ShortcutOption;
+    private options: ShortcutOptions;
 
     constructor(
         $element: JQuery,
@@ -18,7 +18,7 @@ class ShortcutController implements ng.IController  {
         $scope: ng.IScope,
         $log: ng.ILogService,
         $parse: ng.IParseService,
-        pipShortcutsRegister: IShortcutsRegisterService
+        pipShortcutBinding: IShortcutBindingService
     ) {
         "ngInject";
 
@@ -26,7 +26,7 @@ class ShortcutController implements ng.IController  {
             this.actionShortcuts = $parse($attrs.pipShortcutAction);
             this.actionShortcuts($scope, {$event: {}});
         } else {
-            $log.error('Shorcunt action does not set.');
+            $log.error('Shortcut action does not set.');
 
             return
         }
@@ -34,15 +34,16 @@ class ShortcutController implements ng.IController  {
         if ($attrs.pipShortcutName && _.isString($attrs.pipShortcutName)) {
             this.nameShortcuts = $attrs.pipShortcutName;
         } else {
-            $log.error('Shorcunt name does not set.');
+            $log.error('Shortcut name does not set.');
 
             return
         }
 
-        this.options = $attrs.pipShorcutOptions ? <ShortcutOption>$attrs.pipShorcutOptions : <ShortcutOption>{};
+        this.options = $attrs.pipShorcutOptions ? <ShortcutOptions>$attrs.pipShorcutOptions : <ShortcutOptions>{};
         this.options.Target = $element;
+        
         // Registration of keybord shortcuts
-        pipShortcutsRegister.add(this.nameShortcuts, (e?: any) => {
+        pipShortcutBinding.add(this.nameShortcuts, (e?: any) => {
             this.actionShortcuts($scope, {$event: {'e': e}});          
         }, this.options);
     }

@@ -1297,125 +1297,6 @@ exports.ShortcutsConfig = ShortcutsConfig;
 },{}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Shortcut_1 = require("./Shortcut");
-var ShortcutsRegisterService = (function () {
-    ShortcutsRegisterService.$inject = ['$log', 'option'];
-    function ShortcutsRegisterService($log, option) {
-        "ngInject";
-        this._log = $log;
-        this._defaultOption = option ? _.defaults(option, this.getDefaultOption()) : this.getDefaultOption();
-        this._shortcuts = {};
-    }
-    ShortcutsRegisterService.prototype.getDefaultOption = function () {
-        var defaultOption = {
-            Type: Shortcut_1.KeyboardEvent.Keydown,
-            Propagate: false,
-            DisableInInput: false,
-            Target: document,
-            Keycode: null
-        };
-        return defaultOption;
-    };
-    ShortcutsRegisterService.prototype.checkAddShortcut = function (element, shorcutCombination, callback) {
-        if (!element) {
-            this._log.error('Register shortcut: element undentified!');
-            return false;
-        }
-        if (!shorcutCombination) {
-            this._log.error('Register shortcut: shorcut combination undentified!');
-            return false;
-        }
-        if (!callback) {
-            this._log.error('Register shortcut: shorcut callback undentified!');
-            return false;
-        }
-        return true;
-    };
-    Object.defineProperty(ShortcutsRegisterService.prototype, "shortcuts", {
-        get: function () {
-            return this._shortcuts;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ShortcutsRegisterService.prototype.add = function (shortcut, callback, option) {
-        this.remove(shortcut);
-        var shortcutOption = option ? _.defaults(option, this._defaultOption) : this._defaultOption;
-        var shortcutCombination = shortcut.toLowerCase();
-        var element = shortcutOption.Target;
-        if (typeof shortcutOption.Target == 'string') {
-            element = document.getElementById(shortcutOption.Target);
-        }
-        else {
-            element = shortcutOption.Target;
-        }
-        if (!this.checkAddShortcut(element, shortcutCombination, callback)) {
-            return;
-        }
-        var newKeyboardShortcut = new Shortcut_1.Shortcut(element, shortcutCombination, shortcutOption, callback);
-        this._shortcuts[shortcutCombination] = newKeyboardShortcut;
-        if (element.addEventListener) {
-            element.addEventListener(shortcutOption.Type, newKeyboardShortcut.eventCallback, false);
-        }
-        else if (element.attachEvent) {
-            element.attachEvent('on' + shortcutOption.Type, newKeyboardShortcut.eventCallback);
-        }
-        else {
-            element.on(shortcutOption.Type, newKeyboardShortcut.eventCallback);
-        }
-    };
-    ShortcutsRegisterService.prototype.remove = function (shorcut) {
-        var shortcutCombination = shorcut.toLowerCase();
-        var binding = this._shortcuts[shortcutCombination];
-        delete (this._shortcuts[shortcutCombination]);
-        if (!binding)
-            return;
-        var type = binding.event;
-        var element = binding.target;
-        var callback = binding.eventCallback;
-        if (element.detachEvent) {
-            element.detachEvent('on' + type, callback);
-        }
-        else if (element.removeEventListener) {
-            element.removeEventListener(type, callback, false);
-        }
-        else {
-            element.off(type, callback);
-        }
-    };
-    return ShortcutsRegisterService;
-}());
-exports.ShortcutsRegisterService = ShortcutsRegisterService;
-{
-    var ShortcutsRegisterProvider = (function () {
-        function ShortcutsRegisterProvider() {
-        }
-        Object.defineProperty(ShortcutsRegisterProvider.prototype, "option", {
-            get: function () {
-                return this._option;
-            },
-            set: function (value) {
-                this._option = value || new Shortcut_1.ShortcutOption();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ShortcutsRegisterProvider.prototype.$get = ['$log', function ($log) {
-            "ngInject";
-            if (this._service == null)
-                this._service = new ShortcutsRegisterService($log, this._option);
-            return this._service;
-        }];
-        return ShortcutsRegisterProvider;
-    }());
-    angular
-        .module('pipShortcuts')
-        .provider('pipShortcutsRegister', ShortcutsRegisterProvider);
-}
-
-},{"./Shortcut":13}],13:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var KeyboardEvent = (function () {
     function KeyboardEvent() {
     }
@@ -1425,12 +1306,12 @@ KeyboardEvent.Keydown = 'keydown';
 KeyboardEvent.Keyup = 'keyup';
 KeyboardEvent.Keypress = 'keypress';
 exports.KeyboardEvent = KeyboardEvent;
-var ShortcutOption = (function () {
-    function ShortcutOption() {
+var ShortcutOptions = (function () {
+    function ShortcutOptions() {
     }
-    return ShortcutOption;
+    return ShortcutOptions;
 }());
-exports.ShortcutOption = ShortcutOption;
+exports.ShortcutOptions = ShortcutOptions;
 var Shortcut = (function () {
     Shortcut.$inject = ['element', 'shorcutCombination', 'option', 'callback'];
     function Shortcut(element, shorcutCombination, option, callback) {
@@ -1619,12 +1500,123 @@ var Shortcut = (function () {
 }());
 exports.Shortcut = Shortcut;
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Shortcut_1 = require("./Shortcut");
+var ShortcutBindingService = (function () {
+    ShortcutBindingService.$inject = ['$log', 'option'];
+    function ShortcutBindingService($log, option) {
+        "ngInject";
+        this._shortcuts = {};
+        this._log = $log;
+        this._defaultOption = option ? _.defaults(option, this.getDefaultOption()) : this.getDefaultOption();
+    }
+    ShortcutBindingService.prototype.getDefaultOption = function () {
+        var defaultOption = {
+            Type: Shortcut_1.KeyboardEvent.Keydown,
+            Propagate: false,
+            DisableInInput: false,
+            Target: document,
+            Keycode: null
+        };
+        return defaultOption;
+    };
+    Object.defineProperty(ShortcutBindingService.prototype, "shortcuts", {
+        get: function () {
+            return this._shortcuts;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ShortcutBindingService.prototype.add = function (shortcut, callback, option) {
+        this.remove(shortcut);
+        var shortcutOption = option ? _.defaults(option, this._defaultOption) : this._defaultOption;
+        var shortcutCombination = shortcut.toLowerCase();
+        var element = shortcutOption.Target;
+        if (typeof shortcutOption.Target == 'string') {
+            element = document.getElementById(shortcutOption.Target);
+        }
+        else {
+            element = shortcutOption.Target;
+        }
+        if (!element) {
+            this._log.error('Register shortcut: element undentified!');
+            return;
+        }
+        if (!shortcutCombination) {
+            this._log.error('Register shortcut: shortcut combination undentified!');
+            return;
+        }
+        if (!callback) {
+            this._log.error('Register shortcut: shorcut callback undentified!');
+            return;
+        }
+        var newKeyboardShortcut = new Shortcut_1.Shortcut(element, shortcutCombination, shortcutOption, callback);
+        this._shortcuts[shortcutCombination] = newKeyboardShortcut;
+        if (element.addEventListener) {
+            element.addEventListener(shortcutOption.Type, newKeyboardShortcut.eventCallback, false);
+        }
+        else if (element.attachEvent) {
+            element.attachEvent('on' + shortcutOption.Type, newKeyboardShortcut.eventCallback);
+        }
+        else {
+            element.on(shortcutOption.Type, newKeyboardShortcut.eventCallback);
+        }
+    };
+    ShortcutBindingService.prototype.remove = function (shorcut) {
+        var shortcutCombination = shorcut.toLowerCase();
+        var binding = this._shortcuts[shortcutCombination];
+        delete (this._shortcuts[shortcutCombination]);
+        if (!binding)
+            return;
+        var type = binding.event;
+        var element = binding.target;
+        var callback = binding.eventCallback;
+        if (element.detachEvent) {
+            element.detachEvent('on' + type, callback);
+        }
+        else if (element.removeEventListener) {
+            element.removeEventListener(type, callback, false);
+        }
+        else {
+            element.off(type, callback);
+        }
+    };
+    return ShortcutBindingService;
+}());
+exports.ShortcutBindingService = ShortcutBindingService;
+var ShortcutBindingProvider = (function () {
+    function ShortcutBindingProvider() {
+    }
+    Object.defineProperty(ShortcutBindingProvider.prototype, "option", {
+        get: function () {
+            return this._option;
+        },
+        set: function (value) {
+            this._option = value || new Shortcut_1.ShortcutOptions();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ShortcutBindingProvider.prototype.$get = ['$log', function ($log) {
+        "ngInject";
+        if (this._service == null)
+            this._service = new ShortcutBindingService($log, this._option);
+        return this._service;
+    }];
+    return ShortcutBindingProvider;
+}());
+angular
+    .module('pipShortcuts')
+    .provider('pipShortcutBinding', ShortcutBindingProvider);
+
+},{"./Shortcut":12}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ShortcutController = (function () {
-    ShortcutController.$inject = ['$element', '$attrs', '$scope', '$log', '$parse', 'pipShortcutsRegister'];
-    function ShortcutController($element, $attrs, $scope, $log, $parse, pipShortcutsRegister) {
+    ShortcutController.$inject = ['$element', '$attrs', '$scope', '$log', '$parse', 'pipShortcutBinding'];
+    function ShortcutController($element, $attrs, $scope, $log, $parse, pipShortcutBinding) {
         "ngInject";
         var _this = this;
         if ($attrs.pipShortcutAction) {
@@ -1632,19 +1624,19 @@ var ShortcutController = (function () {
             this.actionShortcuts($scope, { $event: {} });
         }
         else {
-            $log.error('Shorcunt action does not set.');
+            $log.error('Shortcut action does not set.');
             return;
         }
         if ($attrs.pipShortcutName && _.isString($attrs.pipShortcutName)) {
             this.nameShortcuts = $attrs.pipShortcutName;
         }
         else {
-            $log.error('Shorcunt name does not set.');
+            $log.error('Shortcut name does not set.');
             return;
         }
         this.options = $attrs.pipShorcutOptions ? $attrs.pipShorcutOptions : {};
         this.options.Target = $element;
-        pipShortcutsRegister.add(this.nameShortcuts, function (e) {
+        pipShortcutBinding.add(this.nameShortcuts, function (e) {
             _this.actionShortcuts($scope, { $event: { 'e': e } });
         }, this.options);
     }
@@ -1672,12 +1664,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var IShortcutsService_1 = require("./IShortcutsService");
 exports.ShortcutsChangedEvent = 'pipShortcutsChanged';
 var ShortcutsService = (function () {
-    function ShortcutsService(config, $rootScope, $window, $location, $injector, pipShortcutsRegister) {
+    function ShortcutsService(config, $rootScope, $window, $location, $injector, pipShortcutBinding) {
         this.$rootScope = $rootScope;
         this.$window = $window;
         this.$location = $location;
         this.$injector = $injector;
-        this.pipShortcutsRegister = pipShortcutsRegister;
+        this.pipShortcutBinding = pipShortcutBinding;
         this._config = config;
         this._oldConfig = _.cloneDeep(this._config);
         this.addShortcuts(this._config.globalShortcuts);
@@ -1694,39 +1686,39 @@ var ShortcutsService = (function () {
     ShortcutsService.prototype.removeShortcuts = function (collection) {
         var _this = this;
         _.each(collection, function (k) {
-            _this.pipShortcutsRegister.remove(k.shortcut);
+            _this.pipShortcutBinding.remove(k.shortcut);
         });
     };
-    ShortcutsService.prototype.keypressShortcut = function (shorcut, event) {
-        if (shorcut.access && _.isFunction(shorcut.access)) {
-            if (!shorcut.access(event)) {
+    ShortcutsService.prototype.keypressShortcut = function (item, event) {
+        if (item.access && _.isFunction(item.access)) {
+            if (!item.access(event)) {
                 return;
             }
         }
-        if (shorcut.keypress) {
-            shorcut.keypress(event);
+        if (item.keypress) {
+            item.keypress(event);
             return;
         }
-        if (shorcut.href) {
-            this.$window.location.href = shorcut.href;
+        if (item.href) {
+            this.$window.location.href = item.href;
             return;
         }
-        if (shorcut.url) {
-            this.$location.url(shorcut.url);
+        if (item.url) {
+            this.$location.url(item.url);
             return;
         }
-        if (shorcut.state) {
+        if (item.state) {
             if (this.$injector.has('$state')) {
                 var $state = this.$injector.get('$state');
-                $state['go'](shorcut.state, shorcut.stateParams);
+                $state['go'](item.state, item.stateParams);
             }
             return;
         }
-        if (shorcut.event) {
-            this.$rootScope.$broadcast(shorcut.event);
+        if (item.event) {
+            this.$rootScope.$broadcast(item.event);
         }
         else {
-            this.$rootScope.$broadcast('pipShortcutKeypress', shorcut.shortcut);
+            this.$rootScope.$broadcast('pipShortcutKeypress', item.shortcut);
         }
     };
     ShortcutsService.prototype.addShortcuts = function (collection) {
@@ -1737,7 +1729,7 @@ var ShortcutsService = (function () {
             var target;
             target = k.target ? k.target : k.targetId;
             option.Target = target;
-            _this.pipShortcutsRegister.add(k.shortcut, function (e) {
+            _this.pipShortcutBinding.add(k.shortcut, function (e) {
                 _this.keypressShortcut(k, e);
             }, option);
         });
@@ -1782,26 +1774,6 @@ var ShortcutsService = (function () {
         enumerable: true,
         configurable: true
     });
-    ShortcutsService.prototype.on = function (globalShortcuts, localShortcuts) {
-        if (globalShortcuts && _.isArray(globalShortcuts)) {
-            this._config.globalShortcuts = globalShortcuts;
-        }
-        if (localShortcuts && _.isArray(localShortcuts)) {
-            this._config.localShortcuts = localShortcuts;
-        }
-        this.sendChangeEvent();
-    };
-    ShortcutsService.prototype.onLocal = function (localShortcuts) {
-        if (localShortcuts && _.isArray(localShortcuts)) {
-            this._config.localShortcuts = localShortcuts;
-        }
-        this.sendChangeEvent();
-    };
-    ShortcutsService.prototype.off = function () {
-        this._config.globalShortcuts = [];
-        this._config.localShortcuts = [];
-        this.sendChangeEvent();
-    };
     return ShortcutsService;
 }());
 var ShortcutsProvider = (function () {
@@ -1838,20 +1810,10 @@ var ShortcutsProvider = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(ShortcutsProvider.prototype, "localShortcuts", {
-        get: function () {
-            return this._config.localShortcuts;
-        },
-        set: function (value) {
-            this._config.localShortcuts = value || [];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ShortcutsProvider.prototype.$get = ['$rootScope', '$window', '$location', '$injector', 'pipShortcutsRegister', function ($rootScope, $window, $location, $injector, pipShortcutsRegister) {
+    ShortcutsProvider.prototype.$get = ['$rootScope', '$window', '$location', '$injector', 'pipShortcutBinding', function ($rootScope, $window, $location, $injector, pipShortcutBinding) {
         "ngInject";
         if (this._service == null)
-            this._service = new ShortcutsService(this._config, $rootScope, $window, $location, $injector, pipShortcutsRegister);
+            this._service = new ShortcutsService(this._config, $rootScope, $window, $location, $injector, pipShortcutBinding);
         return this._service;
     }];
     return ShortcutsProvider;
@@ -1867,14 +1829,14 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 angular.module('pipShortcuts', ['ngMaterial', 'ui.router']);
-require("./ShorcutsRegisterService");
+require("./ShortcutBindingService");
 require("./ShortcutsService");
 require("./ShortcutDirective");
 __export(require("./IShortcutsService"));
 __export(require("./ShortcutsService"));
-__export(require("./ShorcutsRegisterService"));
+__export(require("./ShortcutBindingService"));
 
-},{"./IShortcutsService":11,"./ShorcutsRegisterService":12,"./ShortcutDirective":14,"./ShortcutsService":15}],17:[function(require,module,exports){
+},{"./IShortcutsService":11,"./ShortcutBindingService":13,"./ShortcutDirective":14,"./ShortcutsService":15}],17:[function(require,module,exports){
 {
     var UnsavedChangesLink_1 = (function () {
         function UnsavedChangesLink_1($scope, $window) {
