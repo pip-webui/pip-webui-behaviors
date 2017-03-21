@@ -51,7 +51,7 @@
             function updateItems() {
                 var items = generateItems(10, $scope.items.length);
 
-                $scope.items = $scope.items, items;
+                $scope.items = _.union($scope.items, items);
             }
 
             // function scrollToAnchor() {
