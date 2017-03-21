@@ -13,86 +13,71 @@
                 $scope.centerAnchor = !$scope.centerAnchor;
             };
 
-            $scope.draggableObjects = [{ name: 'one' }, { name: 'two' }, { name: 'three' }];
-            $scope.droppedObjects1 = [];
-            $scope.droppedObjects2 = [];
-
             $scope.content = [
                 {
-                    file_id: "1",
-                    color: {'background-color':'#00ff00'},
-                    file_name: 'name1'
+                    color: {'background-color':'#F1F8E9'},
+                    name: 'F1F8E9'
                 },
                 {
-                    file_id: "2",
-                    color: {'background-color':'#ff0000'},
-                    file_name: 'name2'
+                    color: {'background-color':'#DCEDC8'},
+                    name: 'DCEDC8'
                 },
                 {
-                    file_id: "3",
-                    color: {'background-color':'#0000ff'},
-                    file_name: 'name3'
+                    color: {'background-color':'#C5E1A5'},
+                    name: 'C5E1A5'
                 },
                 {
-                    file_id: "4",
-                    color: {'background-color':'#55ff55'},
-                    file_name: 'name4'
+                    color: {'background-color':'#AED581'},
+                    name: 'AED581'
                 },
                 {
-                    file_id: "5",
-                    color: {'background-color':'#0055cc'},
-                    file_name: 'name5'
+                    color: {'background-color':'#9CCC65'},
+                    name: '9CCC65'
                 },
                 {
-                    file_id: "6",
-                    color: {'background-color':'#cc2299'},
-                    file_name: 'name6'
+                    color: {'background-color':'#8BC34A'},
+                    name: '8BC34A'
                 },
                 {
-                    file_id: "7",
-                    color: {'background-color':'#aaaa22'},
-                    file_name: 'name7'
+                    color: {'background-color':'#7CB342'},
+                    name: '7CB342'
                 },
                 {
-                    file_id: "8",
-                    color: {'background-color':'#008888'},
-                    file_name: 'name8'
+
+                    color: {'background-color':'#689F38'},
+                    name: '689F38'
+                },
+                {
+
+                    color: {'background-color':'#558B2F'},
+                    name: '558B2F'
+                },
+                {
+
+                    color: {'background-color':'#33691E'},
+                    name: '33691E'
                 }
             ];
 
-            $scope.onDropComplete = function (index, data, evt) {
-                var otherObj = $scope.content[index];
-                var otherIndex = $scope.content.indexOf(data);
-                $scope.content[index] = data;
-                $scope.content[otherIndex] = otherObj;
+            $scope.onDropSuccess = function (index, data, evt) {
+                const otherObj = $scope.content[index];
+                const otherIndex = $scope.content.indexOf(data);
+                $scope.content.splice(otherIndex, 1);
+                if (index > otherIndex) $scope.content.splice(index, 0, data);
+                else $scope.content.splice(index + 1, 0, data);
             };
 
-            $scope.onDropComplete1 = function (data, event) {
-                var index = $scope.droppedObjects1.indexOf(data);
-                if (index == -1)
-                    $scope.droppedObjects1.push(data);
-            };
+            $scope.onDragStart = function(data, event) {
+                const index = $scope.content.indexOf(data);
 
-            $scope.onDragSuccess1 = function (data, event) {
-                var index = $scope.droppedObjects1.indexOf(data);
-                if (index > -1) {
-                    $scope.droppedObjects1.splice(index, 1);
-                }
-            };
+                $($('.drag-scroll-test').find('[pip-drag]')[index + 1]).css('margin-top', '83px');
+            }
 
-            $scope.onDragSuccess2 = function (data, event) {
-                var index = $scope.droppedObjects2.indexOf(data);
-                if (index > -1) {
-                    $scope.droppedObjects2.splice(index, 1);
-                }
-            };
+            $scope.onDragStop = function(data, event) {
+                const index = $scope.content.indexOf(data);
 
-            $scope.onDropComplete2 = function (data, event) {
-                var index = $scope.droppedObjects2.indexOf(data);
-                if (index == -1) {
-                    $scope.droppedObjects2.push(data);
-                }
-            };
+                $($('.drag-scroll-test').find('[pip-drag]')[index + 1]).css('margin-top', '0px');
+            }
         }
     );
 

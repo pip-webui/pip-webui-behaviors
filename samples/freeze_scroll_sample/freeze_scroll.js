@@ -20,17 +20,15 @@
 
             $('.wrapper').bind("scroll", function() {
                 var offset = $(this).scrollTop();
-            console.log('scroll', offset);
+                console.log('scroll', offset);
             });
-
-            // $location.hash('#items-20')
 
             return ;
 
             function generateItems(count, start) {
                 var items = [], 
                     itemCount,
-                    colors = ['red', 'blue', 'yellow', 'green'];
+                    colors = ['#BA68C8', '#AB47BC', '#9C27B0', '#8E24AA', '#7B1FA2', '#6A1B9A', '#4A148C'];
 
                 if (start) itemCount = start;
                 else itemCount = 0;
@@ -40,20 +38,20 @@
                         id: itemCount,
                         sort: Math.floor(Math.random()*10000),
                         name: 'Item ' + itemCount,
-                        color: colors[_.random(0, colors.length - 1)]
+                        style: {'background-color': colors[_.random(0, colors.length - 1)], color: 'white', 'margin-bottom': '0px'}
                     };
                     itemCount++;
 
                     items.push(item);
                 }
 
-                return _.sortBy(items, function(item) { return item.sort });
+                return items;
             };
 
             function updateItems() {
                 var items = generateItems(10, $scope.items.length);
 
-                $scope.items = _.sortBy(_.union($scope.items, items), function(item) { return item.sort });
+                $scope.items = $scope.items, items;
             }
 
             // function scrollToAnchor() {

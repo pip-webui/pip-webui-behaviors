@@ -4,6 +4,15 @@ declare module pip.behaviors {
 
 
 
+
+export interface IDraggableService {
+    inputEvent(event: any): any;
+}
+
+
+
+
+
 export class ShortcutOption {
     Type: KeyboardEvent;
     Propagate: boolean;

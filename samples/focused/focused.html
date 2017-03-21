@@ -1,33 +1,36 @@
-<div pip-focused pip-focused-color="rgba(255, 255, 255, 0)" style="display: inline-block">
-	<div>
-		<div class="pip-focusable div-box box-color" tabindex="0" ng-click="onClick(1)">Button 0</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(2)">Button 1</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(3)">Button 2</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(4)">Button 3</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(5)">Button 4</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(6)">Button 5</div>
-	</div>
-</div>
-<div pip-focused class="block1" style="display: inline-block">
-	<div>
-		<div class="pip-focusable div-box" tabindex="0">Button 6</div>
-		<div class="pip-focusable div-box" tabindex="-1">Button 7</div>
-		<div class="pip-focusable div-box" tabindex="-1">Button 8</div>
-		<div class="pip-focusable div-box" tabindex="-1">Button 9</div>
-		<div class="pip-focusable div-box" tabindex="-1">Button 10</div>
-	</div>
-</div>
-<div pip-focused pip-focused-opacity="true" pip-focused-data="collection" style="display: inline-block">
-	<div>
-		<div class="pip-focusable div-box box-color" tabindex="0" ng-click="onClick(1)">Button 0</div>
-		<div class="pip-focusable div-box box-color" tabindex="0" ng-click="onClick(2)">Button 1</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(3)">Button 2</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(4)">Button 3</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(5)">Button 4</div>
-		<div class="pip-focusable div-box box-color" tabindex="-1" ng-click="onClick(6)">Button 5</div>
-	</div>
-</div>
-<md-tabs md-selected="selectedIndex" md-border-bottom="" md-autoselect="" style="width: 500px;">
+<h2 class="text-title">Focused sample:</h2>
+<md-card pip-focused pip-focused-color="rgba(255, 255, 255, 1)" style="display: inline-block; margin-left: 0px; width: calc(50% - 10px);">
+	<md-list class="pip-menu pip-ref-list" style="padding: 0px">
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="0" >Tab index 0</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+	</md-list>
+</md-card>
+<!--md-card pip-focused style="display: inline-block; width: 30%;">
+	<md-list class="pip-menu pip-ref-list" style="padding: 0px">
+		<md-list-item class="pip-focusable divider-bottom div-box" tabindex="0">Tab index 0</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box" tabindex="-1">Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box" tabindex="-1">Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box" tabindex="-1">Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box" tabindex="-1">Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box" tabindex="-1">Tab index -1</md-list-item>
+	</md-list>
+</md-card-->
+<md-card pip-focused pip-focused-opacity="true" pip-focused-data="collection" style="display: inline-block; width: calc(50% - 10px); margin-right: 0px;">
+	<md-list class="pip-menu pip-ref-list" style="padding: 0px">
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="0" >Tab index 0</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1" >Tab index -1</md-list-item>
+	</md-list>
+</md-card>
+
+<md-tabs md-selected="selectedIndex" md-border-bottom="" md-autoselect="">
 	<md-tab ng-repeat="tab in tabs" label="{{tab.title}}">
 		<div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
 			<div ng-bind="tab.content"></div>

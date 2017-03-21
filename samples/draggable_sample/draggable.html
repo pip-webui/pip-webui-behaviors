@@ -1,32 +1,26 @@
 <h2 class="text-title">Drag and Drop sample:</h2>
-<!--<h3 class="text-subhead2">Example with scroll</h3>-->
-
 <md-card class="drag-scroll layout-column flex">
 	<md-card-title>
 		<md-card-title-text>
-			<span class="md-headline">Example with scroll</span>
+			<span class="md-headline">Example with scroll. Let's put colors in reverse order: </span>
 		</md-card-title-text>
 	</md-card-title>
-
 	<md-card-content class="scroll-card">
-		<div class="drag-scroll-test" style="height: 500px">
-			<div xxxclass="composite-item"
-				 style="height: 120px"
+		<div class="drag-scroll-test" style="height: 600px">
+			<div ng-repeat="obj in content track by obj.name"
 				 pip-scroll-container="'.drag-scroll-test'"
-				 ng-style="obj.color"
-				 ng-repeat="obj in content track by obj.file_id"
-
-				 ng-class="{'select-item': isNgClass(obj)}"
-
 				 pip-drop="true"
 				 pip-drag="true"
 				 pip-drag-data="obj"
 				 pip-force-touch = "true"
 				 pip-touch-delay="100"
-				 pip-drop-success="onDropComplete($index, $data, $event)">
-
-				<p>file_id: {{obj.file_id}}</p>
-				<p>file_name: {{obj.file_name}}</p>
+				 pip-drop-success="onDropSuccess($index, $data, $event)"
+				 pip-drag-start="onDragStart($data, $event)"
+				 pip-drag-stop="onDragStop($data, $event)"
+				 pip-drag-move="onDragMove($data, $event)">
+				 <div class="content" ng-style="obj.color">
+					 <p>{{ obj.name }}</p>
+				 </div>
 			</div>
 
 		</div>

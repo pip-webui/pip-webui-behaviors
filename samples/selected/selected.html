@@ -1,3 +1,6 @@
+<h2 class="text-title">Selected sample:</h2>
+<md-card class="drag-scroll layout-column flex">
+	<md-card-content class="scroll-card divider-bottom">
 <md-list class="pip-menu pip-ref-list selected-sample" 
 		pip-selected="sel.itemIndex" 
 		pip-selected-id="sel.itemId" 
@@ -16,7 +19,9 @@
 		</button>
 	</md-list-item>
 </md-list>
-<div>
-	<md-button ng-click="onMoveToStart()">Move to Start</md-button>
+</md-card-content>
+<div class="layout-row layout-align-end-start" style="padding: 8px; ">
+	<!--md-button ng-click="onMoveToStart()">Move to Start</md-button-->
 	<md-button ng-click="onItemDelete()">Delete Item</md-button>
 </div>
+</md-card>

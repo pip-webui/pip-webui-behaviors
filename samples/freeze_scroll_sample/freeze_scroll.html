@@ -1,14 +1,15 @@
-<h2>Block with red border is scroll container for infinite-scroll control</h2>
+<h2 class="text-title">Freeze scroll sample:</h2>
 <p>Scroll to some position into grid data and add some new elements</p>
 
-<div class="wrapper" keep-scroll>
-    <div class="item" scroll-item ng-repeat="item in items" ng-class="'bg-' + item.color" 
-            id="items-{{item.id}}" grid-id="items-{{item.id}}">
-      {{ item.sort }} -  {{ item.id }} -  {{ item.name }}
+<md-card style="margin-left: 0px;">
+    <md-card-content class="scroll-card wrapper" keep-scroll style="padding: 0px">
+        <md-list-item class="item divider-bottom" ng-style="{{ item.style }}" scroll-item ng-repeat="item in items" id="items-{{item.id}}" grid-id="items-{{item.id}}">
+            {{ item.name }}
+        </md-list-item>
+    </md-card-content>
+    <div class="layout-row layout-align-end-start" style="padding: 8px">
+        <md-button ng-click="updateItems()">
+            Update Items
+        </md-button>
     </div>
-  </div>
-<div>
-    <md-button ng-click="updateItems()">
-        Update Items
-    </md-button>
-</div>
+</md-card>

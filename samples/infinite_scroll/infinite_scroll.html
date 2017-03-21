@@ -1,9 +1,9 @@
 
 <!--<h2>{{ 'DESCRIPTION' | translate }}</h2>
 <p>{{ 'TRY_TO_SCROLL' | translate }}</p>-->
-<h2>Block with red border is scroll container for infinite-scroll control</h2>
-<p>Try to scroll. You will see the addition of elements. This will work until the number of elements reaches 200.</p>
-<div class="app-infinite-scroll pip-scroll">
+<h2 class="text-title">Infinite scroll sample:</h2>
+<p>Card is scroll container for infinite-scroll control.Try to scroll. You will see the addition of elements. This will work until the number of elements reaches 200.</p>
+<md-card class="app-infinite-scroll pip-scroll" style="margin-left: 0px;">
     <div class="item-container" pip-infinite-scroll="generateItems(10)"
          pip-scroll-container="'.app-infinite-scroll'" pip-scroll-listen-for-event="windowResized"
          pip-scroll-distance="0.1">
@@ -11,4 +11,4 @@
             {{item.name}}
         </div>
     </div>
-</div>
+</md-card>

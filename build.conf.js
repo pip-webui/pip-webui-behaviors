@@ -17,6 +17,11 @@ module.exports = {
         images: false,
         dist: false
     },
+    browserify: {
+        entries: [ 
+            './src/index.ts'
+        ]
+    }, 
     file: {
         lib: [
             //'../pip-webui-test/dist/**/*',

@@ -1,5 +1,14 @@
-<h2>Shortcuts Example</h2>
-<textarea id="textarea_shortcut"></textarea>
-
-
-<textarea pip-shortcut pip-shortcut-action="keyEvent($event)" pip-shortcut-name="alt+v"></textarea>
+<h2 class="text-title">Shortcuts Example</h2>
+<md-card class="drag-scroll layout-column flex" style="padding: 8px">
+    <p>Press <span style="background-color: rgba(0, 0, 0, 0.16); border-radius: 2px; padding: 4px">shift+alt+t</span> or 
+    <span style="background-color: rgba(0, 0, 0, 0.16); border-radius: 2px; padding: 4px">alt+t</span> when you don't select any textarea
+    </p>
+    <p>Select first textare and press: <span style="background-color: rgba(0, 0, 0, 0.16); border-radius: 2px; padding: 4px">shift + Q</span></p> 
+    <md-input-container class="w-stretch" style="margin-bottom: 0px">
+        <textarea id="textarea_shortcut" placeholder="Textarea with id"></textarea>
+    </md-input-container>
+    <p>Select second textare and press: <span style="background-color: rgba(0, 0, 0, 0.16); border-radius: 2px; padding: 4px">alt + V</span></p> 
+    <md-input-container class="w-stretch" style="margin-bottom: 0px">
+        <textarea pip-shortcut pip-shortcut-action="keyEvent($event)" pip-shortcut-name="alt+v" placeholder="Textarea with attributes"></textarea>
+    </md-input-container>
+</md-card>

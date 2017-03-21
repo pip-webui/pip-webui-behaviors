@@ -8,8 +8,8 @@
         { title: 'Selected', state: 'selected', url: '/selected', controller: 'SelectedController', templateUrl: 'selected/selected.html' },
         { title: 'Infinite Scroll', state: 'infinite_scroll', url: '/infinite_scroll', controller: 'InfiniteScrollController', templateUrl: 'infinite_scroll/infinite_scroll.html' },
         { title: 'Draggable', state: 'draggable', url: '/draggable', controller: 'DraggableController', templateUrl: 'draggable_sample/draggable.html' },
-        { title: 'Draggable Input', state: 'draggable_input', url: '/draggable_input', controller: 'DraggableInputController', templateUrl: 'draggable_sample/draggable_input.html' },
-        { title: 'Unsaved Changes', state: 'unsaved_changes', url: '/unsaved_changes', controller: 'UnsavedChangesController', templateUrl: 'unsaved_changes_sample/unsaved_changes.html' },
+        //{ title: 'Draggable Input', state: 'draggable_input', url: '/draggable_input', controller: 'DraggableInputController', templateUrl: 'draggable_sample/draggable_input.html' },
+        //{ title: 'Unsaved Changes', state: 'unsaved_changes', url: '/unsaved_changes', controller: 'UnsavedChangesController', templateUrl: 'unsaved_changes_sample/unsaved_changes.html' },
         { title: 'Freeze Scroll', state: 'freeze_scroll', url: '/freeze_scroll', controller: 'FreezeScrollController', templateUrl: 'freeze_scroll_sample/freeze_scroll.html' },
         { title: 'Shortcuts', state: 'shortcuts', url: '/shortcuts', controller: 'ShortcutsController', templateUrl: 'shortcuts/shortcuts.html' }
     ];
@@ -25,26 +25,24 @@
             'appBehaviors.Selected', 
             'appBehaviors.InfiniteScroll', 
             'appBehaviors.UnsavedChanges',
-            'appBehaviors.DraggableInput',
+            //'appBehaviors.DraggableInput',
             'appBehaviors.Draggable',
             'appBehaviors.UnsavedChanges',
             'appBehaviors.FreezeScroll',
             'appBehaviors.Shortcuts',
-            'pipFreeze'
+            //'pipFreeze'
         ]
     );
 
     thisModule.config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, 
                 $compileProvider, $httpProvider) {
 
-            $mdIconProvider.iconSet('icons', '../../lib/images/icons.svg', 512);
+            $mdIconProvider.iconSet('icons', '../lib/images/icons.svg', 512);
 
             $compileProvider.debugInfoEnabled(false);
             $httpProvider.useApplyAsync(true);
 
             var contentItem, i;
-
-            $mdIconProvider.iconSet('icons', 'images/icons.svg', 512);
 
             for (i = 0; i < content.length; i++) {
                 contentItem = content[i];

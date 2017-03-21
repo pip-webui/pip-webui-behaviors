@@ -80,12 +80,12 @@ class ShortcutsService implements IShortcutsService {
         private $injector: ng.auto.IInjectorService,
         private pipShortcutsRegister: IShortcutsRegisterService
     ) {
-        this._config = this.config;
-        this._oldConfig = _.cloneDeep(this.config);
+        this._config = config;
+        this._oldConfig = _.cloneDeep(this._config);
 
         // Add shortcuts
-        this.addShortcuts(this.config.globalShortcuts);
-        this.addShortcuts(this.config.localShortcuts);        
+        this.addShortcuts(this._config.globalShortcuts);
+        this.addShortcuts(this._config.localShortcuts);        
     }
 
     // Describe private functions
@@ -264,7 +264,7 @@ class ShortcutsProvider implements IShortcutsProvider {
         pipShortcutsRegister: IShortcutsRegisterService
     ) {
         "ngInject";
-
+console.log('this._config', this._config);
         if (this._service == null)
             this._service = new ShortcutsService(this._config, $rootScope, $window, $location, $injector, pipShortcutsRegister);
         
