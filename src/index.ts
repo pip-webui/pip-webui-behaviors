@@ -1,7 +1,7 @@
 ﻿import './unsaved_changes/UnsavedChanges';
-import './keyboard_shortcuts';
+import './shortcuts/index';
 import './focused/Focused';
-import './draggable';
+import './draggable/index';
 import './selected/Selected';
 import './focused/Focused';
 import './infinite_scroll/InfiniteScroll';
@@ -15,5 +15,4 @@ angular.module('pipBehaviors', [
     'pipShortcuts'
 ]);
 
-export * from './keyboard_shortcuts';
-export * from './draggable';
+export * from './shortcuts/index';

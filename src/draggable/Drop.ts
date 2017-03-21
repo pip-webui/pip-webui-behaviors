@@ -1,6 +1,4 @@
-import {
-    IDraggableService
-} from './IDraggableService';
+import { IDraggableService } from './DraggableService';
 
 {
     interface IDropLinkScope extends ng.IScope {
@@ -196,6 +194,7 @@ import {
         }
     }
 
-    angular.module("pipDraggable")
+    angular
+        .module("pipDraggable")
         .directive('pipDrop', Drop);
 }

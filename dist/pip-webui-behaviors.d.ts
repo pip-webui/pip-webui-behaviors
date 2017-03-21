@@ -3,8 +3,6 @@ declare module pip.behaviors {
 
 
 
-
-
 export interface IDraggableService {
     inputEvent(event: any): any;
 }
@@ -13,56 +11,7 @@ export interface IDraggableService {
 
 
 
-export class ShortcutOption {
-    Type: KeyboardEvent;
-    Propagate: boolean;
-    DisableInInput: boolean;
-    Target: any;
-    Keycode: number;
-}
-export class KeyboardEvent {
-    static Keydown: string;
-    static Keyup: string;
-    static Keypress: string;
-}
-export class KeyboardShortcut {
-    private shift_nums;
-    private special_keys;
-    private modifiers;
-    eventCallback: Function;
-    target: any;
-    event: KeyboardEvent;
-    option: ShortcutOption;
-    shorcut: string;
-    callback: Function;
-    constructor(element: any, shorcutCombination: string, option: ShortcutOption, callback: (e?: JQueryEventObject) => void);
-}
 
-export interface IKeyboardShortcuts {
-    [key: string]: KeyboardShortcut;
-}
-export interface IShortcutsRegisterService {
-    add(shorcutName: string, callback: () => void, options: ShortcutOption): void;
-    remove(shorcutName: string): void;
-    shorcuts: IKeyboardShortcuts;
-}
-export interface IShortcutsRegisterProvider extends ng.IServiceProvider {
-    option: ShortcutOption;
-}
-export class ShortcutsRegisterService implements IShortcutsRegisterService {
-    private _log;
-    private _defaultOption;
-    private _shortcuts;
-    constructor($log: ng.ILogService, option: ShortcutOption);
-    private getDefaultOption();
-    private checkAddShortcut(element, shorcutCombination, callback);
-    readonly shorcuts: IKeyboardShortcuts;
-    add(shorcutName: string, callback: (e: JQueryEventObject) => void, option: ShortcutOption): void;
-    remove(shorcutName: string): void;
-}
-
-
-export let ShortcutsChangedEvent: string;
 export class ShortcutItem {
     shortcut: string;
     target?: any;
@@ -95,6 +44,57 @@ export interface IShortcutsProvider extends ng.IServiceProvider {
     localShortcuts: ShortcutItem[];
     defaultOptions: ShortcutOption;
 }
+
+export interface IKeyboardShortcuts {
+    [key: string]: Shortcut;
+}
+export interface IShortcutsRegisterService {
+    add(shortcut: string, callback: () => void, options: ShortcutOption): void;
+    remove(shortcut: string): void;
+    shortcuts: IKeyboardShortcuts;
+}
+export interface IShortcutsRegisterProvider extends ng.IServiceProvider {
+    option: ShortcutOption;
+}
+export class ShortcutsRegisterService implements IShortcutsRegisterService {
+    private _log;
+    private _defaultOption;
+    private _shortcuts;
+    constructor($log: ng.ILogService, option: ShortcutOption);
+    private getDefaultOption();
+    private checkAddShortcut(element, shorcutCombination, callback);
+    readonly shortcuts: IKeyboardShortcuts;
+    add(shortcut: string, callback: (e: JQueryEventObject) => void, option: ShortcutOption): void;
+    remove(shorcut: string): void;
+}
+
+export class KeyboardEvent {
+    static Keydown: string;
+    static Keyup: string;
+    static Keypress: string;
+}
+export class ShortcutOption {
+    Type: KeyboardEvent;
+    Propagate: boolean;
+    DisableInInput: boolean;
+    Target: any;
+    Keycode: number;
+}
+export class Shortcut {
+    private shift_nums;
+    private special_keys;
+    private modifiers;
+    eventCallback: Function;
+    target: any;
+    event: KeyboardEvent;
+    option: ShortcutOption;
+    shorcut: string;
+    callback: Function;
+    constructor(element: any, shorcutCombination: string, option: ShortcutOption, callback: (e?: JQueryEventObject) => void);
+}
+
+
+export let ShortcutsChangedEvent: string;
 
 
 

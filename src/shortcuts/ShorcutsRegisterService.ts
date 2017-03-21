@@ -1,18 +1,14 @@
-import {
-    KeyboardShortcut,
-    ShortcutOption,
-    KeyboardEvent
-} from "./KeyboardShortcut";
+import { Shortcut, ShortcutOption, KeyboardEvent } from "./Shortcut";
 
 export interface IKeyboardShortcuts {
-    [key: string]: KeyboardShortcut
+    [key: string]: Shortcut
 }
 
 export interface IShortcutsRegisterService {
-    add(shorcutName: string, callback: () => void, options: ShortcutOption): void;
-    remove(shorcutName: string): void;
+    add(shortcut: string, callback: () => void, options: ShortcutOption): void;
+    remove(shortcut: string): void;
 
-    shorcuts: IKeyboardShortcuts
+    shortcuts: IKeyboardShortcuts
 }
 
 export interface IShortcutsRegisterProvider extends ng.IServiceProvider {
@@ -69,45 +65,43 @@ export class ShortcutsRegisterService implements IShortcutsRegisterService {
         return true;
     }
 
-    public get shorcuts(): IKeyboardShortcuts {
+    public get shortcuts(): IKeyboardShortcuts {
         return this._shortcuts;
     }
 
-    public add(shorcutName: string, callback: (e: JQueryEventObject) => void, option: ShortcutOption): void {
-        this.remove(shorcutName);
-        let shorcutOption: ShortcutOption = option ? _.defaults(option, this._defaultOption) : this._defaultOption;
-        let shorcutCombination: string = shorcutName.toLowerCase();
-        let element = shorcutOption.Target;
+    public add(shortcut: string, callback: (e: JQueryEventObject) => void, option: ShortcutOption): void {
+        this.remove(shortcut);
+        let shortcutOption: ShortcutOption = option ? _.defaults(option, this._defaultOption) : this._defaultOption;
+        let shortcutCombination: string = shortcut.toLowerCase();
+        let element = shortcutOption.Target;
 
-
-        if (typeof shorcutOption.Target == 'string') {
-            element = document.getElementById(shorcutOption.Target);
+        if (typeof shortcutOption.Target == 'string') {
+            element = document.getElementById(shortcutOption.Target);
         } else {
-            element = shorcutOption.Target;
+            element = shortcutOption.Target;
         }
 
-        if (!this.checkAddShortcut(element, shorcutCombination, callback)) {
-
+        if (!this.checkAddShortcut(element, shortcutCombination, callback)) {
             return
         }
 
-        let newKeyboardShortcut = new KeyboardShortcut(element, shorcutCombination, shorcutOption, callback);
+        let newKeyboardShortcut = new Shortcut(element, shortcutCombination, shortcutOption, callback);
 
-        this._shortcuts[shorcutCombination] = newKeyboardShortcut;
+        this._shortcuts[shortcutCombination] = newKeyboardShortcut;
 
         //Attach the function with the event
         if (element.addEventListener) {
-            element.addEventListener(shorcutOption.Type, newKeyboardShortcut.eventCallback, false);
+            element.addEventListener(shortcutOption.Type, newKeyboardShortcut.eventCallback, false);
         } else if (element.attachEvent) {
-            element.attachEvent('on' + shorcutOption.Type, newKeyboardShortcut.eventCallback);
+            element.attachEvent('on' + shortcutOption.Type, newKeyboardShortcut.eventCallback);
         } else {
-            element.on(shorcutOption.Type, newKeyboardShortcut.eventCallback);
+            element.on(shortcutOption.Type, newKeyboardShortcut.eventCallback);
         }
     }
 
-    public remove(shorcutName: string): void {
-        let shortcutCombination = shorcutName.toLowerCase();
-        let binding: KeyboardShortcut = this._shortcuts[shortcutCombination];
+    public remove(shorcut: string): void {
+        let shortcutCombination = shorcut.toLowerCase();
+        let binding: Shortcut = this._shortcuts[shortcutCombination];
 
         delete(this._shortcuts[shortcutCombination])
         if (!binding) return;

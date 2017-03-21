@@ -1,3 +1,9 @@
+export class KeyboardEvent {
+    static Keydown: string = 'keydown';
+    static Keyup: string = 'keyup';
+    static Keypress: string = 'keypress';
+}
+
 export class ShortcutOption {
     Type: KeyboardEvent;
     Propagate: boolean;
@@ -6,13 +12,7 @@ export class ShortcutOption {
     Keycode: number;
 }
 
-export class KeyboardEvent {
-    static Keydown: string = 'keydown';
-    static Keyup: string = 'keyup';
-    static Keypress: string = 'keypress';
-}
-
-export class KeyboardShortcut {
+export class Shortcut {
     private shift_nums = {
         "`": "~",
         "1": "!",

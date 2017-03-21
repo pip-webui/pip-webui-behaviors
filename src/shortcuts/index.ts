@@ -4,5 +4,6 @@ import './ShorcutsRegisterService';
 import './ShortcutsService';
 import './ShortcutDirective';
 
+export * from './IShortcutsService';
 export * from './ShortcutsService';
 export * from './ShorcutsRegisterService';

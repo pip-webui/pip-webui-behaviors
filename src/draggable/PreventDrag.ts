@@ -43,6 +43,7 @@
         }
     }
 
-    angular.module("pipDraggable")
+    angular
+        .module("pipDraggable")
         .directive('pipPreventDrag', PreventDrag);
 }

@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts" />
 {
     interface UnsavedChangesScope extends ng.IScope {
         unsavedChangesAvailable: Function;
@@ -49,6 +48,7 @@
         };
     }
 
-    angular.module("pipUnsavedChanges", [])
+    angular
+        .module("pipUnsavedChanges", [])
         .directive("pipUnsavedChanges", UnsavedChanges);
 }

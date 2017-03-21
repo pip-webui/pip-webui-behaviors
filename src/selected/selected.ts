@@ -1,5 +1,4 @@
 {
-
     interface SelectedAttributes extends ng.IAttributes {
         pipSelected: any;
         pipSelectedId: any;
@@ -407,6 +406,7 @@
         }
     }
 
-    angular.module("pipSelected", [])
+    angular
+        .module("pipSelected", [])
         .directive('pipSelected', Selected);
 }

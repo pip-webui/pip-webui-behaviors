@@ -1,5 +1,4 @@
 {
-
     interface InfiniteScrollScope extends ng.IScope {
         pipInfiniteScroll: Function;
         pipScrollContainer: JQuery;
@@ -236,6 +235,7 @@
         }
     }
 
-    angular.module("pipInfiniteScroll", [])
+    angular
+        .module("pipInfiniteScroll", [])
         .directive('pipInfiniteScroll', InfiniteScroll);
 }

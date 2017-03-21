@@ -20,6 +20,7 @@
         }
     }
 
-    angular.module("pipDraggable")
+    angular
+        .module("pipDraggable")
         .directive('pipCancelDrag', CancelDrag);
 }

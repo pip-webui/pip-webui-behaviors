@@ -1,10 +1,5 @@
-import  {
-    ShortcutOption,
-} from "./KeyboardShortcut";
-
-import  {
-    IShortcutsRegisterService,
-} from "./ShorcutsRegisterService";
+import { ShortcutOption } from "./Shortcut";
+import { IShortcutsRegisterService } from "./ShorcutsRegisterService";
 
 interface ShortcutAttributes extends ng.IAttributes {
     pipShortcutAction: any;

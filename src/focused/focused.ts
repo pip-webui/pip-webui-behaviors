@@ -174,6 +174,7 @@
         }
     }
 
-    angular.module("pipFocused", [])
+    angular
+        .module("pipFocused", [])
         .directive('pipFocused', Focused);
 }
