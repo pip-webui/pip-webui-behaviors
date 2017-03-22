@@ -88,6 +88,16 @@
     padding: 24px !important;
 }
 
+/* Styles for Focused */
+
+.white-text {
+    color: white;
+}
+
+.white-text md-icon {
+    color: white;
+}
+
 /* Styles for Selected */
 
 .app-selected .pip-list-x {
@@ -172,6 +182,7 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+    height: 85px;
 }
 
 .drag-scroll [pip-drag] div {

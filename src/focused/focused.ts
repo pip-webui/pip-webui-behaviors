@@ -1,6 +1,7 @@
 {
     interface FocusedScope extends ng.IScope {
         pipFocusedColor: Function;
+        pipFocusedClass: Function;
         pipFocusedRebind: Function;
         pipFocusedTabindex: Function;
         pipFocusedOpacity: Function;
@@ -20,6 +21,8 @@
         private color: string;
         private opacityDelta: number = 0.4;
         private opacityLimit: number = 0.5;
+        private oldBackgroundColor: string;
+        private onFocusClass: string;
 
         constructor(
             private $scope: FocusedScope,
@@ -53,6 +56,7 @@
 
         private init() {
             const selector = this.$scope.pipWithHidden && this.$scope.pipWithHidden() ? '.pip-focusable' : '.pip-focusable:visible';
+            this.onFocusClass = this.$scope.pipFocusedClass ? this.$scope.pipFocusedClass() : '';
             this.controls = this.$element.find(selector);
             this.controlsLength = this.controls.length;
             this.checkTabindex(this.controls);
@@ -66,9 +70,11 @@
                     this.init();
                 }
                 this.$element.addClass('pip-focused-container');
+                $(target).addClass(this.onFocusClass);
                 if (!this.$scope.pipFocusedOpacity || !this.$scope.pipFocusedOpacity()) {
 
                     this.color = $(target).css('backgroundColor');
+                    this.oldBackgroundColor = this.color;
                     $(target).css('backgroundColor', this.rgba(this.color));
                     $(target).addClass('md-focused');
                 } else {
@@ -81,10 +87,9 @@
                     return;
                 }
                 this.$element.removeClass('pip-focused-container');
-
+                $(target).removeClass(this.onFocusClass);
                 if (!this.$scope.pipFocusedOpacity || !this.$scope.pipFocusedOpacity()) {
-                    // $(this).css('backgroundColor', _color);
-                    $(target).css('backgroundColor', "");
+                    $(target).css('backgroundColor', this.oldBackgroundColor);
                     $(target).removeClass('md-focused md-focused-opacity');
                 } else {
                     $(target).removeClass('md-focused');
@@ -161,6 +166,7 @@
         return {
             scope: {
                 pipFocusedColor: '&?',
+                pipFocusedClass: '&?',
                 pipFocusedRebind: '&?',
                 pipFocusedTabindex: '&?',
                 pipFocusedOpacity: '&?',

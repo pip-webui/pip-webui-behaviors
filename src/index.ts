@@ -1,10 +1,9 @@
-﻿import './unsaved_changes/UnsavedChanges';
+﻿import './unsaved_changes/unsavedChanges';
 import './shortcuts/index';
-import './focused/Focused';
+import './focused/focused';
 import './draggable/index';
-import './selected/Selected';
-import './focused/Focused';
-import './infinite_scroll/InfiniteScroll';
+import './selected/selected';
+import './infinite_scroll/infiniteScroll';
 
 angular.module('pipBehaviors', [
     'pipFocused',

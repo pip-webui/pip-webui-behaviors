@@ -1,15 +1,19 @@
 <h2 class="text-title">Unsaved changes sample: </h2>
 
 <p>
-    {{ ::try }}
+    Try to leave this page:
 </p>
-<pip-unsaved-changes pip-unsaved-changes-available="isAvailable()" pip-unsaved-changes-message="{{ message }}"></pip-unsaved-changes>
-<md-input-container class="popover-text-container">
-    <label >{{ ::text }}</label>
-    <input  ng-model="message" required/>
-</md-input-container>
-<md-switch ng-model="available">{{ ::available }}</md-switch>
-<div>
-<md-button ng-click="onLeavePage()" ng-disabled="!message">{{ ::leave }}</md-button>
-<a href="http://github.com/pip-webui/pip-webui-controls/issues/77">{{ ::link }}</a>
-</div>
+<md-card style="margin-left: 0px">
+    <md-card-content>
+        <pip-unsaved-changes pip-unsaved-changes-available="isAvailable()" pip-unsaved-changes-message="{{ message }}"></pip-unsaved-changes>
+        <md-input-container style="margin-bottom: 0px; width: 100%">
+            <label>{{ ::text }}</label>
+            <input ng-model="message" required/>
+        </md-input-container>
+        <md-switch ng-model="available">Is service available</md-switch>
+        <div>
+            <md-button ng-click="onLeavePage()" class="md-raised md-primary" ng-disabled="!message" style="margin-left: 0px">Go back to previous page</md-button>
+            <a href="http://github.com/pip-webui/">Go to GitHub</a>
+        </div>
+    </md-card-content>
+</md-card>

@@ -47,7 +47,7 @@
             };
 
             $scope.available = true;
-            $scope.message = 'MESSAGE';
+            $scope.message = 'Message is displayed when trying to leave this page';
 
             $scope.isAvailable = function () {
                 return $scope.available;
