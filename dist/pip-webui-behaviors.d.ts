@@ -12,7 +12,6 @@ export interface IDraggableService {
 
 
 
-
 export interface IKeyboardShortcuts {
     [key: string]: Shortcut;
 }
@@ -79,19 +78,10 @@ export class Shortcut {
     constructor(element: any, shorcutCombination: string, option: ShortcutOptions, callback: (e?: JQueryEventObject) => void);
 }
 
-export class ShortcutBindingService implements IShortcutBindingService {
-    private _log;
-    private _defaultOption;
-    private _shortcuts;
-    constructor($log: ng.ILogService, option: ShortcutOptions);
-    private getDefaultOption();
-    readonly shortcuts: IKeyboardShortcuts;
-    add(shortcut: string, callback: (e: JQueryEventObject) => void, option: ShortcutOptions): void;
-    remove(shorcut: string): void;
-}
 
 
 export let ShortcutsChangedEvent: string;
+
 
 
 }
