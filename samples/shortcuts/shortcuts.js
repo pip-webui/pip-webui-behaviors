@@ -40,24 +40,22 @@
                 Target: 'textarea_shortcut'
             };
 
-
             pipShortcutBinding.add(textareaShortcut, (e) => {
                 $mdToast.show(
                     $mdToast.simple()
                         .textContent('Pressed shift + Q in first textarea')
-                        .position('top right')
+                        .position('bottom')
                         .hideDelay(3000)
                 );
                 
             }, textareaOptions);
-
 
             pipShortcutBinding.add(documentShortcut, (e) => {
                 console.log('shift+alt+t', e);
                 $mdToast.show(
                     $mdToast.simple()
                         .textContent('Pressed shift+alt+t in document')
-                        .position('top right')
+                        .position('bottom')
                         .hideDelay(3000)
                 );
             });
@@ -66,18 +64,16 @@
                 $mdToast.show(
                     $mdToast.simple()
                         .textContent('Pressed alt+t in document')
-                        .position('top right')
+                        .position('bottom')
                         .hideDelay(3000)
                 );
             });
-
-            // pipShortcuts.on(globalShorcuts, []);
 
             $scope.keyEvent = function ($event) {
                 $mdToast.show(
                     $mdToast.simple()
                         .textContent('Pressed alt + V in second textarea')
-                        .position('top right')
+                        .position('bottom')
                         .hideDelay(3000)
                 );
             }
