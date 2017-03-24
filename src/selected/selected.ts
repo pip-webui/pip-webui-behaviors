@@ -164,14 +164,7 @@
                 }
             }
 
-            // Execute callback to notify about item select
-            if (oldSelectedIndex != this.selectedIndex && this.selectedIndex !== -1) {
-                this.$scope.$apply(updateIndex);
-            } else {
-                this.$scope.$apply(onSelect);
-            }
-
-            function updateIndex() {
+            const updateIndex = () => {
                 const selectedItem = angular.element(items[this.selectedIndex]),
                     selectedId = selectedItem.attr('pip-id');
 
@@ -180,7 +173,7 @@
                 onSelect();
             };
 
-            function onSelect() {
+            const onSelect = () => {
                 const selectedItem = angular.element(items[this.selectedIndex]),
                     selectedId = selectedItem.attr('pip-id');
 
@@ -196,6 +189,13 @@
                         }
                     });
                 }
+            }
+
+            // Execute callback to notify about item select
+            if (oldSelectedIndex != this.selectedIndex && this.selectedIndex !== -1) {
+                this.$scope.$apply(() => { updateIndex(); });
+            } else {
+                this.$scope.$apply(() => { onSelect(); });
             }
         };
 
