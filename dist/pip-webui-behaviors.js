@@ -1080,6 +1080,7 @@ __export(require("./shortcuts/index"));
         };
         ;
         SelectedLink_1.prototype.defineSelectedIndex = function (items) {
+            var _this = this;
             var oldSelectedIndex = this.selectedIndex;
             this.selectedIndex = -1;
             for (var index = 0; index < items.length; index++) {
@@ -1088,35 +1089,34 @@ __export(require("./shortcuts/index"));
                     break;
                 }
             }
-            if (oldSelectedIndex != this.selectedIndex && this.selectedIndex !== -1) {
-                this.$scope.$apply(updateIndex);
-            }
-            else {
-                this.$scope.$apply(onSelect);
-            }
-            function updateIndex() {
-                var selectedItem = angular.element(items[this.selectedIndex]), selectedId = selectedItem.attr('pip-id');
-                if (this.indexSetter)
-                    this.indexSetter(this.$scope, this.selectedIndex);
-                if (this.idSetter)
-                    this.idSetter(this.$scope, selectedId);
+            var updateIndex = function () {
+                var selectedItem = angular.element(items[_this.selectedIndex]), selectedId = selectedItem.attr('pip-id');
+                if (_this.indexSetter)
+                    _this.indexSetter(_this.$scope, _this.selectedIndex);
+                if (_this.idSetter)
+                    _this.idSetter(_this.$scope, selectedId);
                 onSelect();
-            }
-            ;
-            function onSelect() {
-                var selectedItem = angular.element(items[this.selectedIndex]), selectedId = selectedItem.attr('pip-id');
-                if (this.changeGetter) {
-                    this.changeGetter(this.$scope, {
+            };
+            var onSelect = function () {
+                var selectedItem = angular.element(items[_this.selectedIndex]), selectedId = selectedItem.attr('pip-id');
+                if (_this.changeGetter) {
+                    _this.changeGetter(_this.$scope, {
                         $event: {
-                            target: this.$element,
+                            target: _this.$element,
                             item: selectedItem,
-                            index: this.selectedIndex,
+                            index: _this.selectedIndex,
                             id: selectedId,
-                            newIndex: this.selectedIndex,
+                            newIndex: _this.selectedIndex,
                             oldIndex: oldSelectedIndex
                         }
                     });
                 }
+            };
+            if (oldSelectedIndex != this.selectedIndex && this.selectedIndex !== -1) {
+                this.$scope.$apply(function () { updateIndex(); });
+            }
+            else {
+                this.$scope.$apply(function () { onSelect(); });
             }
         };
         ;
