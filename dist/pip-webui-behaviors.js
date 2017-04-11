@@ -1604,7 +1604,6 @@ var ShortcutController = (function () {
         var _this = this;
         if ($attrs.pipShortcutAction) {
             this.actionShortcuts = $parse($attrs.pipShortcutAction);
-            this.actionShortcuts($scope, { $event: {} });
         }
         else {
             $log.error('Shortcut action does not set.');
@@ -1709,7 +1708,9 @@ var ShortcutsService = (function () {
             var option = k.options ? k.options : generalOptions;
             var target;
             target = k.target ? k.target : k.targetId;
-            option.Target = target;
+            if (target) {
+                option.Target = target;
+            }
             _this.pipShortcutBinding.add(k.shortcut, function (e) {
                 _this.keypressShortcut(k, e);
             }, option);

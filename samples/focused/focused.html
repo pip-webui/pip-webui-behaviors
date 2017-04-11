@@ -1,7 +1,8 @@
 <h2 class="text-title">Focused sample:</h2>
 <p>Press <span style="background-color: rgba(0, 0, 0, 0.16); border-radius: 2px; padding: 4px">Tab</span> to choose focusable
-	element and up, down and left, right buttons to change selected element in list:</p>
-<md-card pip-focused pip-focused-color="rgba(255, 255, 255, 1)" style="display: inline-block; margin-left: 0px; width: calc(50% - 10px);">
+	element and up, down and left, right buttons to change selected element in list:
+</p>
+<md-card pip-focused pip-focused-color="rgba(255, 255, 255, 1)" style="display: inline-block; margin-left: 0px; width: calc(50% - 30px);">
 	<md-list class="pip-menu pip-ref-list" style="padding: 0px">
 		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="0">Focusable element</md-list-item>
 		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1">Not focusable element</md-list-item>
@@ -11,7 +12,7 @@
 		<md-list-item class="pip-focusable divider-bottom text-overflow" tabindex="-1">Not focusable element</md-list-item>
 	</md-list>
 </md-card>
-<md-card pip-focused pip-focused-opacity="true" pip-focused-data="collection" style="display: inline-block; width: calc(50% - 10px); margin-right: 0px;">
+<md-card pip-focused pip-focused-opacity="true" pip-focused-data="collection" style="display: inline-block; width: calc(50% - 30px); margin-right: 0px;">
 	<md-list class="pip-menu pip-ref-list" style="padding: 0px">
 		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="0">Focusable element</md-list-item>
 		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1">Not focusable element</md-list-item>
@@ -21,50 +22,52 @@
 		<md-list-item class="pip-focusable divider-bottom div-box text-overflow" tabindex="-1">Not focusable element</md-list-item>
 	</md-list>
 </md-card>
-<div pip-focused pip-focused-color="'#EF6C00'" pip-focused-class="'white-text'" style="display: inline-block;">
-	<p>Focusable elements:</p>
-	<div class="layout-row layout-align-start-start">
-		<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
-		style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); padding-top: 8px;">
-			<md-icon md-svg-icon="icons:plus" style="height: 65px; width: 65px"></md-icon>
-			<span class="flex text-button " style="width: 80px; text-align: center; ">Added</span>
-		</div>
-		<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
-		style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); margin-left: 8px; padding-top: 8px;">
-			<md-icon md-svg-icon="icons:trash" style="height: 65px; width: 65px"></md-icon>
-			<span class="flex text-button " style="width: 80px; text-align: center; ">Deleted</span>
-		</div>
-	</div>
-</div>
-
-<div pip-focused pip-focused-color="'#43A047'" pip-focused-class="'white-text'" style="display: inline-block; margin-left: 8px">
-	<p>Attachments:</p>
-	<div class="layout-row layout-align-start-start">
-		<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
-		style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); padding-top: 8px;">
-			<md-icon md-svg-icon="icons:picture-no-border" style="height: 65px; width: 65px"></md-icon>
-			<span class="flex text-button " style="width: 80px; text-align: center; ">Picture</span>
-		</div>
-		<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
-		style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); margin-left: 8px; padding-top: 8px;">
-			<md-icon md-svg-icon="icons:film" style="height: 65px; width: 65px"></md-icon>
-			<span class="flex text-button " style="width: 80px; text-align: center; ">Video</span>
+<div class="layout-row layout-align-start-start">
+	<div pip-focused pip-focused-color="'#EF6C00'" pip-focused-class="'white-text'" style="display: inline-block;">
+		<p>Focusable elements:</p>
+		<div class="layout-row layout-align-start-start">
+			<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
+			style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); padding-top: 8px;">
+				<md-icon md-svg-icon="icons:plus" style="height: 65px; width: 65px"></md-icon>
+				<span class="flex text-button " style="width: 80px; text-align: center; ">Added</span>
+			</div>
+			<div class="pip-focusable layout-column layout-align-center-center" tabindex="-1" 
+			style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); margin-left: 8px; padding-top: 8px;">
+				<md-icon md-svg-icon="icons:trash" style="height: 65px; width: 65px"></md-icon>
+				<span class="flex text-button " style="width: 80px; text-align: center; ">Deleted</span>
+			</div>
 		</div>
 	</div>
-</div>
 
-<div pip-focused pip-focused-color="'#03A9F4'" pip-focused-class="'white-text'" style="display: inline-block; margin-left: 8px">
-	<p>Some about event:</p>
-	<div class="layout-row layout-align-start-start">
-		<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
-		style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); padding-top: 8px;">
-			<md-icon md-svg-icon="icons:date" style="height: 65px; width: 65px"></md-icon>
-			<span class="flex text-button " style="width: 80px; text-align: center; ">When</span>
+	<div pip-focused pip-focused-color="'#43A047'" pip-focused-class="'white-text'" style="display: inline-block; margin-left: 8px">
+		<p>Attachments:</p>
+		<div class="layout-row layout-align-start-start">
+			<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
+			style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); padding-top: 8px;">
+				<md-icon md-svg-icon="icons:picture-no-border" style="height: 65px; width: 65px"></md-icon>
+				<span class="flex text-button " style="width: 80px; text-align: center; ">Picture</span>
+			</div>
+			<div class="pip-focusable layout-column layout-align-center-center" tabindex="-1" 
+			style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); margin-left: 8px; padding-top: 8px;">
+				<md-icon md-svg-icon="icons:film" style="height: 65px; width: 65px"></md-icon>
+				<span class="flex text-button " style="width: 80px; text-align: center; ">Video</span>
+			</div>
 		</div>
-		<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
-		style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); margin-left: 8px; padding-top: 8px;">
-			<md-icon md-svg-icon="icons:location" style="height: 65px; width: 65px"></md-icon>
-			<span class="flex text-button " style="width: 80px; text-align: center; ">Where</span>
+	</div>
+
+	<div pip-focused pip-focused-color="'#03A9F4'" pip-focused-class="'white-text'" style="display: inline-block; margin-left: 8px">
+		<p>Some about event:</p>
+		<div class="layout-row layout-align-start-start">
+			<div class="pip-focusable layout-column layout-align-center-center" tabindex="0" 
+			style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); padding-top: 8px;">
+				<md-icon md-svg-icon="icons:date" style="height: 65px; width: 65px"></md-icon>
+				<span class="flex text-button " style="width: 80px; text-align: center; ">When</span>
+			</div>
+			<div class="pip-focusable layout-column layout-align-center-center" tabindex="-1" 
+			style="height: 100px; width: 100px; background-color: rgba(0, 0, 0, 0.16); margin-left: 8px; padding-top: 8px;">
+				<md-icon md-svg-icon="icons:location" style="height: 65px; width: 65px"></md-icon>
+				<span class="flex text-button " style="width: 80px; text-align: center; ">Where</span>
+			</div>
 		</div>
 	</div>
 </div>

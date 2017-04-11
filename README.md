@@ -9,6 +9,7 @@ Pip.WebUI.Behaviors module contains behaviors that can be attached to existing c
 * **Draggable** - implements drag & drop functionality
 * **Infinite Scroll** - allows to upload data in chunks while user is scrolling
 * **Unsaved Changes** - intercept page transition events to confirm with user to save data
+* **Shortcuts** - allows to register hotkeys for the web-site or separate web-pages
 
 ## Learn more about the module
 

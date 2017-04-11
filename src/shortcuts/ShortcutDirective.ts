@@ -24,7 +24,7 @@ class ShortcutController implements ng.IController  {
 
         if ($attrs.pipShortcutAction) {
             this.actionShortcuts = $parse($attrs.pipShortcutAction);
-            this.actionShortcuts($scope, {$event: {}});
+            // this.actionShortcuts($scope, {$event: {}});
         } else {
             $log.error('Shortcut action does not set.');
 

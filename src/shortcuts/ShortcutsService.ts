@@ -92,7 +92,9 @@ class ShortcutsService implements IShortcutsService {
             let target: any;
 
             target = k.target ? k.target : k.targetId;
-            option.Target = target;
+            if (target) { 
+                option.Target = target;
+            }
             // Registration of keyboard shortcut
             this.pipShortcutBinding.add(k.shortcut, (e?: any) => {
                 this.keypressShortcut(k, e);        
