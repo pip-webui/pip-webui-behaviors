@@ -755,12 +755,12 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-require("./unsaved_changes/unsavedChanges");
+require("./unsaved_changes/UnsavedChanges");
 require("./shortcuts/index");
-require("./focused/focused");
+require("./focused/Focused");
 require("./draggable/index");
-require("./selected/selected");
-require("./infinite_scroll/infiniteScroll");
+require("./selected/Selected");
+require("./infinite_scroll/InfiniteScroll");
 angular.module('pipBehaviors', [
     'pipFocused',
     'pipSelected',
@@ -770,7 +770,7 @@ angular.module('pipBehaviors', [
     'pipShortcuts'
 ]);
 __export(require("./shortcuts/index"));
-},{"./draggable/index":6,"./focused/focused":7,"./infinite_scroll/infiniteScroll":9,"./selected/selected":10,"./shortcuts/index":16,"./unsaved_changes/unsavedChanges":17}],9:[function(require,module,exports){
+},{"./draggable/index":6,"./focused/Focused":7,"./infinite_scroll/InfiniteScroll":9,"./selected/Selected":10,"./shortcuts/index":16,"./unsaved_changes/UnsavedChanges":17}],9:[function(require,module,exports){
 {
     var InfiniteScrollLink_1 = (function () {
         function InfiniteScrollLink_1($rootScope, $window, $interval, $scope, $element, $attrs) {
