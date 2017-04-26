@@ -4,11 +4,11 @@ declare module pip.behaviors {
 
 
 
-
-
 export interface IDraggableService {
     inputEvent(event: any): any;
 }
+
+
 
 
 
