@@ -44,7 +44,8 @@ module.exports = {
         ]
     },
     samples: {
-        port: 8190
+        port: 8190,
+        https: false
     },
     api: {
         port: 8191
