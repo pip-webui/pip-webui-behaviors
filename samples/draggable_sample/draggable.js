@@ -69,18 +69,18 @@
 
             $scope.onTileDrop = function(gIndex, tileData,  $event) {
                 let draggedTile = $scope.groups[groupIndex].source[tileIndex];
-                console.log('tileIndex', tileIndex);
-                console.log('groupIndex', groupIndex);
-                console.log('draggedTile', draggedTile);
 
                 $scope.groups[groupIndex].source.splice(tileIndex, 1);
                 $scope.groups[gIndex].source.push(draggedTile);
-                console.log(' $scope.groups[gIndex]',  $scope.groups[gIndex]);
             }
 
             $scope.onTileDragStart = function(gIndex, tIndex, tileData,  $event) {
                 tileIndex = tIndex;
                 groupIndex = gIndex;
+            }
+
+            $scope.onTileMove = function($event) {
+                console.log('$event move', $event);
             }
 
             $scope.onTileDragEnd = function(gIndex, tIndex, tileData,  $event) {

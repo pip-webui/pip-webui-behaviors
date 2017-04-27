@@ -121,7 +121,7 @@ import {
         private onDragEnd(evt, obj) {
             // don't listen to drop events if this is the element being dragged
             // only update the styles and return
-            if (!this._dropEnabled || this._myid === obj.uid) {
+            if (!this._dropEnabled) {
                 this.updateDragStyles(false, obj.element);
                 return;
             }

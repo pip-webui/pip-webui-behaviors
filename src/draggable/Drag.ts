@@ -1,4 +1,6 @@
-import { IDraggableService } from './DraggableService';
+import {
+    IDraggableService
+} from './DraggableService';
 
 {
     interface IDragLinkScope extends ng.IScope {
@@ -8,6 +10,7 @@ import { IDraggableService } from './DraggableService';
     interface IDragLinkAttributes extends ng.IAttributes {
         ngDrag: any;
         pipDragStart: any;
+        pipDragMove: any;
         pipDragStop: any;
         pipDragSuccess: any;
         allowTransform: any;
@@ -49,6 +52,7 @@ import { IDraggableService } from './DraggableService';
         private _elementStyle: any = {};
 
         private onDragStartCallback: Function;
+        private onDragMoveCallbak: Function;
         private onDragStopCallback: Function;
         private onDragSuccessCallback: Function;
         private allowTransform: boolean;
@@ -79,6 +83,7 @@ import { IDraggableService } from './DraggableService';
             $scope.value = $attrs.ngDrag;
             this._myid = $scope.$id;
             this.onDragStartCallback = $parse($attrs.pipDragStart) || null;
+            this.onDragMoveCallbak = $parse($attrs.pipDragMove) || null;
             this.onDragStopCallback = $parse($attrs.pipDragStop) || null;
             this.onDragSuccessCallback = $parse($attrs.pipDragSuccess) || null;
             this.allowTransform = angular.isDefined($attrs.allowTransform) ? $scope.$eval($attrs.allowTransform) : false;
@@ -207,7 +212,7 @@ import { IDraggableService } from './DraggableService';
         }
 
         private saveElementStyles() {
-            this._elementStyle.left = this.$element.css('css') || 0;
+            this._elementStyle.left = this.$element.css('left') || 0;
             this._elementStyle.top = this.$element.css('top') || 0;
             this._elementStyle.position = this.$element.css('position');
             this._elementStyle.width = this.$element.css('width');
@@ -310,7 +315,7 @@ import { IDraggableService } from './DraggableService';
             }
 
             this.moveElement(this._tx, this._ty);
-
+            
             this.$rootScope.$broadcast('draggable:move', {
                 x: this._mx,
                 y: this._my,
@@ -322,6 +327,15 @@ import { IDraggableService } from './DraggableService';
                 uid: this._myid,
                 dragOffset: this._dragOffset
             });
+
+            if (this.onDragMoveCallbak) {
+                this.$scope.$apply(() => {
+                    this.onDragMoveCallbak(this.$scope, {
+                        $data: this._data,
+                        $event: angular.extend(evt, ),
+                    });
+                });
+            }
         }
 
         private onrelease(evt) {
