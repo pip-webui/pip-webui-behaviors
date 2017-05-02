@@ -6,7 +6,7 @@
     var thisModule = angular.module('appBehaviors.Draggable', []);
 
     thisModule.controller('DraggableController',
-        function($scope) {
+        function($scope, $timeout) {
             $scope.centerAnchor = true;
 
             $scope.toggleCenterAnchor = function () {
@@ -58,6 +58,48 @@
                     name: '33691E'
                 }
             ];
+
+            $scope.groups = [
+                {source: [ {name: 'timer'}, {name: 'calendar'}, {name: 'picture slider'}, {name: 'statistics'} ]},
+                {source: [ {name: 'map'}, {name: 'clocks'}, {name: 'note'} ,{name: 'event'} ]}
+            ];
+
+            let tileIndex;
+            let groupIndex;
+
+            $scope.onTileDrop = function(gIndex, tileData,  $event) {
+                let draggedTile = $scope.groups[groupIndex].source[tileIndex];
+
+                $scope.groups[groupIndex].source.splice(tileIndex, 1);
+                $scope.groups[gIndex].source.push(draggedTile);
+            }
+
+            $scope.onTileDragStart = function(gIndex, tIndex, tileData,  $event) {
+                tileIndex = tIndex;
+                groupIndex = gIndex;
+            }
+
+            $scope.onTileMove = function($event) {
+                console.log('$event move', $event);
+            }
+
+            $scope.onTileDragEnd = function(gIndex, tIndex, tileData,  $event) {
+                $scope.groups[groupIndex].source.splice(tileIndex, 1);
+            }
+
+            $scope.onDiactive = function(gIndex, tileData,  $event) {
+                console.log('on diactive', gIndex);
+            }
+
+            $scope.onEnter = function(gIndex, tileData,  $event) {
+                console.log('enter group index:', gIndex);
+                console.log('$target', $event);
+            }
+
+            $scope.onLeave = function(gIndex, tileData,  $event) {
+                console.log('leave group index:', gIndex);
+                console.log('$event', $event);
+            }
 
             $scope.onDropSuccess = function (index, data, evt) {
                 const otherObj = $scope.content[index];

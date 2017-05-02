@@ -1,12 +1,12 @@
 <h2 class="text-title">Drag and Drop sample:</h2>
 <p>Example with scroll. Let's put colors in reverse order:</p>
-<md-card class="drag-scroll layout-column flex">
+<!--md-card class="drag-scroll layout-column flex">
 	<!--md-card-title>
 		<md-card-title-text>
 			<span class="md-headline">Example with scroll. Let's put colors in reverse order: </span>
 		</md-card-title-text>
 	</md-card-title-->
-	<md-card-content class="scroll-card">
+	<!--md-card-content class="scroll-card">
 		<div class="drag-scroll-test" style="height: 600px">
 			<div ng-repeat="obj in content track by obj.name"
 				 pip-scroll-container="'.drag-scroll-test'"
@@ -24,6 +24,36 @@
 				 </div>
 			</div>
 
+		</div>
+	</md-card-content>
+</md-card-->
+
+<md-card class="drag-scroll layout-column flex">
+	<md-card-content>
+		<div ng-repeat="group in groups" 
+			class="tile-group"
+			pip-drop="true"
+			pip-drop-success="onTileDrop($index, $data, $event)" 
+			pip-deactive="onDiactive($index, $data, $event)"
+			pip-enter="onEnter($index, $data, $event, $target)"
+			pip-leave="onLeave($index, $data, $event)"
+			ng-value="gIndex = $index"
+		style="min-height: 110px; background-color: #F1F8E9; margin: 10px;">
+			<div ng-repeat="tile in group.source" 
+				class="tile"
+				pip-drag="true" 
+				pip-drag-data="tile"
+				pip-drag-start="onTileDragStart(gIndex, $index, $data, $event)"
+				pip-drag-move="onTileMove($event)"
+				pip-drag-end="onTileDragEnd(gIndex, $index, $data, $event)"
+				style="width: 100px; height: 100px; display: 
+				inline-block; 
+				color: white;
+				margin: 5px; 
+				padding: 4px;
+				background-color: #33691E">
+				{{ tile.name }}
+			</div>
 		</div>
 	</md-card-content>
 </md-card>

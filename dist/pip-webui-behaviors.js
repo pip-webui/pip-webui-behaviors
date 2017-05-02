@@ -49,6 +49,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             $scope.value = $attrs.ngDrag;
             this._myid = $scope.$id;
             this.onDragStartCallback = $parse($attrs.pipDragStart) || null;
+            this.onDragMoveCallbak = $parse($attrs.pipDragMove) || null;
             this.onDragStopCallback = $parse($attrs.pipDragStop) || null;
             this.onDragSuccessCallback = $parse($attrs.pipDragSuccess) || null;
             this.allowTransform = angular.isDefined($attrs.allowTransform) ? $scope.$eval($attrs.allowTransform) : false;
@@ -155,7 +156,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         };
         DragLink_1.prototype.saveElementStyles = function () {
-            this._elementStyle.left = this.$element.css('css') || 0;
+            this._elementStyle.left = this.$element.css('left') || 0;
             this._elementStyle.top = this.$element.css('top') || 0;
             this._elementStyle.position = this.$element.css('position');
             this._elementStyle.width = this.$element.css('width');
@@ -259,6 +260,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 uid: this._myid,
                 dragOffset: this._dragOffset
             });
+            if (this.onDragMoveCallbak) {
+                this.$scope.$apply(function () {
+                    _this.onDragMoveCallbak(_this.$scope, {
+                        $data: _this._data,
+                        $event: angular.extend(evt),
+                    });
+                });
+            }
         };
         DragLink_1.prototype.onrelease = function (evt) {
             var _this = this;
@@ -427,6 +436,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
             this.onDragStartCallback = $parse($attrs.pipDragStart);
             this.onDragStopCallback = $parse($attrs.pipDragStop);
             this.onDragMoveCallback = $parse($attrs.pipDragMove);
+            this.onEnterCallback = $parse($attrs.pipEnter);
+            this.onLeaveCallback = $parse($attrs.pipLeave);
+            this.onDiactiveCallback = $parse($attrs.pipDiactive);
             this.initialize();
         }
         DropLink_1.prototype.initialize = function () {
@@ -462,7 +474,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             var _this = this;
             if (!this._dropEnabled)
                 return;
-            this.isTouching(obj.x, obj.y, obj.element);
+            this.isTouching(obj.x, obj.y, obj.element, evt, obj);
             if (this.$attrs.pipDragStart) {
                 this.$timeout(function () {
                     _this.onDragStartCallback(_this.$scope, {
@@ -476,7 +488,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             var _this = this;
             if (!this._dropEnabled)
                 return;
-            this.isTouching(obj.x, obj.y, obj.element);
+            this.isTouching(obj.x, obj.y, obj.element, evt, obj);
             if (this.$attrs.pipDragMove) {
                 this.$timeout(function () {
                     _this.onDragMoveCallback(_this.$scope, {
@@ -488,17 +500,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
         };
         DropLink_1.prototype.onDragEnd = function (evt, obj) {
             var _this = this;
-            if (!this._dropEnabled || this._myid === obj.uid) {
+            if (!this._dropEnabled) {
                 this.updateDragStyles(false, obj.element);
                 return;
             }
-            if (this.isTouching(obj.x, obj.y, obj.element)) {
+            if (this.isTouching(obj.x, obj.y, obj.element, evt, obj)) {
                 if (obj.callback) {
                     obj.callback(obj);
                 }
                 if (this.$attrs.pipDropSuccess) {
                     this.$timeout(function () {
                         _this.onDropCallback(_this.$scope, {
+                            $data: obj.data,
+                            $event: obj,
+                            $target: _this.$scope.$eval(_this.$scope.value)
+                        });
+                    });
+                }
+                if (this.$attrs.pipDiactive) {
+                    this.$timeout(function () {
+                        _this.onDiactiveCallback(_this.$scope, {
                             $data: obj.data,
                             $event: obj,
                             $target: _this.$scope.$eval(_this.$scope.value)
@@ -516,8 +537,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
             this.updateDragStyles(false, obj.element);
         };
-        DropLink_1.prototype.isTouching = function (mouseX, mouseY, dragElement) {
+        DropLink_1.prototype.isTouching = function (mouseX, mouseY, dragElement, evt, obj) {
             var touching = this.hitTest(mouseX, mouseY);
+            if (touching !== this.$scope.isTouching) {
+                if (touching) {
+                    this.onEnterCallback(this.$scope, {
+                        $data: obj.data,
+                        $event: obj,
+                        $target: this.$scope.$eval(this.$scope.value)
+                    });
+                }
+                else {
+                    this.onLeaveCallback(this.$scope, {
+                        $data: obj.data,
+                        $event: obj,
+                        $target: this.$scope.$eval(this.$scope.value)
+                    });
+                }
+            }
             this.$scope.isTouching = touching;
             if (touching) {
                 this._lastDropTouch = this.$element;

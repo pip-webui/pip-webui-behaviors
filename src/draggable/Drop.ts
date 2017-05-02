@@ -1,4 +1,6 @@
-import { IDraggableService } from './DraggableService';
+import {
+    IDraggableService
+} from './DraggableService';
 
 {
     interface IDropLinkScope extends ng.IScope {
@@ -12,6 +14,9 @@ import { IDraggableService } from './DraggableService';
         pipDragStart: any;
         pipDragStop: any;
         pipDragMove: any;
+        pipEnter: any;
+        pipLeave: any;
+        pipDiactive: any;
     }
 
     class DropLink {
@@ -24,6 +29,9 @@ import { IDraggableService } from './DraggableService';
         private onDragStartCallback: Function;
         private onDragStopCallback: Function;
         private onDragMoveCallback: Function;
+        private onEnterCallback: Function;
+        private onLeaveCallback: Function;
+        private onDiactiveCallback: Function;
 
         constructor(
             private $parse: ng.IParseService,
@@ -42,6 +50,9 @@ import { IDraggableService } from './DraggableService';
             this.onDragStartCallback = $parse($attrs.pipDragStart);
             this.onDragStopCallback = $parse($attrs.pipDragStop);
             this.onDragMoveCallback = $parse($attrs.pipDragMove);
+            this.onEnterCallback = $parse($attrs.pipEnter);
+            this.onLeaveCallback = $parse($attrs.pipLeave);
+            this.onDiactiveCallback = $parse($attrs.pipDiactive);
 
             this.initialize();
         }
@@ -81,7 +92,7 @@ import { IDraggableService } from './DraggableService';
 
         private onDragStart(evt, obj) {
             if (!this._dropEnabled) return;
-            this.isTouching(obj.x, obj.y, obj.element);
+            this.isTouching(obj.x, obj.y, obj.element, evt, obj);
 
             if (this.$attrs.pipDragStart) {
                 this.$timeout(() => {
@@ -95,7 +106,7 @@ import { IDraggableService } from './DraggableService';
 
         private onDragMove(evt, obj) {
             if (!this._dropEnabled) return;
-            this.isTouching(obj.x, obj.y, obj.element);
+            this.isTouching(obj.x, obj.y, obj.element, evt, obj);
 
             if (this.$attrs.pipDragMove) {
                 this.$timeout(() => {
@@ -110,12 +121,12 @@ import { IDraggableService } from './DraggableService';
         private onDragEnd(evt, obj) {
             // don't listen to drop events if this is the element being dragged
             // only update the styles and return
-            if (!this._dropEnabled || this._myid === obj.uid) {
+            if (!this._dropEnabled) {
                 this.updateDragStyles(false, obj.element);
                 return;
             }
 
-            if (this.isTouching(obj.x, obj.y, obj.element)) {
+            if (this.isTouching(obj.x, obj.y, obj.element, evt, obj)) {
                 // call the pipDraggable pipDragSuccess element callback
                 if (obj.callback) {
                     obj.callback(obj);
@@ -124,6 +135,16 @@ import { IDraggableService } from './DraggableService';
                 if (this.$attrs.pipDropSuccess) {
                     this.$timeout(() => {
                         this.onDropCallback(this.$scope, {
+                            $data: obj.data,
+                            $event: obj,
+                            $target: this.$scope.$eval(this.$scope.value)
+                        });
+                    });
+                }
+
+                if (this.$attrs.pipDiactive) {
+                    this.$timeout(() => {
+                        this.onDiactiveCallback(this.$scope, {
                             $data: obj.data,
                             $event: obj,
                             $target: this.$scope.$eval(this.$scope.value)
@@ -144,8 +165,24 @@ import { IDraggableService } from './DraggableService';
             this.updateDragStyles(false, obj.element);
         }
 
-        private isTouching(mouseX, mouseY, dragElement) {
+        private isTouching(mouseX, mouseY, dragElement, evt, obj) {
             const touching = this.hitTest(mouseX, mouseY);
+            if (touching !== this.$scope.isTouching) {
+                if (touching) {
+                    this.onEnterCallback(this.$scope, {
+                        $data: obj.data,
+                        $event: obj,
+                        $target: this.$scope.$eval(this.$scope.value)
+                    });
+                } else {
+                    this.onLeaveCallback(this.$scope, {
+                        $data: obj.data,
+                        $event: obj,
+                        $target: this.$scope.$eval(this.$scope.value)
+                    });
+                }
+            }
+
             this.$scope.isTouching = touching;
             if (touching) {
                 this._lastDropTouch = this.$element;
