@@ -18,7 +18,6 @@
         .module("pipDraggable")
         .directive('pipCancelDrag', CancelDrag);
 }
-
 },{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -396,7 +395,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
         .module("pipDraggable")
         .directive('pipDrag', Drag);
 }
-
 },{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -418,7 +416,6 @@ var DraggableService = (function () {
 angular
     .module("pipDraggable")
     .service('pipDraggable', DraggableService);
-
 },{}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -601,7 +598,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
         .module("pipDraggable")
         .directive('pipDrop', Drop);
 }
-
 },{}],5:[function(require,module,exports){
 {
     var PreventDragLink_1 = (function () {
@@ -641,7 +637,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
         .module("pipDraggable")
         .directive('pipPreventDrag', PreventDrag);
 }
-
 },{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -651,7 +646,6 @@ require("./Drag");
 require("./Drop");
 require("./PreventDrag");
 require("./CancelDrag");
-
 },{"./CancelDrag":1,"./Drag":2,"./DraggableService":3,"./Drop":4,"./PreventDrag":5}],7:[function(require,module,exports){
 {
     var FocusedLink_1 = (function () {
@@ -792,7 +786,6 @@ require("./CancelDrag");
         .module("pipFocused", [])
         .directive('pipFocused', Focused);
 }
-
 },{}],8:[function(require,module,exports){
 "use strict";
 function __export(m) {
@@ -814,7 +807,6 @@ angular.module('pipBehaviors', [
     'pipShortcuts'
 ]);
 __export(require("./shortcuts/index"));
-
 },{"./draggable/index":6,"./focused/Focused":7,"./infinite_scroll/InfiniteScroll":9,"./selected/Selected":10,"./shortcuts/index":16,"./unsaved_changes/UnsavedChanges":17}],9:[function(require,module,exports){
 {
     var InfiniteScrollLink_1 = (function () {
@@ -1014,7 +1006,6 @@ __export(require("./shortcuts/index"));
         .module("pipInfiniteScroll", [])
         .directive('pipInfiniteScroll', InfiniteScroll);
 }
-
 },{}],10:[function(require,module,exports){
 {
     var SelectedLink_1 = (function () {
@@ -1315,7 +1306,6 @@ __export(require("./shortcuts/index"));
         .module("pipSelected", [])
         .directive('pipSelected', Selected);
 }
-
 },{}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1334,7 +1324,6 @@ var ShortcutsConfig = (function () {
     return ShortcutsConfig;
 }());
 exports.ShortcutsConfig = ShortcutsConfig;
-
 },{}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1540,7 +1529,6 @@ var Shortcut = (function () {
     return Shortcut;
 }());
 exports.Shortcut = Shortcut;
-
 },{}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1652,7 +1640,6 @@ var Shortcut_1 = require("./Shortcut");
         .module('pipShortcuts')
         .provider('pipShortcutBinding', ShortcutBindingProvider);
 }
-
 },{"./Shortcut":12}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1698,7 +1685,6 @@ var ShortcutController = (function () {
         .module('pipShortcuts')
         .directive('pipShortcut', shortcutsDirective);
 }
-
 },{}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1864,7 +1850,6 @@ var ShortcutsProvider = (function () {
 angular
     .module('pipShortcuts')
     .provider('pipShortcuts', ShortcutsProvider);
-
 },{"./IShortcutsService":11}],16:[function(require,module,exports){
 "use strict";
 function __export(m) {
@@ -1877,7 +1862,6 @@ require("./ShortcutsService");
 require("./ShortcutDirective");
 __export(require("./IShortcutsService"));
 __export(require("./ShortcutsService"));
-
 },{"./IShortcutsService":11,"./ShortcutBindingService":13,"./ShortcutDirective":14,"./ShortcutsService":15}],17:[function(require,module,exports){
 {
     var UnsavedChangesLink_1 = (function () {
@@ -1922,7 +1906,6 @@ __export(require("./ShortcutsService"));
         .module("pipUnsavedChanges", [])
         .directive("pipUnsavedChanges", UnsavedChanges);
 }
-
 },{}]},{},[8])(8)
 });
 
