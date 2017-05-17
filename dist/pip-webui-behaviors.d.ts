@@ -12,7 +12,6 @@ export interface IDraggableService {
 
 
 
-
 export interface IKeyboardShortcuts {
     [key: string]: Shortcut;
 }
@@ -82,6 +81,7 @@ export class Shortcut {
 
 
 export let ShortcutsChangedEvent: string;
+
 
 
 }
