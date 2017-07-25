@@ -45,6 +45,7 @@
             private $element: JQuery,
             private $attrs: SelectedAttributes
         ) {
+            //todo add stopSelect parametr to disable select
             this.indexGetter = $attrs.pipSelected ? $parse($attrs.pipSelected) : null;
             this.indexSetter = this.indexGetter ? this.indexGetter.assign : null;
             this.idGetter = $attrs.pipSelectedId ? $parse($attrs.pipSelectedId) : null;
