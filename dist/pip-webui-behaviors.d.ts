@@ -4,6 +4,14 @@ declare module pip.behaviors {
 
 
 
+export interface IDraggableService {
+    inputEvent(event: any): any;
+}
+
+
+
+
+
 
 export interface IKeyboardShortcuts {
     [key: string]: Shortcut;
@@ -74,14 +82,6 @@ export class Shortcut {
 
 
 export let ShortcutsChangedEvent: string;
-
-
-
-export interface IDraggableService {
-    inputEvent(event: any): any;
-}
-
-
 
 
 }
