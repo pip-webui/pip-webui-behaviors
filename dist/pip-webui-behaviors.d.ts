@@ -4,6 +4,7 @@ declare module pip.behaviors {
 
 
 
+
 export interface IKeyboardShortcuts {
     [key: string]: Shortcut;
 }
@@ -73,7 +74,6 @@ export class Shortcut {
 
 
 export let ShortcutsChangedEvent: string;
-
 
 
 
