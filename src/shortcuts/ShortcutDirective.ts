@@ -51,6 +51,8 @@ class ShortcutController implements ng.IController  {
     private keypressShortcut(action) {
         this.actionShortcuts();
     }
+
+    public $onInit() {}
 }
 
 // Prevent junk from going into typescript definitions

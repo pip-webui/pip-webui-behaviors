@@ -1671,6 +1671,7 @@ var ShortcutController = (function () {
     ShortcutController.prototype.keypressShortcut = function (action) {
         this.actionShortcuts();
     };
+    ShortcutController.prototype.$onInit = function () { };
     return ShortcutController;
 }());
 {
@@ -1691,7 +1692,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var IShortcutsService_1 = require("./IShortcutsService");
 exports.ShortcutsChangedEvent = 'pipShortcutsChanged';
 var ShortcutsService = (function () {
+    ShortcutsService.$inject = ['config', '$rootScope', '$window', '$location', '$injector', 'pipShortcutBinding'];
     function ShortcutsService(config, $rootScope, $window, $location, $injector, pipShortcutBinding) {
+        "ngInject";
         this.$rootScope = $rootScope;
         this.$window = $window;
         this.$location = $location;

@@ -16,6 +16,7 @@ class ShortcutsService implements IShortcutsService {
         private $injector: ng.auto.IInjectorService,
         private pipShortcutBinding: IShortcutBindingService
     ) {
+        "ngInject";
         this._config = config;
         this._oldConfig = _.cloneDeep(this._config);
 
